@@ -3,14 +3,19 @@ package fr.umontpellier.iut;
 import java.util.*;
 
 public class Transition {
-    private Automate automate;
     private List<Character> lettres;
-    private List<Etat> etatsDestinations;
-    private List<Etat> etatsOrigines;
+    private Etat etatOrigine;
+    private Etat etatDestination;
 
-    public Transition(List<Character> lettres, List<Etat> etatsDestinations, List<Etat> etatsOrigines) {
+    public Transition(List<Character> lettres, Etat etatOrigine, Etat etatDestination) {
         this.lettres = lettres;
-        this.etatsDestinations = etatsDestinations;
-        this.etatsOrigines = etatsOrigines;
+        this.etatOrigine = etatOrigine;
+        this.etatDestination = etatDestination;
+        etatDestination.ajoutTransitionEntrante(this);
+        etatOrigine.ajoutTransitionSortante(this);
+    }
+
+    public List<Character> getLettres() {
+        return lettres;
     }
 }

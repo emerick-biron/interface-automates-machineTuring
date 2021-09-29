@@ -9,11 +9,50 @@ public class Automate {
     private Etat etatInitial;
     private List<Etat> etatsFinaux;
 
-    public Automate(List<Etat> etats, List<Transition> transition, Etat etatInitial, List<Etat> etatsFinaux) {
+    public Automate(List<Etat> etats, List<Transition> transition) {
         this.etats = etats;
         this.transition = transition;
-        this.etatInitial = etatInitial;
-        this.etatsFinaux = etatsFinaux;
         mot = null;
     }
+
+    public void setEtatInitial() {
+        for (Etat etat : etats) {
+            if (etat.estInitial()) {
+                etatInitial = etat;
+            }
+        }
+    }
+
+    public void setEtatsFinaux() {
+        etatsFinaux = new ArrayList<>();
+        for (Etat etat : etats) {
+            if (etat.estFinal()) {
+                etatsFinaux.add(etat);
+            }
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

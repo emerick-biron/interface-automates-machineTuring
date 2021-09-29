@@ -8,4 +8,8 @@ public class Mot {
     public Mot(List<Character> lettres) {
         this.lettres = lettres;
     }
+
+    public List<Character> getLettres() {
+        return lettres;
+    }
 }
