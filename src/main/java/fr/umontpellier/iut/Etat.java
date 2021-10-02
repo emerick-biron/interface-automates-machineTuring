@@ -1,50 +1,100 @@
 package fr.umontpellier.iut;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Etat {
-
-    private String nom;
     private boolean estInitial;
-    private boolean estActif;
-    private boolean estFinal;
-    private List<Transition> transitionsEntrantes;
-    private List<Transition> transitionsSortantes;
+    private boolean estTerminal;
+    private ArrayList<Transition> listeTransitions;
 
-    public List<Transition> getTransitionsSortantes() {
-        return transitionsSortantes;
-    }
-
-    public Etat(String nom, boolean estInitial, boolean estFinal) {
-        this.nom = nom;
+    public void setEstInitial(boolean estInitial) {
         this.estInitial = estInitial;
-        this.estFinal = estFinal;
-        transitionsEntrantes = new ArrayList<>();
-        transitionsSortantes = new ArrayList<>();
-        estActif = false;
     }
 
-    public void ajoutTransitionSortante(Transition transitionSortante){
-        transitionsSortantes.add(transitionSortante);
+    public void setEstTerminal(boolean estTerminal) {
+        this.estTerminal = estTerminal;
     }
 
-    public void ajoutTransitionEntrante(Transition transitionEntrante){
-        transitionsEntrantes.add(transitionEntrante);
+    public Etat(boolean estInitial, boolean estTerminal, ArrayList<Transition> listeTransitions) {
+        this.estInitial = estInitial;
+        this.estTerminal = estTerminal;
+        this.listeTransitions = listeTransitions;
     }
 
-    public String getNom() {
-        return nom;
+    public Etat() {
+        estInitial = false;
+        estTerminal = false;
+        listeTransitions = new ArrayList<>();
+    }
+
+    public Etat(boolean estInitial, boolean estTerminal) {
+        this.estInitial = estInitial;
+        this.estTerminal = estTerminal;
+        listeTransitions = new ArrayList<>();
+    }
+
+    public boolean existeTrans(char c) {
+        for (Transition transition : listeTransitions) {
+            if (transition.getEtiquette() == c) return true;
+        }
+        return false;
     }
 
     public boolean estInitial() {
         return estInitial;
     }
 
-    public boolean estActif() {
-        return estActif;
+    public boolean estTerminal() {
+        return estTerminal;
     }
 
-    public boolean estFinal() {
-        return estFinal;
+    public ArrayList<Transition> getListeTransitions() {
+        return listeTransitions;
+    }
+
+    public Etat cible(char c) {
+        if (!existeTrans(c)) return null;
+        for (Transition transition : listeTransitions) {
+            if (transition.getEtiquette() == c) return transition.getEtatArrivee();
+        }
+        return null;
+    }
+
+    public void ajoutTransition(Transition... t){
+        listeTransitions.addAll(Arrays.asList(t));
+    }
+
+    public List<Etat> cibleND(char c){
+        List<Etat> resultat = new ArrayList<>();
+        for (Transition t : listeTransitions) {
+            if (t.getEtiquette()==c) resultat.add(t.getEtatArrivee());
+        }
+        return resultat;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,21 +1,27 @@
 package fr.umontpellier.iut;
 
-import java.util.*;
-
 public class Transition {
-    private List<Character> lettres;
-    private Etat etatOrigine;
-    private Etat etatDestination;
+    private Etat etatDepart;
+    private Etat etatArrivee;
+    private char etiquette;
 
-    public Transition(List<Character> lettres, Etat etatOrigine, Etat etatDestination) {
-        this.lettres = lettres;
-        this.etatOrigine = etatOrigine;
-        this.etatDestination = etatDestination;
-        etatDestination.ajoutTransitionEntrante(this);
-        etatOrigine.ajoutTransitionSortante(this);
+    public Transition(Etat etatDepart, Etat etatArrivee, char etiquette) {
+        this.etatDepart = etatDepart;
+        this.etatArrivee = etatArrivee;
+        this.etiquette = etiquette;
     }
 
-    public List<Character> getLettres() {
-        return lettres;
+    public Etat getEtatDepart() {
+        return etatDepart;
     }
+
+    public Etat getEtatArrivee() {
+        return etatArrivee;
+    }
+
+    public char getEtiquette() {
+        return etiquette;
+    }
+
+
 }
