@@ -7,15 +7,10 @@ import java.util.List;
 public class Etat {
     private boolean estInitial;
     private boolean estTerminal;
+    /**
+     * Liste des transitions SORTANTES de l'etat
+     */
     private ArrayList<Transition> listeTransitions;
-
-    public void setEstInitial(boolean estInitial) {
-        this.estInitial = estInitial;
-    }
-
-    public void setEstTerminal(boolean estTerminal) {
-        this.estTerminal = estTerminal;
-    }
 
     public Etat(boolean estInitial, boolean estTerminal, ArrayList<Transition> listeTransitions) {
         this.estInitial = estInitial;
@@ -35,6 +30,20 @@ public class Etat {
         listeTransitions = new ArrayList<>();
     }
 
+    public void setEstInitial(boolean estInitial) {
+        this.estInitial = estInitial;
+    }
+
+    public void setEstTerminal(boolean estTerminal) {
+        this.estTerminal = estTerminal;
+    }
+
+    /**
+     * Permet de savoir si il existe une transition sortante de cet etat portant une certaine lettre
+     *
+     * @param c lettre a tester
+     * @return true si la transition existe sinon false
+     */
     public boolean existeTrans(char c) {
         for (Transition transition : listeTransitions) {
             if (transition.getEtiquette() == c) return true;
@@ -54,6 +63,14 @@ public class Etat {
         return listeTransitions;
     }
 
+    /**
+     * Permet d'obtenir l'etat qui peut etre atteint a partir de l'etat courant avec une certaine lettre (ne
+     * fonctionne que pour un automate deterministe)
+     *
+     * @param c lettre a tester
+     * @return null si il n'exite pas de transition sortante portant la lettre c sinon l'etat qui peut etre atteint
+     * avec la lettre c
+     */
     public Etat cible(char c) {
         if (!existeTrans(c)) return null;
         for (Transition transition : listeTransitions) {
@@ -62,14 +79,20 @@ public class Etat {
         return null;
     }
 
-    public void ajoutTransition(Transition... t){
+    public void ajoutTransition(Transition... t) {
         listeTransitions.addAll(Arrays.asList(t));
     }
 
-    public List<Etat> cibleND(char c){
+    /**
+     * Permet d'obtenir la liste des etat qui peuvent etre atteint a partir de l'etat qui courant avec la lettre c
+     *
+     * @param c lettre a tester
+     * @return liste des etat qui peuvent etre atteint, null si il n'y en a pas
+     */
+    public List<Etat> cibleND(char c) {
         List<Etat> resultat = new ArrayList<>();
         for (Transition t : listeTransitions) {
-            if (t.getEtiquette()==c) resultat.add(t.getEtatArrivee());
+            if (t.getEtiquette() == c) resultat.add(t.getEtatArrivee());
         }
         return resultat;
     }

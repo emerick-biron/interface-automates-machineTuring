@@ -16,6 +16,12 @@ public class Automate {
         this.etats = Arrays.asList(etats);
     }
 
+    /**
+     * Permet de creer un automate a partir d'un fichier
+     *
+     * @param nomFichier fichier contenant l'automate
+     * @throws IOException
+     */
     public Automate(String nomFichier) throws IOException {
         FileReader fr = new FileReader(nomFichier);
         BufferedReader bf = new BufferedReader(fr);
@@ -66,6 +72,11 @@ public class Automate {
         etats = new ArrayList<>();
     }
 
+    /**
+     * Permet d'obtenir l'etat initial (ne fonctionne que pour une automate deterministe)
+     *
+     * @return l'etat initial de l'automate
+     */
     public Etat getEtatInitial() {
         for (Etat etat : etats) {
             if (etat.estInitial()) return etat;
@@ -73,6 +84,12 @@ public class Automate {
         return null;
     }
 
+    /**
+     * Permet de savoir si l'automate reconnait un mot (ne fonctionne que pour un automate deterministe)
+     *
+     * @param mot mot a tester
+     * @return true si l'automate reconnait le mot sinon false
+     */
     public boolean reconnait(String mot) {
         Etat courant = getEtatInitial();
         char lettre;
@@ -84,6 +101,13 @@ public class Automate {
         return courant.estTerminal();
     }
 
+    /**
+     * Permet de savoir si un mot peut etre reconnu a partir d'un certain etat
+     *
+     * @param etat etat de depart
+     * @param mot  mot a tester
+     * @return true si le mot est reconnu sinon false
+     */
     public boolean reconnAux(Etat etat, String mot) {
         if (mot.length() < 1) {
             return etat.estTerminal();
@@ -102,6 +126,12 @@ public class Automate {
         return false;
     }
 
+    /**
+     * Permet de savoir si un automate non deterministe reconnait un certain mot
+     *
+     * @param mot mot a tester
+     * @return true si l'automate reconnait le mot sinon false
+     */
     public boolean reconnaitND(String mot) {
         for (Etat etat : etats) {
             if (etat.estInitial()) {
@@ -111,6 +141,12 @@ public class Automate {
         return false;
     }
 
+    /**
+     * Permet de sauvegarder l'automate dans un fichier
+     *
+     * @param nomFichier nom du fichier dans lequel sauvegarder l'automate
+     * @throws IOException
+     */
     public void ecrit(String nomFichier) throws IOException {
         Writer fileWriter = new FileWriter(nomFichier, false); //overwrites file
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -149,7 +185,12 @@ public class Automate {
         fileWriter.close();
     }
 
-    public List<Etat> getEtatsInitiaux(){
+    /**
+     * Permet d'obtenir tous les etats initiaux d'un automate non deterministe
+     *
+     * @return liste des etats initiaux
+     */
+    public List<Etat> getEtatsInitiaux() {
         List<Etat> res = new ArrayList<>();
         for (Etat etat : etats) {
             if (etat.estInitial()) res.add(etat);
