@@ -1,11 +1,20 @@
 package fr.umontpellier.iut;
 
-import java.io.IOException;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
-public class App {
-    public static void main(String[] args) throws IOException {
-        Automate automate = new Automate("./automates_txt/input.txt");
-        System.out.println(automate.reconnaitND("b"));
+import java.util.*;
 
+public class App extends Application {
+    private Stage primaryStage;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        this.primaryStage = stage;
+        primaryStage.setTitle("Automates");
     }
 }

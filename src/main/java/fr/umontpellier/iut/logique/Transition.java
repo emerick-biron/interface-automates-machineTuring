@@ -1,4 +1,4 @@
-package fr.umontpellier.iut;
+package fr.umontpellier.iut.logique;
 
 public class Transition {
     private Etat etatDepart;
