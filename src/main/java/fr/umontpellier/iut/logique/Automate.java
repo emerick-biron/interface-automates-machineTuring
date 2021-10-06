@@ -149,12 +149,16 @@ public class Automate {
         fileWriter.close();
     }
 
-    public List<Etat> getEtatsInitiaux(){
+    public List<Etat> getEtatsInitiaux() {
         List<Etat> res = new ArrayList<>();
         for (Etat etat : etats) {
             if (etat.estInitial()) res.add(etat);
         }
         return res;
+    }
+
+    public void ajouterEtat(Etat etat) {
+        etats.add(etat);
     }
 }
 

@@ -1,5 +1,8 @@
 package fr.umontpellier.iut.logique;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,6 +11,7 @@ public class Etat {
     private boolean estInitial;
     private boolean estTerminal;
     private ArrayList<Transition> listeTransitions;
+    private BooleanProperty estActif;
 
     public void setEstInitial(boolean estInitial) {
         this.estInitial = estInitial;
@@ -21,18 +25,22 @@ public class Etat {
         this.estInitial = estInitial;
         this.estTerminal = estTerminal;
         this.listeTransitions = listeTransitions;
+        estActif = new SimpleBooleanProperty(false);
     }
 
     public Etat() {
         estInitial = false;
         estTerminal = false;
         listeTransitions = new ArrayList<>();
+        estActif = new SimpleBooleanProperty(false);
+
     }
 
     public Etat(boolean estInitial, boolean estTerminal) {
         this.estInitial = estInitial;
         this.estTerminal = estTerminal;
         listeTransitions = new ArrayList<>();
+        estActif = new SimpleBooleanProperty(false);
     }
 
     public boolean existeTrans(char c) {
