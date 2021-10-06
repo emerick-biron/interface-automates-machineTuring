@@ -47,30 +47,12 @@ public class VueEtat extends Circle {
     }
 
     public void init() {
-        setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                setCursor(Cursor.MOVE);
-            }
+        setOnMousePressed(mouseEvent -> setCursor(Cursor.MOVE));
+        setOnMouseReleased(mouseEvent -> setCursor(Cursor.HAND));
+        setOnMouseDragged(mouseEvent -> {
+            setCenterX(mouseEvent.getX());
+            setCenterY(mouseEvent.getY());
         });
-        setOnMouseReleased(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                setCursor(Cursor.HAND);
-            }
-        });
-        setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                setCenterX(mouseEvent.getX());
-                setCenterY(mouseEvent.getY());
-            }
-        });
-        setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                setCursor(Cursor.HAND);
-            }
-        });
+        setOnMouseEntered(mouseEvent -> setCursor(Cursor.HAND));
     }
 }
