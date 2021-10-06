@@ -1,14 +1,9 @@
 package fr.umontpellier.iut;
 
-import fr.umontpellier.iut.vues.VueEtat;
+import fr.umontpellier.iut.composants.VueEtat;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class App extends Application {

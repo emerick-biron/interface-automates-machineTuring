@@ -1,7 +1,5 @@
-package fr.umontpellier.iut.vues;
+package fr.umontpellier.iut.composants;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
