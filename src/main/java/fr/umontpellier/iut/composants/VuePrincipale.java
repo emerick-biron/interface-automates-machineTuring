@@ -5,10 +5,11 @@ import fr.umontpellier.iut.logique.Etat;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
-public class VuePrincipale extends HBox {
+public class VuePrincipale extends BorderPane {
 
     private Button boutonCreerEtat;
     private VueAutomate vueAutomate;
@@ -25,8 +26,8 @@ public class VuePrincipale extends HBox {
             }
         });
 
-        getChildren().add(boutonCreerEtat);
-        getChildren().add(vueAutomate);
+        setTop(boutonCreerEtat);
+        setCenter(vueAutomate);
 
     }
 }
