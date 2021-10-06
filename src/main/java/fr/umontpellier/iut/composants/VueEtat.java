@@ -62,8 +62,8 @@ public class VueEtat extends Circle {
         setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                setCenterX(mouseEvent.getSceneX());
-                setCenterY(mouseEvent.getSceneY());
+                setCenterX(mouseEvent.getX());
+                setCenterY(mouseEvent.getY());
             }
         });
         setOnMouseEntered(new EventHandler<MouseEvent>() {
