@@ -1,19 +1,22 @@
 package fr.umontpellier.iut.logique;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class Automate {
-    private List<Etat> etats;
+    private ObservableList<Etat> etats;
 
     public Automate(List<Etat> etats) {
-        this.etats = etats;
+        this.etats =  FXCollections.observableArrayList(etats);
     }
 
     public Automate(Etat... etats) {
-        this.etats = Arrays.asList(etats);
+        this.etats = FXCollections.observableArrayList(etats);
     }
 
     public Automate(String nomFichier) throws IOException {
@@ -59,11 +62,15 @@ public class Automate {
         bf.close();
         fr.close();
 
-        this.etats = Arrays.asList(etats);
+        this.etats =  FXCollections.observableArrayList(etats);
     }
 
     public Automate() {
-        etats = new ArrayList<>();
+        etats =  FXCollections.observableArrayList();
+    }
+
+    public ObservableList<Etat> getEtats() {
+        return etats;
     }
 
     public Etat getEtatInitial() {
