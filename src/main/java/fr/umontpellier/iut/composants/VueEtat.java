@@ -1,19 +1,16 @@
 package fr.umontpellier.iut.composants;
 
 import fr.umontpellier.iut.logique.Etat;
-import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 public class VueEtat extends StackPane {
     private Etat etat;
     private Circle cercle;
+    private Label labelNumEtat;
     private double mouseX;
     private double mouseY;
 
@@ -21,12 +18,29 @@ public class VueEtat extends StackPane {
         return etat;
     }
 
+    public Label getLabelNumEtat() {
+        return labelNumEtat;
+    }
+
+    public void setLabelNumEtat(Label labelNumEtat) {
+        this.labelNumEtat = labelNumEtat;
+    }
+
+    public VueEtat(Etat etat, Label labelNumEtat) {
+        this.etat = etat;
+        this.labelNumEtat = labelNumEtat;
+        cercle = new Circle(50, 50, 50, Color.RED);
+        getChildren().add(cercle);
+        getChildren().add(labelNumEtat);
+        init();
+    }
 
     public VueEtat(Etat etat) {
         this.etat = etat;
+        labelNumEtat = new Label();
         cercle = new Circle(50, 50, 50, Color.RED);
         getChildren().add(cercle);
-        getChildren().add(new Label("10"));
+        getChildren().add(labelNumEtat);
         init();
     }
 
