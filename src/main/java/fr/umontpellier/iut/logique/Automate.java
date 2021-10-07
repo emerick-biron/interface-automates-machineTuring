@@ -69,7 +69,7 @@ public class Automate {
         etats =  FXCollections.observableArrayList();
     }
 
-    public ObservableList<Etat> getEtats() {
+    public ObservableList<Etat> etatsProperty() {
         return etats;
     }
 
