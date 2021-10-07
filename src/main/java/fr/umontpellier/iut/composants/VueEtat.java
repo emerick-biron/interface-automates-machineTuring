@@ -22,8 +22,8 @@ public class VueEtat extends StackPane {
         return labelNumEtat;
     }
 
-    public void setLabelNumEtat(Label labelNumEtat) {
-        this.labelNumEtat = labelNumEtat;
+    public void setLabelNumEtat(int numEtat) {
+        labelNumEtat.setText(String.valueOf(numEtat));
     }
 
     public VueEtat(Etat etat, Label labelNumEtat) {
