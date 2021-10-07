@@ -31,7 +31,6 @@ public class VueEtat extends StackPane {
         this.labelNumEtat = labelNumEtat;
         cercle = new Circle(50, 50, 50, Color.RED);
         getChildren().add(cercle);
-        getChildren().add(labelNumEtat);
         init();
     }
 
@@ -40,11 +39,10 @@ public class VueEtat extends StackPane {
         labelNumEtat = new Label();
         cercle = new Circle(50, 50, 50, Color.RED);
         getChildren().add(cercle);
-        getChildren().add(labelNumEtat);
         init();
     }
 
-    public void init() {
+    public void initMouseEvents() {
         setOnMousePressed(mouseEvent -> {
             setCursor(Cursor.MOVE);
             mouseX = mouseEvent.getSceneX();
@@ -71,5 +69,15 @@ public class VueEtat extends StackPane {
 
         });
         setOnMouseEntered(mouseEvent -> setCursor(Cursor.HAND));
+    }
+
+    public void initLabelNumEtat() {
+        labelNumEtat.setStyle(" -fx-font-size: " + cercle.getRadius() / 2 + ";-fx-font-weight: bold");
+        getChildren().add(labelNumEtat);
+    }
+
+    public void init() {
+        initMouseEvents();
+        initLabelNumEtat();
     }
 }

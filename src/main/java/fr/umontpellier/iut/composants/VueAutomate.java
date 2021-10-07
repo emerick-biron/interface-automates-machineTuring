@@ -15,7 +15,6 @@ public class VueAutomate extends Pane {
                 for (Node n : getChildren()) {
                     if (n instanceof VueEtat) {
                         VueEtat vueEtat = (VueEtat) n;
-                        vueEtat.setLabelNumEtat(10);
                         vueEtat.setLabelNumEtat(automate.etatsProperty().indexOf(vueEtat.getEtat()));
                     }
                 }
