@@ -13,22 +13,19 @@ public class VuePrincipale extends BorderPane {
 
     private Button boutonCreerEtat;
     private VueAutomate vueAutomate;
+    private EventHandler<ActionEvent> eventAjouterEtat = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            VueEtat vueEtat = new VueEtat(new Etat());
+            vueAutomate.ajouterVueEtat(vueEtat);
+        }
+    };
 
     public VuePrincipale() {
         boutonCreerEtat = new Button("Ajouter etat");
         vueAutomate = new VueAutomate(new Automate());
 
-        boutonCreerEtat.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                VueEtat vueEtat = new VueEtat(new Etat());
-                try {
-                    vueAutomate.ajouterVueEtat(vueEtat);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        boutonCreerEtat.setOnAction(eventAjouterEtat);
 
         setTop(boutonCreerEtat);
         setCenter(vueAutomate);

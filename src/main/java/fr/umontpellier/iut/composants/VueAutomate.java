@@ -28,7 +28,7 @@ public class VueAutomate extends Pane {
         automate.etatsProperty().addListener(miseAJourEtats);
     }
 
-    public void ajouterVueEtat(VueEtat vueEtat) throws InterruptedException {
+    public void ajouterVueEtat(VueEtat vueEtat) {
         getChildren().add(vueEtat);
         automate.ajouterEtat(vueEtat.getEtat());
     }
