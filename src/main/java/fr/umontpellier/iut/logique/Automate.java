@@ -167,6 +167,10 @@ public class Automate {
     public void ajouterEtat(Etat etat) {
         etats.add(etat);
     }
+
+    public void supprimerEtat(Etat etat){
+        etats.remove(etat);
+    }
 }
 
 

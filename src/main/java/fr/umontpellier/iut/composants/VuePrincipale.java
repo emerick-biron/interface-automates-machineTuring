@@ -22,7 +22,11 @@ public class VuePrincipale extends BorderPane {
             @Override
             public void handle(ActionEvent actionEvent) {
                 VueEtat vueEtat = new VueEtat(new Etat());
-                vueAutomate.ajouterVueEtat(vueEtat);
+                try {
+                    vueAutomate.ajouterVueEtat(vueEtat);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 

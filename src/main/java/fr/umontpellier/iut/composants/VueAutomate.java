@@ -4,6 +4,7 @@ import fr.umontpellier.iut.logique.Automate;
 import fr.umontpellier.iut.logique.Etat;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 public class VueAutomate extends Pane {
@@ -27,8 +28,23 @@ public class VueAutomate extends Pane {
         automate.etatsProperty().addListener(miseAJourEtats);
     }
 
-    public void ajouterVueEtat(VueEtat vueEtat) {
+    public void ajouterVueEtat(VueEtat vueEtat) throws InterruptedException {
         getChildren().add(vueEtat);
         automate.ajouterEtat(vueEtat.getEtat());
+    }
+
+    public VueEtat getVueEtat(Etat etat){
+        for (Node n : getChildren()) {
+            if (n instanceof VueEtat){
+                VueEtat vueEtat = (VueEtat) n;
+                if(vueEtat.getEtat().equals(etat)) return vueEtat;
+            }
+        }
+        return null;
+    }
+
+    public void supprimerVueEtat(VueEtat vueEtat){
+        getChildren().remove(vueEtat);
+        automate.supprimerEtat(vueEtat.getEtat());
     }
 }
