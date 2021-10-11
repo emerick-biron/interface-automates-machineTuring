@@ -191,15 +191,11 @@ public class Automate {
         bufferedWriter.close();
         fileWriter.close();
     }
-
-<<<<<<< HEAD:src/main/java/fr/umontpellier/iut/Automate.java
     /**
      * Permet d'obtenir tous les etats initiaux d'un automate non deterministe
      *
      * @return liste des etats initiaux
      */
-=======
->>>>>>> faed03ae50f30d8d0b2f7e275eaa7e55e1a40c4b:src/main/java/fr/umontpellier/iut/logique/Automate.java
     public List<Etat> getEtatsInitiaux() {
         List<Etat> res = new ArrayList<>();
         for (Etat etat : etats) {
