@@ -1,4 +1,7 @@
-package fr.umontpellier.iut;
+package fr.umontpellier.iut.logique;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -6,14 +9,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Automate {
-    private List<Etat> etats;
+    private ObservableList<Etat> etats;
 
     public Automate(List<Etat> etats) {
-        this.etats = etats;
+        this.etats =  FXCollections.observableArrayList(etats);
     }
 
     public Automate(Etat... etats) {
-        this.etats = Arrays.asList(etats);
+        this.etats = FXCollections.observableArrayList(etats);
     }
 
     /**
@@ -65,11 +68,15 @@ public class Automate {
         bf.close();
         fr.close();
 
-        this.etats = Arrays.asList(etats);
+        this.etats =  FXCollections.observableArrayList(etats);
     }
 
     public Automate() {
-        etats = new ArrayList<>();
+        etats =  FXCollections.observableArrayList();
+    }
+
+    public ObservableList<Etat> etatsProperty() {
+        return etats;
     }
 
     /**
@@ -185,17 +192,28 @@ public class Automate {
         fileWriter.close();
     }
 
+<<<<<<< HEAD:src/main/java/fr/umontpellier/iut/Automate.java
     /**
      * Permet d'obtenir tous les etats initiaux d'un automate non deterministe
      *
      * @return liste des etats initiaux
      */
+=======
+>>>>>>> faed03ae50f30d8d0b2f7e275eaa7e55e1a40c4b:src/main/java/fr/umontpellier/iut/logique/Automate.java
     public List<Etat> getEtatsInitiaux() {
         List<Etat> res = new ArrayList<>();
         for (Etat etat : etats) {
             if (etat.estInitial()) res.add(etat);
         }
         return res;
+    }
+
+    public void ajouterEtat(Etat etat) {
+        etats.add(etat);
+    }
+
+    public void supprimerEtat(Etat etat){
+        etats.remove(etat);
     }
 }
 

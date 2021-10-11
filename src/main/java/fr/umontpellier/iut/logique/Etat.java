@@ -1,4 +1,7 @@
-package fr.umontpellier.iut;
+package fr.umontpellier.iut.logique;
+
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,23 +14,28 @@ public class Etat {
      * Liste des transitions SORTANTES de l'etat
      */
     private ArrayList<Transition> listeTransitions;
+    private BooleanProperty estActif;
 
     public Etat(boolean estInitial, boolean estTerminal, ArrayList<Transition> listeTransitions) {
         this.estInitial = estInitial;
         this.estTerminal = estTerminal;
         this.listeTransitions = listeTransitions;
+        estActif = new SimpleBooleanProperty(false);
     }
 
     public Etat() {
         estInitial = false;
         estTerminal = false;
         listeTransitions = new ArrayList<>();
+        estActif = new SimpleBooleanProperty(false);
+
     }
 
     public Etat(boolean estInitial, boolean estTerminal) {
         this.estInitial = estInitial;
         this.estTerminal = estTerminal;
         listeTransitions = new ArrayList<>();
+        estActif = new SimpleBooleanProperty(false);
     }
 
     public void setEstInitial(boolean estInitial) {
