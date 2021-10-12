@@ -1,4 +1,4 @@
-package fr.umontpellier.iut.composants;
+package fr.umontpellier.iut.gui;
 
 import fr.umontpellier.iut.logique.Automate;
 import fr.umontpellier.iut.logique.Etat;
@@ -6,8 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 

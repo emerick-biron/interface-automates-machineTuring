@@ -1,10 +1,9 @@
-package fr.umontpellier.iut.composants;
+package fr.umontpellier.iut.gui;
 
 import fr.umontpellier.iut.logique.Automate;
 import fr.umontpellier.iut.logique.Etat;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 
 public class VueAutomate extends Pane {
