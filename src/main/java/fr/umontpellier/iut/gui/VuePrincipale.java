@@ -17,7 +17,7 @@ public class VuePrincipale extends BorderPane {
     private Button boutonSupprimerEtat;
     private VueAutomate vueAutomate;
     private HBox barreDeMenu;
-    private EventHandler<ActionEvent> eventAjouterEtat = new EventHandler<ActionEvent>() {
+    private EventHandler<ActionEvent> eventAjouterEtat = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
             vueAutomate.getAutomate().ajouterEtat(new Etat());

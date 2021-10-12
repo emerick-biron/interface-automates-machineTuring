@@ -96,4 +96,8 @@ public class VueEtat extends StackPane {
         initMouseEvents();
         initLabelNumEtat();
     }
+
+    public Circle getCercle() {
+        return cercle;
+    }
 }
