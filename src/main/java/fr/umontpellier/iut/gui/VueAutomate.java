@@ -17,8 +17,8 @@ public class VueAutomate extends Pane {
                     for (Etat e : change.getAddedSubList()) {
                         getChildren().add(new VueEtat(e, VueAutomate.this));
                     }
-                } else if (change.wasRemoved()){
-                    for (Etat e : change.getRemoved()){
+                } else if (change.wasRemoved()) {
+                    for (Etat e : change.getRemoved()) {
                         getChildren().remove(getVueEtat(e));
                     }
                 }
@@ -33,10 +33,14 @@ public class VueAutomate extends Pane {
         }
     };
 
-    public VueAutomate(Automate automate, VuePrincipale vuePrincipale){
+    public VueAutomate(Automate automate, VuePrincipale vuePrincipale) {
         this.vuePrincipale = vuePrincipale;
         this.automate = automate;
         this.automate.etatsProperty().addListener(miseAJourEtats);
+    }
+
+    public VuePrincipale getVuePrincipale() {
+        return vuePrincipale;
     }
 
     public Automate getAutomate() {

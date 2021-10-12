@@ -33,6 +33,10 @@ public class VueEtat extends StackPane {
         init();
     }
 
+    public VueAutomate getVueAutomate() {
+        return vueAutomate;
+    }
+
     public Etat getEtat() {
         return etat;
     }
