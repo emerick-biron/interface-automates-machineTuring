@@ -51,15 +51,20 @@ public class VueEtat extends StackPane {
 
     public void initMouseEvents() {
         setOnMousePressed(mouseEvent -> {
-            if (vueAutomate.getVuePrincipale().getActionsSouris() == ActionsSouris.DEPLACER_ETAT) {
+            ActionSouris actionSouris = vueAutomate.getVuePrincipale().getActionsSouris();
+            if (actionSouris == ActionSouris.DEPLACER_ETAT) {
                 setCursor(Cursor.MOVE);
                 mouseX = mouseEvent.getSceneX();
                 mouseY = mouseEvent.getSceneY();
+            } else if (actionSouris == ActionSouris.SUPPRIMER_ETAT){
+                vueAutomate.getAutomate().supprimerEtat(etat);
+                vueAutomate.getVuePrincipale().setDefaultActionSouris();
             }
         });
         setOnMouseReleased(mouseEvent -> setCursor(Cursor.HAND));
         setOnMouseDragged(mouseEvent -> {
-            if (vueAutomate.getVuePrincipale().getActionsSouris() == ActionsSouris.DEPLACER_ETAT) {
+            ActionSouris actionSouris = vueAutomate.getVuePrincipale().getActionsSouris();
+            if (actionSouris == ActionSouris.DEPLACER_ETAT) {
                 //Permet de deplacer la vueEtat a la souris
                 double deltaX = mouseEvent.getSceneX() - mouseX;
                 double deltaY = mouseEvent.getSceneY() - mouseY;

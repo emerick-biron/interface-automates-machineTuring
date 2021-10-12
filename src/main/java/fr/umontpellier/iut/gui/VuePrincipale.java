@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class VuePrincipale extends BorderPane {
 
-    private ActionsSouris actionsSouris = ActionsSouris.DEPLACER_ETAT;
+    private ActionSouris actionSouris = ActionSouris.DEPLACER_ETAT;
     private Button boutonCreerEtat;
     private Button boutonSupprimerEtat;
     private VueAutomate vueAutomate;
@@ -26,7 +26,7 @@ public class VuePrincipale extends BorderPane {
 
     public VuePrincipale() throws IOException {
         boutonSupprimerEtat = new Button("Supprimer Etat");
-        boutonSupprimerEtat.setOnAction(actionEvent -> actionsSouris = ActionsSouris.SUPPRIMER_ETAT);
+        boutonSupprimerEtat.setOnAction(actionEvent -> actionSouris = ActionSouris.SUPPRIMER_ETAT);
         boutonCreerEtat = new Button("Ajouter etat");
         vueAutomate = new VueAutomate(new Automate(), this);
         boutonCreerEtat.setOnAction(eventAjouterEtat);
@@ -37,7 +37,15 @@ public class VuePrincipale extends BorderPane {
 
     }
 
-    public ActionsSouris getActionsSouris() {
-        return actionsSouris;
+    public ActionSouris getActionsSouris() {
+        return actionSouris;
+    }
+
+    public void setActionsSouris(ActionSouris actionSouris) {
+        this.actionSouris = actionSouris;
+    }
+
+    public void setDefaultActionSouris(){
+        this.actionSouris = ActionSouris.DEPLACER_ETAT;
     }
 }

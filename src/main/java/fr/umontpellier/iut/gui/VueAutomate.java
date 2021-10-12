@@ -3,7 +3,9 @@ package fr.umontpellier.iut.gui;
 import fr.umontpellier.iut.logique.Automate;
 import fr.umontpellier.iut.logique.Etat;
 import javafx.collections.ListChangeListener;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 public class VueAutomate extends Pane {
@@ -37,6 +39,7 @@ public class VueAutomate extends Pane {
         this.vuePrincipale = vuePrincipale;
         this.automate = automate;
         this.automate.etatsProperty().addListener(miseAJourEtats);
+        setOnMousePressed(mouseEvent -> vuePrincipale.setDefaultActionSouris());
     }
 
     public VuePrincipale getVuePrincipale() {
