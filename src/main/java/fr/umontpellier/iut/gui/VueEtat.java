@@ -51,29 +51,32 @@ public class VueEtat extends StackPane {
 
     public void initMouseEvents() {
         setOnMousePressed(mouseEvent -> {
-            setCursor(Cursor.MOVE);
-            mouseX = mouseEvent.getSceneX();
-            mouseY = mouseEvent.getSceneY();
+            if (vueAutomate.getVuePrincipale().getActionsSouris() == ActionsSouris.DEPLACER_ETAT) {
+                setCursor(Cursor.MOVE);
+                mouseX = mouseEvent.getSceneX();
+                mouseY = mouseEvent.getSceneY();
+            }
         });
         setOnMouseReleased(mouseEvent -> setCursor(Cursor.HAND));
         setOnMouseDragged(mouseEvent -> {
-            //Permet de deplacer la vueEtat a la souris
-            double deltaX = mouseEvent.getSceneX() - mouseX;
-            double deltaY = mouseEvent.getSceneY() - mouseY;
-            double newXpos = getLayoutX() + deltaX;
-            double newYPos = getLayoutY() + deltaY;
+            if (vueAutomate.getVuePrincipale().getActionsSouris() == ActionsSouris.DEPLACER_ETAT) {
+                //Permet de deplacer la vueEtat a la souris
+                double deltaX = mouseEvent.getSceneX() - mouseX;
+                double deltaY = mouseEvent.getSceneY() - mouseY;
+                double newXpos = getLayoutX() + deltaX;
+                double newYPos = getLayoutY() + deltaY;
 
-            //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-            if (newXpos >= 0 && newXpos + getWidth() <= vueAutomate.getBoundsInLocal().getMaxX()) {
-                setLayoutX(newXpos);
-                mouseX = mouseEvent.getSceneX();
+                //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
+                if (newXpos >= 0 && newXpos + getWidth() <= vueAutomate.getBoundsInLocal().getMaxX()) {
+                    setLayoutX(newXpos);
+                    mouseX = mouseEvent.getSceneX();
+                }
+                //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
+                if (newYPos >= 0 && newYPos + getHeight() <= vueAutomate.getBoundsInLocal().getMaxY()) {
+                    setLayoutY(newYPos);
+                    mouseY = mouseEvent.getSceneY();
+                }
             }
-            //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-            if (newYPos >= 0 && newYPos + getHeight() <= vueAutomate.getBoundsInLocal().getMaxY()) {
-                setLayoutY(newYPos);
-                mouseY = mouseEvent.getSceneY();
-            }
-
         });
         setOnMouseEntered(mouseEvent -> setCursor(Cursor.HAND));
     }

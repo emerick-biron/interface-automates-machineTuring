@@ -36,4 +36,8 @@ public class VuePrincipale extends BorderPane {
         setCenter(vueAutomate);
 
     }
+
+    public ActionsSouris getActionsSouris() {
+        return actionsSouris;
+    }
 }
