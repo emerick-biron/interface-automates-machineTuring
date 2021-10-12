@@ -60,12 +60,12 @@ public class VueEtat extends StackPane {
             double newYPos = getLayoutY() + deltaY;
 
             //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-            if (newXpos >= 0 && newXpos + getWidth() <= getParent().getBoundsInLocal().getMaxX()) {
+            if (newXpos >= 0 && newXpos + getWidth() <= vueAutomate.getBoundsInLocal().getMaxX()) {
                 setLayoutX(newXpos);
                 mouseX = mouseEvent.getSceneX();
             }
             //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-            if (newYPos >= 0 && newYPos + getHeight() <= getParent().getBoundsInLocal().getMaxY()) {
+            if (newYPos >= 0 && newYPos + getHeight() <= vueAutomate.getBoundsInLocal().getMaxY()) {
                 setLayoutY(newYPos);
                 mouseY = mouseEvent.getSceneY();
             }
