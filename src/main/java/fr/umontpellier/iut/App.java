@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class App extends Application {
 
     public static void main(String[] args) {
@@ -16,7 +18,7 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("Hello World!");
         Pane root = new VuePrincipale();
 

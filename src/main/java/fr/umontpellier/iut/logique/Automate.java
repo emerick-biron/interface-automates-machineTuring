@@ -19,7 +19,9 @@ public class Automate {
         this.etats = FXCollections.observableArrayList(etats);
     }
 
-    public Automate(String nomFichier) throws IOException {
+    public void chargerFichier(String nomFichier) throws IOException {
+        this.etats.clear();
+
         FileReader fr = new FileReader(nomFichier);
         BufferedReader bf = new BufferedReader(fr);
 
@@ -62,7 +64,7 @@ public class Automate {
         bf.close();
         fr.close();
 
-        this.etats =  FXCollections.observableArrayList(etats);
+        this.etats.addAll(etats);
     }
 
     public Automate() {

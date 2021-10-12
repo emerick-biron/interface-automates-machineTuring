@@ -13,38 +13,42 @@ public class VueAutomate extends Pane {
         @Override
         public void onChanged(Change<? extends Etat> change) {
             while (change.next()) {
-                for (Node n : getChildren()) {
-                    if (n instanceof VueEtat) {
-                        VueEtat vueEtat = (VueEtat) n;
-                        vueEtat.setLabelNumEtat(automate.etatsProperty().indexOf(vueEtat.getEtat()));
+                if (change.wasAdded()) {
+                    for (Etat e : change.getAddedSubList()) {
+                        getChildren().add(new VueEtat(e));
                     }
+                } else if (change.wasRemoved()){
+                    for (Etat e : change.getRemoved()){
+                        getChildren().remove(getVueEtat(e));
+                    }
+                }
+
+            }
+            for (Node n : getChildren()) {
+                if (n instanceof VueEtat) {
+                    VueEtat vueEtat = (VueEtat) n;
+                    vueEtat.setLabelNumEtat(automate.etatsProperty().indexOf(vueEtat.getEtat()));
                 }
             }
         }
     };
 
-    public VueAutomate(Automate automate) {
+    public VueAutomate(Automate automate){
         this.automate = automate;
-        automate.etatsProperty().addListener(miseAJourEtats);
+        this.automate.etatsProperty().addListener(miseAJourEtats);
     }
 
-    public void ajouterVueEtat(VueEtat vueEtat) {
-        getChildren().add(vueEtat);
-        automate.ajouterEtat(vueEtat.getEtat());
+    public Automate getAutomate() {
+        return automate;
     }
 
-    public VueEtat getVueEtat(Etat etat){
+    public VueEtat getVueEtat(Etat etat) {
         for (Node n : getChildren()) {
-            if (n instanceof VueEtat){
+            if (n instanceof VueEtat) {
                 VueEtat vueEtat = (VueEtat) n;
-                if(vueEtat.getEtat().equals(etat)) return vueEtat;
+                if (vueEtat.getEtat().equals(etat)) return vueEtat;
             }
         }
         return null;
-    }
-
-    public void supprimerVueEtat(VueEtat vueEtat){
-        getChildren().remove(vueEtat);
-        automate.supprimerEtat(vueEtat.getEtat());
     }
 }
