@@ -16,13 +16,6 @@ public class Etat {
     private ArrayList<Transition> listeTransitions;
     private BooleanProperty estActif;
 
-    public Etat(boolean estInitial, boolean estTerminal, ArrayList<Transition> listeTransitions) {
-        this.estInitial = estInitial;
-        this.estTerminal = estTerminal;
-        this.listeTransitions = listeTransitions;
-        estActif = new SimpleBooleanProperty(false);
-    }
-
     public Etat() {
         estInitial = false;
         estTerminal = false;
@@ -85,10 +78,6 @@ public class Etat {
             if (transition.getEtiquette() == c) return transition.getEtatArrivee();
         }
         return null;
-    }
-
-    public void ajoutTransition(Transition... t) {
-        listeTransitions.addAll(Arrays.asList(t));
     }
 
     /**

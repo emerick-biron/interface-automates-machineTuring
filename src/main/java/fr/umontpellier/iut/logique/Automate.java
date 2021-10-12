@@ -10,13 +10,18 @@ import java.util.List;
 
 public class Automate {
     private ObservableList<Etat> etats;
+    private ObservableList<Transition> transitions;
 
     public Automate(List<Etat> etats) {
-        this.etats =  FXCollections.observableArrayList(etats);
+        this.etats = FXCollections.observableArrayList(etats);
     }
 
     public Automate(Etat... etats) {
         this.etats = FXCollections.observableArrayList(etats);
+    }
+
+    public Automate() {
+        etats = FXCollections.observableArrayList();
     }
 
     public void chargerFichier(String nomFichier) throws IOException {
@@ -51,7 +56,7 @@ public class Automate {
                 char lettre = split[1].charAt(0);
 
                 Transition transition = new Transition(etats[numE1], etats[numE2], lettre);
-                etats[numE1].ajoutTransition(transition);
+                ajoutTransition(transition);
             }
 
             ligne = bf.readLine();
@@ -67,8 +72,18 @@ public class Automate {
         this.etats.addAll(etats);
     }
 
-    public Automate() {
-        etats =  FXCollections.observableArrayList();
+    public void ajoutTransition(Transition... transitions) {
+        this.transitions.addAll(transitions);
+        for (Transition t : transitions) {
+            t.getEtatDepart().getListeTransitions().add(t);
+        }
+    }
+
+    public void supprimerTransition(Transition... transitions){
+        this.transitions.removeAll(transitions);
+        for (Transition t : transitions) {
+            t.getEtatDepart().getListeTransitions().remove(t);
+        }
     }
 
     public ObservableList<Etat> etatsProperty() {
@@ -187,6 +202,7 @@ public class Automate {
         bufferedWriter.close();
         fileWriter.close();
     }
+
     /**
      * Permet d'obtenir tous les etats initiaux d'un automate non deterministe
      *
@@ -204,7 +220,7 @@ public class Automate {
         etats.add(etat);
     }
 
-    public void supprimerEtat(Etat etat){
+    public void supprimerEtat(Etat etat) {
         etats.remove(etat);
     }
 }
