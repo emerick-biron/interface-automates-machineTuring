@@ -8,13 +8,14 @@ import javafx.scene.layout.Pane;
 
 public class VueAutomate extends Pane {
     private Automate automate;
+    private VuePrincipale vuePrincipale;
     private ListChangeListener<Etat> miseAJourEtats = new ListChangeListener<Etat>() {
         @Override
         public void onChanged(Change<? extends Etat> change) {
             while (change.next()) {
                 if (change.wasAdded()) {
                     for (Etat e : change.getAddedSubList()) {
-                        getChildren().add(new VueEtat(e));
+                        getChildren().add(new VueEtat(e, VueAutomate.this));
                     }
                 } else if (change.wasRemoved()){
                     for (Etat e : change.getRemoved()){
@@ -32,7 +33,8 @@ public class VueAutomate extends Pane {
         }
     };
 
-    public VueAutomate(Automate automate){
+    public VueAutomate(Automate automate, VuePrincipale vuePrincipale){
+        this.vuePrincipale = vuePrincipale;
         this.automate = automate;
         this.automate.etatsProperty().addListener(miseAJourEtats);
     }

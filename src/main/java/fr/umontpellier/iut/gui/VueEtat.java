@@ -11,8 +11,27 @@ public class VueEtat extends StackPane {
     private Etat etat;
     private Circle cercle;
     private Label labelNumEtat;
+    private VueAutomate vueAutomate;
     private double mouseX;
     private double mouseY;
+
+    public VueEtat(Etat etat, Label labelNumEtat, VueAutomate vueAutomate) {
+        this.vueAutomate = vueAutomate;
+        this.etat = etat;
+        this.labelNumEtat = labelNumEtat;
+        cercle = new Circle(50, 50, 50, Color.RED);
+        getChildren().add(cercle);
+        init();
+    }
+
+    public VueEtat(Etat etat, VueAutomate vueAutomate) {
+        this.vueAutomate = vueAutomate;
+        this.etat = etat;
+        labelNumEtat = new Label();
+        cercle = new Circle(50, 50, 50, Color.RED);
+        getChildren().add(cercle);
+        init();
+    }
 
     public Etat getEtat() {
         return etat;
@@ -24,22 +43,6 @@ public class VueEtat extends StackPane {
 
     public void setLabelNumEtat(int numEtat) {
         labelNumEtat.setText(String.valueOf(numEtat));
-    }
-
-    public VueEtat(Etat etat, Label labelNumEtat) {
-        this.etat = etat;
-        this.labelNumEtat = labelNumEtat;
-        cercle = new Circle(50, 50, 50, Color.RED);
-        getChildren().add(cercle);
-        init();
-    }
-
-    public VueEtat(Etat etat) {
-        this.etat = etat;
-        labelNumEtat = new Label();
-        cercle = new Circle(50, 50, 50, Color.RED);
-        getChildren().add(cercle);
-        init();
     }
 
     public void initMouseEvents() {
