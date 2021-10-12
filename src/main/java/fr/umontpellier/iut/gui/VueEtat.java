@@ -1,4 +1,4 @@
-package fr.umontpellier.iut.composants;
+package fr.umontpellier.iut.gui;
 
 import fr.umontpellier.iut.logique.Etat;
 import javafx.scene.Cursor;

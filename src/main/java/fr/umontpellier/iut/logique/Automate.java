@@ -19,13 +19,9 @@ public class Automate {
         this.etats = FXCollections.observableArrayList(etats);
     }
 
-    /**
-     * Permet de creer un automate a partir d'un fichier
-     *
-     * @param nomFichier fichier contenant l'automate
-     * @throws IOException
-     */
-    public Automate(String nomFichier) throws IOException {
+    public void chargerFichier(String nomFichier) throws IOException {
+        this.etats.clear();
+
         FileReader fr = new FileReader(nomFichier);
         BufferedReader bf = new BufferedReader(fr);
 
@@ -68,7 +64,7 @@ public class Automate {
         bf.close();
         fr.close();
 
-        this.etats =  FXCollections.observableArrayList(etats);
+        this.etats.addAll(etats);
     }
 
     public Automate() {
