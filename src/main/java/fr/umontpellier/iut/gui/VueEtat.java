@@ -57,6 +57,7 @@ public class VueEtat extends StackPane {
                 mouseX = mouseEvent.getSceneX();
                 mouseY = mouseEvent.getSceneY();
             } else if (actionSouris == ActionSouris.SUPPRIMER_ETAT){
+                //Permet de supprimer un etat
                 vueAutomate.getAutomate().supprimerEtat(etat);
                 vueAutomate.getVuePrincipale().setDefaultActionSouris();
             }
