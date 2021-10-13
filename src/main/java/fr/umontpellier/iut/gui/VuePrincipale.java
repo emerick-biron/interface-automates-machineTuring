@@ -30,7 +30,7 @@ public class VuePrincipale extends BorderPane {
         boutonCreerEtat = new Button("Ajouter etat");
         Automate automate = new Automate();
         vueAutomate = new VueAutomate(automate, this);
-        automate.chargerFichier("/home/ann2/birone/semestre3/projet_s3_desbos_moret_roussel_biron/automates_txt/input.txt");
+        automate.chargerFichier("automates_txt/input.txt");
         boutonCreerEtat.setOnAction(eventAjouterEtat);
 
         barreDeMenu = new HBox(boutonCreerEtat, boutonSupprimerEtat);
