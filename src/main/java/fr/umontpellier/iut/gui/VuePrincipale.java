@@ -24,19 +24,17 @@ public class VuePrincipale extends BorderPane {
         }
     };
 
-    public VuePrincipale() throws IOException {
+    public VuePrincipale() throws IOException, InterruptedException {
         boutonSupprimerEtat = new Button("Supprimer Etat");
         boutonSupprimerEtat.setOnAction(actionEvent -> actionSouris = ActionSouris.SUPPRIMER_ETAT);
         boutonCreerEtat = new Button("Ajouter etat");
         Automate automate = new Automate();
         vueAutomate = new VueAutomate(automate, this);
-        automate.chargerFichier("automates_txt/input.txt");
         boutonCreerEtat.setOnAction(eventAjouterEtat);
 
         barreDeMenu = new HBox(boutonCreerEtat, boutonSupprimerEtat);
         setTop(barreDeMenu);
         setCenter(vueAutomate);
-
     }
 
     public ActionSouris getActionsSouris() {
@@ -49,5 +47,9 @@ public class VuePrincipale extends BorderPane {
 
     public void setDefaultActionSouris() {
         this.actionSouris = ActionSouris.DEPLACER_ETAT;
+    }
+
+    public VueAutomate getVueAutomate() {
+        return vueAutomate;
     }
 }

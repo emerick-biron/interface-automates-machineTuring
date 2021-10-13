@@ -251,13 +251,18 @@ public class Automate {
         etats.remove(etat);
     }
 
-    public void lancer(String mot) {
+    public void lancer(String mot, long dellayMillis) throws InterruptedException {
         etatsActifs.clear();
         etatsActifs.addAll(getEtatsInitiaux());
         for (int i = 0; i < mot.length(); i++) {
+            Thread.sleep(dellayMillis);
             char lettre = mot.charAt(i);
             step(lettre);
         }
+    }
+
+    public void lancer(String mot) throws InterruptedException {
+        lancer(mot, 0);
     }
 
     public void step(char lettre) {

@@ -2,6 +2,8 @@ package fr.umontpellier.iut;
 
 import fr.umontpellier.iut.gui.VuePrincipale;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -15,11 +17,13 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException, InterruptedException {
         primaryStage.setTitle("Hello World!");
-        Pane root = new VuePrincipale();
+        VuePrincipale vuePrincipale = new VuePrincipale();
 
-        primaryStage.setScene(new Scene(root, 300, 250));
+        primaryStage.setScene(new Scene(vuePrincipale, 300, 250));
         primaryStage.show();
+
+        vuePrincipale.getVueAutomate().getAutomate().chargerFichier("automates_txt/input.txt");
     }
 }
