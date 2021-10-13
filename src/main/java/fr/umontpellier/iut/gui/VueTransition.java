@@ -23,6 +23,10 @@ public class VueTransition extends Group {
         init();
     }
 
+    public Transition getTransition() {
+        return transition;
+    }
+
     public void init() {
         ligne.setStrokeWidth(3);
         initCoordonneLigne();
