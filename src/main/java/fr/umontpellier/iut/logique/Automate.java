@@ -262,22 +262,25 @@ public class Automate {
 
     public void step(char lettre) {
         List<Etat> nouveauxActifs = new ArrayList<>();
+
         for (Etat e : etatsActifs) {
-            nouveauxActifs.addAll(e.cibleND(lettre));
-        }
-        for (Etat nouveau : nouveauxActifs) {
-            nouveau.active();
-            if (!etatsActifs.contains(nouveau)) etatsActifs.add(nouveau);
-        }
-        Iterator<Etat> it = etatsActifs.iterator();
-        while (it.hasNext()) {
-            Etat e = it.next();
-            if (!nouveauxActifs.contains(e)) {
-                e.desactive();
-                it.remove();
+            for (Etat etatCible : e.cibleND(lettre)) {
+                if (!nouveauxActifs.contains(etatCible)){
+                    nouveauxActifs.add(etatCible);
+                }
             }
         }
+
+        for (Etat e : etatsActifs) {
+            e.desactive();
+        }
+
+        etatsActifs.clear();
         etatsActifs.addAll(nouveauxActifs);
+
+        for (Etat e : etatsActifs) {
+            e.active();
+        }
     }
 
     public List<Etat> getEtatsActifs() {
@@ -285,6 +288,36 @@ public class Automate {
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
