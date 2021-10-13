@@ -12,6 +12,8 @@ public class Automate {
     private ObservableList<Etat> etats;
     private ObservableList<Transition> transitions;
 
+    private List<Etat> etatsCourants;
+
     public Automate(List<Etat> etats) {
         this.etats = FXCollections.observableArrayList(etats);
     }
@@ -222,6 +224,19 @@ public class Automate {
 
     public void supprimerEtat(Etat etat) {
         etats.remove(etat);
+    }
+
+    public void step(char lettre) {
+        for(Etat e : etats) {
+            if (e.estActif()) etatsCourants.add(e);
+        }
+        for(Etat e : etatsCourants) {
+           List<Etat> suivants = e.cibleND(lettre);
+           e.desactive();
+            for (Etat suivant : suivants) {
+                suivant.active();
+            }
+        }
     }
 }
 

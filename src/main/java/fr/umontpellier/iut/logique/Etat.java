@@ -20,7 +20,7 @@ public class Etat {
         estInitial = false;
         estTerminal = false;
         listeTransitions = new ArrayList<>();
-        estActif = new SimpleBooleanProperty(false);
+        desactive();
 
     }
 
@@ -28,11 +28,13 @@ public class Etat {
         this.estInitial = estInitial;
         this.estTerminal = estTerminal;
         listeTransitions = new ArrayList<>();
-        estActif = new SimpleBooleanProperty(false);
+        if (estInitial) active();
+        else desactive();
     }
 
     public void setEstInitial(boolean estInitial) {
         this.estInitial = estInitial;
+        active();
     }
 
     public void setEstTerminal(boolean estTerminal) {
@@ -92,6 +94,18 @@ public class Etat {
             if (t.getEtiquette() == c) resultat.add(t.getEtatArrivee());
         }
         return resultat;
+    }
+
+    public void active() {
+        estActif.set(true);
+    }
+
+    public void desactive() {
+        estActif.set(false);
+    }
+
+    public boolean estActif() {
+        return estActif.getValue();
     }
 }
 
