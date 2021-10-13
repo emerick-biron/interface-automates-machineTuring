@@ -15,15 +15,6 @@ public class VueEtat extends StackPane {
     private double mouseX;
     private double mouseY;
 
-    public VueEtat(Etat etat, Label labelNumEtat, VueAutomate vueAutomate) {
-        this.vueAutomate = vueAutomate;
-        this.etat = etat;
-        this.labelNumEtat = labelNumEtat;
-        cercle = new Circle(50, 50, 50, Color.RED);
-        getChildren().add(cercle);
-        init();
-    }
-
     public VueEtat(Etat etat, VueAutomate vueAutomate) {
         this.vueAutomate = vueAutomate;
         this.etat = etat;
