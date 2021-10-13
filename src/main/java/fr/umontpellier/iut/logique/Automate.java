@@ -2,6 +2,7 @@ package fr.umontpellier.iut.logique;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -251,23 +252,32 @@ public class Automate {
         etats.remove(etat);
     }
 
-    public void lancer(String mot, long dellayMillis) throws InterruptedException {
-        etatsActifs.clear();
-        etatsActifs.addAll(getEtatsInitiaux());
-        for (int i = 0; i < mot.length(); i++) {
-            Thread.sleep(dellayMillis);
-            char lettre = mot.charAt(i);
-            step(lettre);
-        }
+    public Task<Void> getTaskLancer(String mot, long dellayMillis) {
+        Task<Void> taskLancer = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                for (Etat e : etatsActifs) {
+                    e.desactive();
+                }
+                etatsActifs.clear();
+                etatsActifs.addAll(getEtatsInitiaux());
+                for (int i = 0; i < mot.length(); i++) {
+                    Thread.sleep(dellayMillis);
+                    char lettre = mot.charAt(i);
+                    step(lettre);
+                }
+                return null;
+            }
+        };
+        return taskLancer;
     }
 
-    public void lancer(String mot) throws InterruptedException {
-        lancer(mot, 0);
+    public void lancer(Task<Void> taskLancer) throws InterruptedException {
+        new Thread(taskLancer).start();
     }
 
     public void step(char lettre) {
         List<Etat> nouveauxActifs = new ArrayList<>();
-
         for (Etat e : etatsActifs) {
             for (Etat etatCible : e.cibleND(lettre)) {
                 if (!nouveauxActifs.contains(etatCible)){

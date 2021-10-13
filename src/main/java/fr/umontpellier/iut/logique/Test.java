@@ -1,5 +1,10 @@
 package fr.umontpellier.iut.logique;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
+
 import java.io.IOException;
 
 public class Test {
@@ -7,8 +12,7 @@ public class Test {
         Automate automate = new Automate();
 
         automate.chargerFichier("automates_txt/input.txt");
-        automate.lancer("a");
-        System.out.println(automate.getEtatsActifs());
+        Task<Void> taskLancer = automate.getTaskLancer("abb", 1000);
 
     }
 }

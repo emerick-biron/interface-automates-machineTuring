@@ -2,9 +2,11 @@ package fr.umontpellier.iut.gui;
 
 import fr.umontpellier.iut.logique.Automate;
 import fr.umontpellier.iut.logique.Etat;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
@@ -17,22 +19,43 @@ public class VuePrincipale extends BorderPane {
     private Button boutonSupprimerEtat;
     private VueAutomate vueAutomate;
     private HBox barreDeMenu;
+    private Button boutonLancer;
+    private TextField textFieldMotAutomate = new TextField();
+    private TextField textFieldDelaiAutomate = new TextField();
     private EventHandler<ActionEvent> eventAjouterEtat = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
             vueAutomate.getAutomate().ajouterEtat(new Etat());
         }
     };
+    private EventHandler<ActionEvent> eventLancerAutomate = new EventHandler<>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            Task<Void> taskLancer = vueAutomate.getAutomate().getTaskLancer(textFieldMotAutomate.getText(),
+                    Integer.parseInt(textFieldDelaiAutomate.getText()));
+            try {
+                vueAutomate.getAutomate().lancer(taskLancer);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     public VuePrincipale() throws IOException, InterruptedException {
         boutonSupprimerEtat = new Button("Supprimer Etat");
-        boutonSupprimerEtat.setOnAction(actionEvent -> actionSouris = ActionSouris.SUPPRIMER_ETAT);
         boutonCreerEtat = new Button("Ajouter etat");
+        boutonLancer = new Button("Lancer");
+
+
         Automate automate = new Automate();
         vueAutomate = new VueAutomate(automate, this);
-        boutonCreerEtat.setOnAction(eventAjouterEtat);
 
-        barreDeMenu = new HBox(boutonCreerEtat, boutonSupprimerEtat);
+        boutonCreerEtat.setOnAction(eventAjouterEtat);
+        boutonSupprimerEtat.setOnAction(actionEvent -> actionSouris = ActionSouris.SUPPRIMER_ETAT);
+        boutonLancer.setOnAction(eventLancerAutomate);
+
+        barreDeMenu = new HBox(boutonCreerEtat, boutonSupprimerEtat, boutonLancer, textFieldMotAutomate,
+                textFieldDelaiAutomate);
         setTop(barreDeMenu);
         setCenter(vueAutomate);
     }

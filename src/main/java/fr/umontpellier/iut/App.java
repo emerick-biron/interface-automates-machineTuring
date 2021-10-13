@@ -4,6 +4,8 @@ import fr.umontpellier.iut.gui.VuePrincipale;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -25,5 +27,6 @@ public class App extends Application {
         primaryStage.show();
 
         vuePrincipale.getVueAutomate().getAutomate().chargerFichier("automates_txt/input.txt");
+
     }
 }
