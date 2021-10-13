@@ -53,6 +53,7 @@ public class VueAutomate extends Pane {
         this.vuePrincipale = vuePrincipale;
         this.automate = automate;
         this.automate.etatsProperty().addListener(miseAJourEtats);
+        this.automate.transitionsProperty().addListener(miseAJourTransition);
         setOnMousePressed(mouseEvent -> vuePrincipale.setDefaultActionSouris());
     }
 
