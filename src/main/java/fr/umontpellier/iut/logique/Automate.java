@@ -17,16 +17,19 @@ public class Automate {
     public Automate(List<Etat> etats) {
         this.etats = FXCollections.observableArrayList(etats);
         transitions = FXCollections.observableArrayList();
+        etatsCourants = new ArrayList<>();
     }
 
     public Automate(Etat... etats) {
         this.etats = FXCollections.observableArrayList(etats);
         transitions = FXCollections.observableArrayList();
+        etatsCourants = new ArrayList<>();
     }
 
     public Automate() {
         etats = FXCollections.observableArrayList();
         transitions = FXCollections.observableArrayList();
+        etatsCourants = new ArrayList<>();
     }
 
     public ObservableList<Transition> transitionsProperty() {
@@ -241,18 +244,37 @@ public class Automate {
         etats.remove(etat);
     }
 
+    public void lancer(String mot){
+        etatsCourants = new ArrayList<>(getEtatsInitiaux());
+        for (int i=0; i< mot.length(); i++) {
+            char lettre = mot.charAt(i);
+            step(lettre);
+        }
+    }
+
     public void step(char lettre) {
+        etatsCourants.clear();
+        List<Etat> nouveauxCourants = new ArrayList<>();
         for(Etat e : etats) {
             if (e.estActif()) etatsCourants.add(e);
         }
         for(Etat e : etatsCourants) {
-           List<Etat> suivants = e.cibleND(lettre);
-           e.desactive();
-            for (Etat suivant : suivants) {
-                suivant.active();
+            nouveauxCourants.addAll(e.cibleND(lettre));
+        }
+        for (Etat nouveau : nouveauxCourants) {
+            nouveau.active();
+        }
+        for (Etat e : etatsCourants) {
+            if (!nouveauxCourants.contains(e)){
+                e.desactive();
             }
         }
     }
+
+    public List<Etat> getEtatsCourants(){
+        return etatsCourants;
+    }
+
 }
 
 

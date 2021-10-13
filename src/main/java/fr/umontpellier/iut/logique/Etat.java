@@ -20,7 +20,7 @@ public class Etat {
         estInitial = false;
         estTerminal = false;
         listeTransitions = new ArrayList<>();
-        desactive();
+        estActif = new SimpleBooleanProperty(false);
 
     }
 
@@ -28,13 +28,11 @@ public class Etat {
         this.estInitial = estInitial;
         this.estTerminal = estTerminal;
         listeTransitions = new ArrayList<>();
-        if (estInitial) active();
-        else desactive();
+        estActif = new SimpleBooleanProperty(false);
     }
 
     public void setEstInitial(boolean estInitial) {
         this.estInitial = estInitial;
-        active();
     }
 
     public void setEstTerminal(boolean estTerminal) {
