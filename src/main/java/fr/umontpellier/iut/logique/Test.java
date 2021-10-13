@@ -8,7 +8,7 @@ public class Test {
 
         automate.chargerFichier("/Users/lenaisdesbos/Documents/IUT/S3/Projet_S3/Git/clone/automates_txt/input.txt");
         automate.lancer("a");
-        System.out.println(automate.getEtatsCourants());
+        System.out.println(automate.getEtatsActifs());
 
     }
 }

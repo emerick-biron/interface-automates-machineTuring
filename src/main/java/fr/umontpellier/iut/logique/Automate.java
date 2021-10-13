@@ -5,31 +5,30 @@ import javafx.collections.ObservableList;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Automate {
     private ObservableList<Etat> etats;
     private ObservableList<Transition> transitions;
 
-    private List<Etat> etatsCourants;
+    private List<Etat> etatsActifs;
 
     public Automate(List<Etat> etats) {
         this.etats = FXCollections.observableArrayList(etats);
         transitions = FXCollections.observableArrayList();
-        etatsCourants = new ArrayList<>();
+        etatsActifs = new ArrayList<>();
     }
 
     public Automate(Etat... etats) {
         this.etats = FXCollections.observableArrayList(etats);
         transitions = FXCollections.observableArrayList();
-        etatsCourants = new ArrayList<>();
+        etatsActifs = new ArrayList<>();
     }
 
     public Automate() {
         etats = FXCollections.observableArrayList();
         transitions = FXCollections.observableArrayList();
-        etatsCourants = new ArrayList<>();
+        etatsActifs = new ArrayList<>();
     }
 
     public ObservableList<Transition> transitionsProperty() {
@@ -245,7 +244,8 @@ public class Automate {
     }
 
     public void lancer(String mot){
-        etatsCourants = new ArrayList<>(getEtatsInitiaux());
+        etatsActifs.clear();
+        etatsActifs.addAll(getEtatsInitiaux());
         for (int i=0; i< mot.length(); i++) {
             char lettre = mot.charAt(i);
             step(lettre);
@@ -253,26 +253,26 @@ public class Automate {
     }
 
     public void step(char lettre) {
-        etatsCourants.clear();
+        etatsActifs.clear();
         List<Etat> nouveauxCourants = new ArrayList<>();
         for(Etat e : etats) {
-            if (e.estActif()) etatsCourants.add(e);
+            if (e.estActif()) etatsActifs.add(e);
         }
-        for(Etat e : etatsCourants) {
+        for(Etat e : etatsActifs) {
             nouveauxCourants.addAll(e.cibleND(lettre));
         }
         for (Etat nouveau : nouveauxCourants) {
             nouveau.active();
         }
-        for (Etat e : etatsCourants) {
+        for (Etat e : etatsActifs) {
             if (!nouveauxCourants.contains(e)){
                 e.desactive();
             }
         }
     }
 
-    public List<Etat> getEtatsCourants(){
-        return etatsCourants;
+    public List<Etat> getEtatsActifs(){
+        return etatsActifs;
     }
 
 }
