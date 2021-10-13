@@ -253,11 +253,9 @@ public class Automate {
     }
 
     public void step(char lettre) {
-        etatsActifs.clear();
+
         List<Etat> nouveauxCourants = new ArrayList<>();
-        for(Etat e : etats) {
-            if (e.estActif()) etatsActifs.add(e);
-        }
+
         for(Etat e : etatsActifs) {
             nouveauxCourants.addAll(e.cibleND(lettre));
         }
