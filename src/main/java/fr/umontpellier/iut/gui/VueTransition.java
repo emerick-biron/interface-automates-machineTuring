@@ -1,6 +1,8 @@
 package fr.umontpellier.iut.gui;
 
 import fr.umontpellier.iut.logique.Transition;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.DoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
@@ -21,13 +23,19 @@ public class VueTransition extends Group {
         init();
     }
 
-    public void init(){
-        Circle cercleEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart()).getCercle();
-        Circle cercleEtatFin = vueAutomate.getVueEtat(transition.getEtatArrivee()).getCercle();
+    public void init() {
+        ligne.setStrokeWidth(3);
+        initCoordonneLigne();
+        this.toBack();
+    }
 
-        ligne.startXProperty().bind(cercleEtatDep.centerXProperty());
-        ligne.startYProperty().bind(cercleEtatDep.centerYProperty());
-        ligne.endXProperty().bind(cercleEtatFin.centerXProperty());
-        ligne.endYProperty().bind(cercleEtatFin.centerYProperty());
+    public void initCoordonneLigne(){
+        VueEtat vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
+        VueEtat vueEtatFin = vueAutomate.getVueEtat(transition.getEtatArrivee());
+
+        ligne.startXProperty().bind(vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().getRadius()));
+        ligne.startYProperty().bind(vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().getRadius()));
+        ligne.endXProperty().bind(vueEtatFin.layoutXProperty().add(vueEtatFin.getCercle().getRadius()));
+        ligne.endYProperty().bind(vueEtatFin.layoutYProperty().add(vueEtatFin.getCercle().getRadius()));
     }
 }
