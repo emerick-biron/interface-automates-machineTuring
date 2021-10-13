@@ -261,6 +261,9 @@ public class Automate {
                 }
                 etatsActifs.clear();
                 etatsActifs.addAll(getEtatsInitiaux());
+                for (Etat e : etatsActifs) {
+                    e.active();
+                }
                 for (int i = 0; i < mot.length(); i++) {
                     Thread.sleep(dellayMillis);
                     char lettre = mot.charAt(i);

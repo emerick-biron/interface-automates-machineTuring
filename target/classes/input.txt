@@ -1,9 +1,10 @@
-3
-initial 0 1
-terminal 2
+7
+initial 0
+terminal 6
 0 a 1
-2 a 2
-2 b 2
-1 b 1
+0 b 3
+3 b 5
+1 b 3
 1 b 2
-2 b 1
+2 a 4
+4 b 6

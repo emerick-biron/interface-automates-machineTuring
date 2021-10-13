@@ -1,6 +1,9 @@
 package fr.umontpellier.iut;
 
+import fr.umontpellier.iut.gui.VueAutomate;
+import fr.umontpellier.iut.gui.VueEtat;
 import fr.umontpellier.iut.gui.VuePrincipale;
+import fr.umontpellier.iut.logique.Etat;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Task;

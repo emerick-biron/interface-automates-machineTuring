@@ -3,8 +3,8 @@ initial 0
 terminal 6
 0 a 1
 0 b 3
-1 b 3
 3 b 5
+1 b 3
 1 b 2
-2 b 4
+2 a 4
 4 b 6
