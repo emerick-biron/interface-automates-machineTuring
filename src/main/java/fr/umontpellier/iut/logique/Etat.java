@@ -101,6 +101,18 @@ public class Etat {
         }
         return resultat;
     }
+
+    public void active() {
+        estActif.set(true);
+    }
+
+    public void desactive() {
+        estActif.set(false);
+    }
+
+    public boolean estActif() {
+        return estActif.getValue();
+    }
 }
 
 
