@@ -16,14 +16,21 @@ public class Automate {
 
     public Automate(List<Etat> etats) {
         this.etats = FXCollections.observableArrayList(etats);
+        transitions = FXCollections.observableArrayList();
     }
 
     public Automate(Etat... etats) {
         this.etats = FXCollections.observableArrayList(etats);
+        transitions = FXCollections.observableArrayList();
     }
 
     public Automate() {
         etats = FXCollections.observableArrayList();
+        transitions = FXCollections.observableArrayList();
+    }
+
+    public ObservableList<Transition> transitionsProperty() {
+        return transitions;
     }
 
     public void chargerFichier(String nomFichier) throws IOException {
@@ -38,6 +45,8 @@ public class Automate {
         for (int i = 0; i < nbEtat; i++) {
             etats[i] = new Etat();
         }
+
+        ArrayList<Transition> transitionArrayList = new ArrayList<>();
 
         String ligne = bf.readLine();
         String[] split = ligne.split(" ");
@@ -57,8 +66,7 @@ public class Automate {
                 int numE2 = Integer.parseInt(split[2]);
                 char lettre = split[1].charAt(0);
 
-                Transition transition = new Transition(etats[numE1], etats[numE2], lettre);
-                ajoutTransition(transition);
+                transitionArrayList.add(new Transition(etats[numE1], etats[numE2], lettre));
             }
 
             ligne = bf.readLine();
@@ -72,6 +80,7 @@ public class Automate {
         fr.close();
 
         this.etats.addAll(etats);
+        this.transitions.addAll(transitionArrayList);
     }
 
     public void ajoutTransition(Transition... transitions) {
@@ -81,7 +90,7 @@ public class Automate {
         }
     }
 
-    public void supprimerTransition(Transition... transitions){
+    public void supprimerTransition(Transition... transitions) {
         this.transitions.removeAll(transitions);
         for (Transition t : transitions) {
             t.getEtatDepart().getListeTransitions().remove(t);
@@ -223,6 +232,12 @@ public class Automate {
     }
 
     public void supprimerEtat(Etat etat) {
+        ArrayList<Transition> transitionsASupprimer = new ArrayList<>();
+        for (Transition t : transitions) {
+            if (t.getEtatDepart() == etat) transitionsASupprimer.add(t);
+            else if (t.getEtatArrivee() == etat) transitionsASupprimer.add(t);
+        }
+        transitions.removeAll(transitionsASupprimer);
         etats.remove(etat);
     }
 
