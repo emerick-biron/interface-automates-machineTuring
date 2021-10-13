@@ -16,6 +16,14 @@ public class Etat {
     private ArrayList<Transition> listeTransitions;
     private BooleanProperty estActif;
 
+    public BooleanProperty estActifProperty() {
+        return estActif;
+    }
+
+    public void setEstActif(boolean estActif) {
+        this.estActif.set(estActif);
+    }
+
     public Etat() {
         estInitial = false;
         estTerminal = false;
