@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Automate {
@@ -82,10 +83,17 @@ public class Automate {
         fr.close();
 
         this.etats.addAll(etats);
-        this.transitions.addAll(transitionArrayList);
+        ajoutTransition(transitionArrayList);
     }
 
     public void ajoutTransition(Transition... transitions) {
+        this.transitions.addAll(transitions);
+        for (Transition t : transitions) {
+            t.getEtatDepart().getListeTransitions().add(t);
+        }
+    }
+
+    public void ajoutTransition(ArrayList<Transition> transitions) {
         this.transitions.addAll(transitions);
         for (Transition t : transitions) {
             t.getEtatDepart().getListeTransitions().add(t);
@@ -243,35 +251,36 @@ public class Automate {
         etats.remove(etat);
     }
 
-    public void lancer(String mot){
+    public void lancer(String mot) {
         etatsActifs.clear();
         etatsActifs.addAll(getEtatsInitiaux());
-        for (int i=0; i< mot.length(); i++) {
+        for (int i = 0; i < mot.length(); i++) {
             char lettre = mot.charAt(i);
             step(lettre);
         }
     }
 
     public void step(char lettre) {
-        etatsActifs.clear();
-        List<Etat> nouveauxCourants = new ArrayList<>();
-        for(Etat e : etats) {
-            if (e.estActif()) etatsActifs.add(e);
-        }
-        for(Etat e : etatsActifs) {
-            nouveauxCourants.addAll(e.cibleND(lettre));
-        }
-        for (Etat nouveau : nouveauxCourants) {
-            nouveau.active();
-        }
+        List<Etat> nouveauxActifs = new ArrayList<>();
         for (Etat e : etatsActifs) {
-            if (!nouveauxCourants.contains(e)){
+            nouveauxActifs.addAll(e.cibleND(lettre));
+        }
+        for (Etat nouveau : nouveauxActifs) {
+            nouveau.active();
+            if (!etatsActifs.contains(nouveau)) etatsActifs.add(nouveau);
+        }
+        Iterator<Etat> it = etatsActifs.iterator();
+        while (it.hasNext()) {
+            Etat e = it.next();
+            if (!nouveauxActifs.contains(e)) {
                 e.desactive();
+                it.remove();
             }
         }
+        etatsActifs.addAll(nouveauxActifs);
     }
 
-    public List<Etat> getEtatsActifs(){
+    public List<Etat> getEtatsActifs() {
         return etatsActifs;
     }
 
