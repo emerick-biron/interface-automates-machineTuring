@@ -1,6 +1,8 @@
 package fr.umontpellier.iut.gui;
 
 import fr.umontpellier.iut.logique.Etat;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
@@ -14,10 +16,19 @@ public class VueEtat extends StackPane {
     private VueAutomate vueAutomate;
     private double mouseX;
     private double mouseY;
+    private ChangeListener<Boolean> changementActivationEtat = new ChangeListener<Boolean>() {
+        @Override
+        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean ancienneValeur,
+                            Boolean nouvelleValeur) {
+            if (observableValue.getValue()) cercle.setFill(Color.GREEN);
+            else cercle.setFill(Color.RED);
+        }
+    };
 
     public VueEtat(Etat etat, VueAutomate vueAutomate) {
         this.vueAutomate = vueAutomate;
         this.etat = etat;
+        this.etat.estActifProperty().addListener(changementActivationEtat);
         labelNumEtat = new Label();
         cercle = new Circle(50, 50, 50, Color.RED);
         getChildren().add(cercle);
@@ -47,7 +58,7 @@ public class VueEtat extends StackPane {
                 setCursor(Cursor.MOVE);
                 mouseX = mouseEvent.getSceneX();
                 mouseY = mouseEvent.getSceneY();
-            } else if (actionSouris == ActionSouris.SUPPRIMER_ETAT){
+            } else if (actionSouris == ActionSouris.SUPPRIMER_ETAT) {
                 //Permet de supprimer un etat
                 vueAutomate.getAutomate().supprimerEtat(etat);
                 vueAutomate.getVuePrincipale().setDefaultActionSouris();
