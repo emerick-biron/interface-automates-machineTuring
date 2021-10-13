@@ -33,6 +33,7 @@ public class VuePrincipale extends BorderPane {
         public void handle(ActionEvent actionEvent) {
             Task<Void> taskLancer = vueAutomate.getAutomate().getTaskLancer(textFieldMotAutomate.getText(),
                     Integer.parseInt(textFieldDelaiAutomate.getText()));
+            //TODO Faire des tests pour voir si les entrees sont ok
             try {
                 vueAutomate.getAutomate().lancer(taskLancer);
             } catch (InterruptedException e) {
@@ -41,7 +42,7 @@ public class VuePrincipale extends BorderPane {
         }
     };
 
-    public VuePrincipale() throws IOException, InterruptedException {
+    public VuePrincipale() {
         boutonSupprimerEtat = new Button("Supprimer Etat");
         boutonCreerEtat = new Button("Ajouter etat");
         boutonLancer = new Button("Lancer");

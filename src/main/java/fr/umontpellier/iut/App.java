@@ -19,7 +19,7 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException, InterruptedException {
+    public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("Hello World!");
         VuePrincipale vuePrincipale = new VuePrincipale();
 
