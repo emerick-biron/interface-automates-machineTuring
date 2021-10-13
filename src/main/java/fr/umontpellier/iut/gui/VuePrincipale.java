@@ -28,7 +28,9 @@ public class VuePrincipale extends BorderPane {
         boutonSupprimerEtat = new Button("Supprimer Etat");
         boutonSupprimerEtat.setOnAction(actionEvent -> actionSouris = ActionSouris.SUPPRIMER_ETAT);
         boutonCreerEtat = new Button("Ajouter etat");
-        vueAutomate = new VueAutomate(new Automate(), this);
+        Automate automate = new Automate();
+        vueAutomate = new VueAutomate(automate, this);
+        automate.chargerFichier("/home/ann2/birone/semestre3/projet_s3_desbos_moret_roussel_biron/automates_txt/input.txt");
         boutonCreerEtat.setOnAction(eventAjouterEtat);
 
         barreDeMenu = new HBox(boutonCreerEtat, boutonSupprimerEtat);
@@ -45,7 +47,7 @@ public class VuePrincipale extends BorderPane {
         this.actionSouris = actionSouris;
     }
 
-    public void setDefaultActionSouris(){
+    public void setDefaultActionSouris() {
         this.actionSouris = ActionSouris.DEPLACER_ETAT;
     }
 }
