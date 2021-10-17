@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 public class VueAutomate extends Pane {
     private Automate automate;
     private VuePrincipale vuePrincipale;
+    private VueEtat vueEtatSelectionne = null;
     private ListChangeListener<Etat> miseAJourEtats = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
@@ -54,7 +55,21 @@ public class VueAutomate extends Pane {
         this.automate = automate;
         this.automate.etatsProperty().addListener(miseAJourEtats);
         this.automate.transitionsProperty().addListener(miseAJourTransition);
-        setOnMousePressed(mouseEvent -> vuePrincipale.setDefaultActionSouris());
+
+        setOnMousePressed(mouseEvent -> {
+            if (mouseEvent.getTarget() == this) {
+                vuePrincipale.setDefaultActionSouris();
+                vueEtatSelectionne = null;
+            }
+        });
+    }
+
+    public VueEtat getVueEtatSelectionne() {
+        return vueEtatSelectionne;
+    }
+
+    public void setVueEtatSelectionne(VueEtat vueEtatSelectionne) {
+        this.vueEtatSelectionne = vueEtatSelectionne;
     }
 
     public VuePrincipale getVuePrincipale() {

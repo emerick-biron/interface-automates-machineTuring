@@ -17,11 +17,11 @@ public class VuePrincipale extends BorderPane {
     private ActionSouris actionSouris = ActionSouris.DEPLACER_ETAT;
     private Button boutonCreerEtat;
     private Button boutonSupprimerEtat;
+    private Button boutonAjouterTransition;
     private VueAutomate vueAutomate;
     private HBox barreDeMenu;
     private Button boutonLancer;
     private TextField textFieldMotAutomate = new TextField();
-    private TextField textFieldDelaiAutomate = new TextField();
     private EventHandler<ActionEvent> eventAjouterEtat = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
@@ -31,8 +31,7 @@ public class VuePrincipale extends BorderPane {
     private EventHandler<ActionEvent> eventLancerAutomate = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
-            Task<Void> taskLancer = vueAutomate.getAutomate().getTaskLancer(textFieldMotAutomate.getText(),
-                    Integer.parseInt(textFieldDelaiAutomate.getText()));
+            Task<Void> taskLancer = vueAutomate.getAutomate().getTaskLancer(textFieldMotAutomate.getText(), 1000);
             //TODO Faire des tests pour voir si les entrees sont ok
             try {
                 vueAutomate.getAutomate().lancer(taskLancer);
@@ -46,6 +45,7 @@ public class VuePrincipale extends BorderPane {
         boutonSupprimerEtat = new Button("Supprimer Etat");
         boutonCreerEtat = new Button("Ajouter etat");
         boutonLancer = new Button("Lancer");
+        boutonAjouterTransition = new Button("Ajouter transition");
 
 
         Automate automate = new Automate();
@@ -54,9 +54,11 @@ public class VuePrincipale extends BorderPane {
         boutonCreerEtat.setOnAction(eventAjouterEtat);
         boutonSupprimerEtat.setOnAction(actionEvent -> actionSouris = ActionSouris.SUPPRIMER_ETAT);
         boutonLancer.setOnAction(eventLancerAutomate);
+        boutonAjouterTransition.setOnAction(actionEvent -> actionSouris = ActionSouris.AJOUTER_TRANSITION);
 
-        barreDeMenu = new HBox(boutonCreerEtat, boutonSupprimerEtat, boutonLancer, textFieldMotAutomate,
-                textFieldDelaiAutomate);
+
+        barreDeMenu = new HBox(boutonCreerEtat, boutonSupprimerEtat, boutonAjouterTransition, boutonLancer,
+                textFieldMotAutomate);
         setTop(barreDeMenu);
         setCenter(vueAutomate);
     }

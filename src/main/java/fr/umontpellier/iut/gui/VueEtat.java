@@ -1,6 +1,7 @@
 package fr.umontpellier.iut.gui;
 
 import fr.umontpellier.iut.logique.Etat;
+import fr.umontpellier.iut.logique.Transition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
@@ -62,9 +63,20 @@ public class VueEtat extends StackPane {
                 //Permet de supprimer un etat
                 vueAutomate.getAutomate().supprimerEtat(etat);
                 vueAutomate.getVuePrincipale().setDefaultActionSouris();
+            } else if (actionSouris == ActionSouris.AJOUTER_TRANSITION) {
+                VueEtat vueEtatSelectionne = vueAutomate.getVueEtatSelectionne();
+                if (vueEtatSelectionne == null) {
+                    vueAutomate.setVueEtatSelectionne(this);
+                } else {
+                    vueAutomate.getAutomate().ajoutTransition(new Transition(vueEtatSelectionne.getEtat(), etat, 'a'));
+                    vueAutomate.setVueEtatSelectionne(null);
+                    vueAutomate.getVuePrincipale().setDefaultActionSouris();
+                }
             }
         });
+
         setOnMouseReleased(mouseEvent -> setCursor(Cursor.HAND));
+
         setOnMouseDragged(mouseEvent -> {
             ActionSouris actionSouris = vueAutomate.getVuePrincipale().getActionsSouris();
             if (actionSouris == ActionSouris.DEPLACER_ETAT) {
@@ -86,6 +98,7 @@ public class VueEtat extends StackPane {
                 }
             }
         });
+
         setOnMouseEntered(mouseEvent -> setCursor(Cursor.HAND));
     }
 
