@@ -7,10 +7,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 import java.io.IOException;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 public class VuePrincipale extends BorderPane {
 
@@ -22,6 +25,17 @@ public class VuePrincipale extends BorderPane {
     private HBox barreDeMenu;
     private Button boutonLancer;
     private TextField textFieldMotAutomate = new TextField();
+    private UnaryOperator<TextFormatter.Change> textFilterAjoutTransition = change -> {
+        String input = change.getControlNewText();
+        if (!change.isContentChange()) {
+            return change;
+        }
+        if (!Pattern.matches("[a-z]?", input)) {
+            return null;
+        }
+        return change;
+    };
+    private TextField textFieldEtiquette = new TextField();
     private EventHandler<ActionEvent> eventAjouterEtat = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
@@ -40,7 +54,6 @@ public class VuePrincipale extends BorderPane {
             }
         }
     };
-
     public VuePrincipale() {
         boutonSupprimerEtat = new Button("Supprimer Etat");
         boutonCreerEtat = new Button("Ajouter etat");
@@ -56,11 +69,16 @@ public class VuePrincipale extends BorderPane {
         boutonLancer.setOnAction(eventLancerAutomate);
         boutonAjouterTransition.setOnAction(actionEvent -> actionSouris = ActionSouris.AJOUTER_TRANSITION);
 
+        textFieldEtiquette.setTextFormatter(new TextFormatter<Object>(textFilterAjoutTransition));
 
-        barreDeMenu = new HBox(boutonCreerEtat, boutonSupprimerEtat, boutonAjouterTransition, boutonLancer,
-                textFieldMotAutomate);
+        barreDeMenu = new HBox(boutonCreerEtat, boutonSupprimerEtat, boutonAjouterTransition, textFieldEtiquette,
+                boutonLancer, textFieldMotAutomate);
         setTop(barreDeMenu);
         setCenter(vueAutomate);
+    }
+
+    public TextField getTextFieldEtiquette() {
+        return textFieldEtiquette;
     }
 
     public ActionSouris getActionsSouris() {

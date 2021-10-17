@@ -68,9 +68,12 @@ public class VueEtat extends StackPane {
                 if (vueEtatSelectionne == null) {
                     vueAutomate.setVueEtatSelectionne(this);
                 } else {
-                    vueAutomate.getAutomate().ajoutTransition(new Transition(vueEtatSelectionne.getEtat(), etat, 'a'));
-                    vueAutomate.setVueEtatSelectionne(null);
-                    vueAutomate.getVuePrincipale().setDefaultActionSouris();
+                    String etiquette = vueAutomate.getVuePrincipale().getTextFieldEtiquette().getText();
+                    if (etiquette.length() >= 1) {
+                        vueAutomate.getAutomate().ajoutTransition(new Transition(vueEtatSelectionne.getEtat(), etat, etiquette.charAt(0)));
+                        vueAutomate.setVueEtatSelectionne(null);
+                        vueAutomate.getVuePrincipale().setDefaultActionSouris();
+                    }
                 }
             }
         });
