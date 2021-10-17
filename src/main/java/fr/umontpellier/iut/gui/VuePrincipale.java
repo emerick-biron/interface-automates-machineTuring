@@ -6,6 +6,7 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
@@ -24,6 +25,8 @@ public class VuePrincipale extends BorderPane {
     private VueAutomate vueAutomate;
     private HBox barreDeMenu;
     private Button boutonLancer;
+    private CheckBox checkBoxEstInitial;
+    private CheckBox checkBoxEstTerminal;
     private TextField textFieldMotAutomate = new TextField();
     private UnaryOperator<TextFormatter.Change> textFilterAjoutTransition = change -> {
         String input = change.getControlNewText();
@@ -39,7 +42,8 @@ public class VuePrincipale extends BorderPane {
     private EventHandler<ActionEvent> eventAjouterEtat = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
-            vueAutomate.getAutomate().ajouterEtat(new Etat());
+            vueAutomate.getAutomate()
+                    .ajouterEtat(new Etat(checkBoxEstInitial.isSelected(), checkBoxEstTerminal.isSelected()));
         }
     };
     private EventHandler<ActionEvent> eventLancerAutomate = new EventHandler<>() {
@@ -54,11 +58,14 @@ public class VuePrincipale extends BorderPane {
             }
         }
     };
+
     public VuePrincipale() {
         boutonSupprimerEtat = new Button("Supprimer Etat");
         boutonCreerEtat = new Button("Ajouter etat");
         boutonLancer = new Button("Lancer");
         boutonAjouterTransition = new Button("Ajouter transition");
+        checkBoxEstInitial = new CheckBox("Initial");
+        checkBoxEstTerminal = new CheckBox("Terminal");
 
 
         Automate automate = new Automate();
@@ -70,9 +77,10 @@ public class VuePrincipale extends BorderPane {
         boutonAjouterTransition.setOnAction(actionEvent -> actionSouris = ActionSouris.AJOUTER_TRANSITION);
 
         textFieldEtiquette.setTextFormatter(new TextFormatter<Object>(textFilterAjoutTransition));
+        textFieldEtiquette.setPrefWidth(30);
 
-        barreDeMenu = new HBox(boutonCreerEtat, boutonSupprimerEtat, boutonAjouterTransition, textFieldEtiquette,
-                boutonLancer, textFieldMotAutomate);
+        barreDeMenu = new HBox(boutonCreerEtat, checkBoxEstInitial, checkBoxEstTerminal, boutonSupprimerEtat,
+                boutonAjouterTransition, textFieldEtiquette, boutonLancer, textFieldMotAutomate);
         setTop(barreDeMenu);
         setCenter(vueAutomate);
     }

@@ -23,10 +23,13 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("Automates");
         VuePrincipale vuePrincipale = new VuePrincipale();
 
         primaryStage.setScene(new Scene(vuePrincipale, 300, 250));
+        primaryStage.setWidth(800);
+        primaryStage.setHeight(600);
+
         primaryStage.show();
         vuePrincipale.getVueAutomate().getAutomate().chargerFichier("src/main/resources/input.txt");
 

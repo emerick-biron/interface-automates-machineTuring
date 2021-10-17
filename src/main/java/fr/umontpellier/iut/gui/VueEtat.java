@@ -78,6 +78,7 @@ public class VueEtat extends StackPane {
                         vueAutomate.getAutomate().ajoutTransition(
                                 new Transition(vueEtatSelectionne.getEtat(), etat, etiquette.charAt(0)));
                         vueAutomate.setVueEtatSelectionne(null);
+                        vueAutomate.getVuePrincipale().getTextFieldEtiquette().setText("");
                         vueAutomate.getVuePrincipale().setDefaultActionSouris();
                     }
                 }
@@ -101,7 +102,7 @@ public class VueEtat extends StackPane {
                     mouseX = mouseEvent.getSceneX();
                 }
                 //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-                if (newYPos >= 0 && newYPos + getHeight() <= vueAutomate.getBoundsInLocal().getMaxY()) {
+                if (newYPos >= 0 && newYPos + getHeight() <= vueAutomate.getBoundsInLocal().getMaxY() - 25) {
                     setLayoutY(newYPos);
                     mouseY = mouseEvent.getSceneY();
                 }
