@@ -8,3 +8,4 @@ terminal 6
 1 b 2
 2 a 4
 4 b 6
+6 b 6

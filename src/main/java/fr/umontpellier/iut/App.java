@@ -28,8 +28,7 @@ public class App extends Application {
 
         primaryStage.setScene(new Scene(vuePrincipale, 300, 250));
         primaryStage.show();
-
-        vuePrincipale.getVueAutomate().getAutomate().chargerFichier("automates_txt/input.txt");
+        vuePrincipale.getVueAutomate().getAutomate().chargerFichier("src/main/resources/input.txt");
 
     }
 }
