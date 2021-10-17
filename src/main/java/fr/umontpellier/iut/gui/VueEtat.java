@@ -6,6 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -17,6 +18,8 @@ public class VueEtat extends StackPane {
     private VueAutomate vueAutomate;
     private double mouseX;
     private double mouseY;
+    private ImageView imageViewInitial;
+    private ImageView imageViewTerminal;
     private ChangeListener<Boolean> changementActivationEtat = new ChangeListener<Boolean>() {
         @Override
         public void changed(ObservableValue<? extends Boolean> observableValue, Boolean ancienneValeur,
@@ -31,6 +34,8 @@ public class VueEtat extends StackPane {
         this.etat = etat;
         this.etat.estActifProperty().addListener(changementActivationEtat);
         labelNumEtat = new Label();
+        imageViewInitial = new ImageView("imgEtatInitial.png");
+        imageViewTerminal = new ImageView("imgEtatTerminal.png");
         cercle = new Circle(50, 50, 50, Color.RED);
         getChildren().add(cercle);
         init();
@@ -70,7 +75,8 @@ public class VueEtat extends StackPane {
                 } else {
                     String etiquette = vueAutomate.getVuePrincipale().getTextFieldEtiquette().getText();
                     if (etiquette.length() >= 1) {
-                        vueAutomate.getAutomate().ajoutTransition(new Transition(vueEtatSelectionne.getEtat(), etat, etiquette.charAt(0)));
+                        vueAutomate.getAutomate().ajoutTransition(
+                                new Transition(vueEtatSelectionne.getEtat(), etat, etiquette.charAt(0)));
                         vueAutomate.setVueEtatSelectionne(null);
                         vueAutomate.getVuePrincipale().setDefaultActionSouris();
                     }
@@ -113,6 +119,24 @@ public class VueEtat extends StackPane {
     public void init() {
         initMouseEvents();
         initLabelNumEtat();
+        initImages();
+    }
+
+    private void initImages() {
+        if (etat.estInitial()) {
+            imageViewInitial.setFitWidth(15);
+            imageViewInitial.setPreserveRatio(true);
+            imageViewInitial.setTranslateX(-40);
+            imageViewInitial.setTranslateY(-40);
+            getChildren().add(imageViewInitial);
+        }
+        if (etat.estTerminal()){
+            imageViewTerminal.setFitWidth(15);
+            imageViewTerminal.setPreserveRatio(true);
+            imageViewTerminal.setTranslateX(40);
+            imageViewTerminal.setTranslateY(-40);
+            getChildren().add(imageViewTerminal);
+        }
     }
 
     public Circle getCercle() {
