@@ -4,6 +4,8 @@ import fr.umontpellier.iut.logique.Transition;
 import javafx.beans.binding.DoubleBinding;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
@@ -14,6 +16,7 @@ public class VueTransition extends Group {
     private Label labelEtiquette;
     private Line ligneHautFleche;
     private Line ligneBasFleche;
+    private ImageView imgAutoTransition;
 
     public VueTransition(Transition transition, VueAutomate vueAutomate) {
         this.transition = transition;
@@ -22,10 +25,8 @@ public class VueTransition extends Group {
         ligneHautFleche = new Line();
         ligneBasFleche = new Line();
         labelEtiquette = new Label(String.valueOf(transition.getEtiquette()));
+        imgAutoTransition = new ImageView("imgAutoTransition.png");
 
-        getChildren().add(ligneHautFleche);
-        getChildren().add(ligneBasFleche);
-        getChildren().add(ligne);
         getChildren().add(labelEtiquette);
 
         init();
@@ -35,8 +36,10 @@ public class VueTransition extends Group {
         return transition;
     }
 
-    public void init() {initStyleLignes();
-        initCoordonnesLignes();
+    public void init() {
+        initStyleLignes();
+        if (transition.getEtatDepart() != transition.getEtatArrivee()) initCoordonnesLignes();
+        else initAutoTransition();
         initLabel();
         this.toBack();
     }
@@ -63,9 +66,27 @@ public class VueTransition extends Group {
         ligneBasFleche.endYProperty().bind(yPosMidlleBinding);
         ligneBasFleche.startXProperty().bind(xPosMiddleBinding.subtract(20));
         ligneBasFleche.startYProperty().bind(yPosMidlleBinding.add(10));
+
+        getChildren().add(ligneHautFleche);
+        getChildren().add(ligneBasFleche);
+        getChildren().add(ligne);
     }
 
-    public void initStyleLignes(){
+    public void initAutoTransition() {
+        VueEtat vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
+
+        imgAutoTransition.setFitHeight(25);
+        imgAutoTransition.setPreserveRatio(true);
+        imgAutoTransition.layoutXProperty()
+                .bind(vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().radiusProperty())
+                        .subtract(30));
+        imgAutoTransition.layoutYProperty()
+                .bind(vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().radiusProperty().multiply(2)));
+
+        getChildren().add(imgAutoTransition);
+    }
+
+    public void initStyleLignes() {
         ligne.setStrokeWidth(3);
         ligne.setStroke(Color.GRAY);
         ligneHautFleche.setStrokeWidth(3);
@@ -75,11 +96,20 @@ public class VueTransition extends Group {
     }
 
     public void initLabel() {
-        DoubleBinding xPosMiddleBinding = ligne.endXProperty().add(ligne.startXProperty()).divide(2);
-        DoubleBinding yPosMidlleBinding = ligne.endYProperty().add(ligne.startYProperty()).divide(2);
+        if (transition.getEtatDepart() != transition.getEtatArrivee()) {
+            DoubleBinding xPosMiddleBinding = ligne.endXProperty().add(ligne.startXProperty()).divide(2);
+            DoubleBinding yPosMidlleBinding = ligne.endYProperty().add(ligne.startYProperty()).divide(2);
 
-        labelEtiquette.layoutXProperty().bind(xPosMiddleBinding);
-        labelEtiquette.layoutYProperty().bind(yPosMidlleBinding);
+            labelEtiquette.layoutXProperty().bind(xPosMiddleBinding);
+            labelEtiquette.layoutYProperty().bind(yPosMidlleBinding);
+        } else {
+            VueEtat vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
+
+            labelEtiquette.layoutXProperty()
+                    .bind(vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().radiusProperty()));
+            labelEtiquette.layoutYProperty()
+                    .bind(vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().radiusProperty().multiply(2)));
+        }
 
         labelEtiquette.setStyle("-fx-font-weight: bold; -fx-font-size: 17;");
     }
