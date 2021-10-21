@@ -238,6 +238,11 @@ public class Automate {
         return res;
     }
 
+    //edit
+    public List<Etat> getEtats() {
+        return etats;
+    }
+
     public void ajouterEtat(Etat etat) {
         etats.add(etat);
     }

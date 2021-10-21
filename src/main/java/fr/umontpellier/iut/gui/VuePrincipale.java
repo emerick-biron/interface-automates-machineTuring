@@ -13,6 +13,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
@@ -59,6 +61,22 @@ public class VuePrincipale extends BorderPane {
         }
     };
 
+    //edit
+    private EventHandler<ActionEvent> eventClear = new EventHandler<>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            Automate automate = getVueAutomate().getAutomate();
+            List<Etat> etats = automate.getEtats();
+            if (!etats.isEmpty()) {
+                int l = etats.size();
+                for(int i=0;i<l;i++) {
+                    automate.supprimerEtat(etats.get(0));
+                }
+            }
+
+        }
+    };
+
     public VuePrincipale() {
         boutonSupprimerEtat = new Button("Supprimer Etat");
         boutonCreerEtat = new Button("Ajouter etat");
@@ -67,6 +85,9 @@ public class VuePrincipale extends BorderPane {
         checkBoxEstInitial = new CheckBox("Initial");
         checkBoxEstTerminal = new CheckBox("Terminal");
 
+        //edit
+        Button boutonClear = new Button("Clear");
+        boutonClear.setOnAction(eventClear);
 
         Automate automate = new Automate();
         vueAutomate = new VueAutomate(automate, this);
@@ -80,7 +101,7 @@ public class VuePrincipale extends BorderPane {
         textFieldEtiquette.setPrefWidth(30);
 
         barreDeMenu = new HBox(boutonCreerEtat, checkBoxEstInitial, checkBoxEstTerminal, boutonSupprimerEtat,
-                boutonAjouterTransition, textFieldEtiquette, boutonLancer, textFieldMotAutomate);
+                boutonAjouterTransition, textFieldEtiquette, boutonLancer, textFieldMotAutomate, boutonClear);
         setTop(barreDeMenu);
         setCenter(vueAutomate);
     }
