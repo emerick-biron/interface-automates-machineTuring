@@ -24,6 +24,9 @@ public class VuePrincipale extends BorderPane {
     private Button boutonCreerEtat;
     private Button boutonSupprimerEtat;
     private Button boutonAjouterTransition;
+    private Button boutonSauvegarder;
+    private Button boutonCharger;
+    private Button boutonClear;
     private VueAutomate vueAutomate;
     private HBox barreDeMenu;
     private Button boutonLancer;
@@ -66,24 +69,12 @@ public class VuePrincipale extends BorderPane {
     };
 
     public VuePrincipale() {
-        boutonSupprimerEtat = new Button("Supprimer Etat");
-        boutonCreerEtat = new Button("Ajouter etat");
-        boutonLancer = new Button("Lancer");
-        boutonAjouterTransition = new Button("Ajouter transition");
-        checkBoxEstInitial = new CheckBox("Initial");
-        checkBoxEstTerminal = new CheckBox("Terminal");
-
-        //edit
-        Button boutonClear = new Button("Clear");
-        boutonClear.setOnAction(eventClear);
+        initComposants();
+        initSetOnAction();
 
         Automate automate = new Automate();
         vueAutomate = new VueAutomate(automate, this);
 
-        boutonCreerEtat.setOnAction(eventAjouterEtat);
-        boutonSupprimerEtat.setOnAction(actionEvent -> actionSouris = ActionSouris.SUPPRIMER_ETAT);
-        boutonLancer.setOnAction(eventLancerAutomate);
-        boutonAjouterTransition.setOnAction(actionEvent -> actionSouris = ActionSouris.AJOUTER_TRANSITION);
 
         textFieldEtiquette.setTextFormatter(new TextFormatter<Object>(textFilterAjoutTransition));
         textFieldEtiquette.setPrefWidth(30);
@@ -92,6 +83,26 @@ public class VuePrincipale extends BorderPane {
                 boutonAjouterTransition, textFieldEtiquette, boutonLancer, textFieldMotAutomate, boutonClear);
         setTop(barreDeMenu);
         setCenter(vueAutomate);
+    }
+
+    public void initComposants() {
+        boutonSupprimerEtat = new Button("Supprimer Etat");
+        boutonCreerEtat = new Button("Ajouter etat");
+        boutonLancer = new Button("Lancer");
+        boutonClear = new Button("Clear");
+        boutonSauvegarder = new Button("Sauvegarder");
+        boutonCharger = new Button("Charger");
+        boutonAjouterTransition = new Button("Ajouter transition");
+        checkBoxEstInitial = new CheckBox("Initial");
+        checkBoxEstTerminal = new CheckBox("Terminal");
+    }
+
+    public void initSetOnAction() {
+        boutonCreerEtat.setOnAction(eventAjouterEtat);
+        boutonSupprimerEtat.setOnAction(actionEvent -> actionSouris = ActionSouris.SUPPRIMER_ETAT);
+        boutonLancer.setOnAction(eventLancerAutomate);
+        boutonAjouterTransition.setOnAction(actionEvent -> actionSouris = ActionSouris.AJOUTER_TRANSITION);
+        boutonClear.setOnAction(eventClear);
     }
 
     public TextField getTextFieldEtiquette() {
