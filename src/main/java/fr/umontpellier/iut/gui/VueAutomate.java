@@ -160,7 +160,7 @@ public class VueAutomate extends Pane {
                 Etat etat = automate.getEtats().get(numEtat);
                 VueEtat vueEtat = getVueEtat(etat);
 
-//Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
+                //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
                 double taille = vueEtat.getCercle().getRadius() * 2 + 20;
                 if (xPos >= 0 && xPos + taille <= getBoundsInLocal().getMaxX()) {
                     vueEtat.setLayoutX(xPos);
