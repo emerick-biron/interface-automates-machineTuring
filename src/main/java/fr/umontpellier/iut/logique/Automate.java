@@ -37,6 +37,12 @@ public class Automate {
         return transitions;
     }
 
+    /**
+     * Permet de creer un automate a partir d'un fichier
+     *
+     * @param nomFichier nom du fichier contenant l'automate
+     * @throws IOException
+     */
     public void chargerFichier(String nomFichier) throws IOException {
         this.etats.clear();
 
@@ -74,10 +80,12 @@ public class Automate {
             }
 
             ligne = bf.readLine();
-            if (ligne != null) {
+            if (ligne == null || ligne.contains("###")) {
+                m = 0;
+            } else{
                 split = ligne.split(" ");
                 m = split.length;
-            } else m = 0;
+            }
         }
 
         bf.close();
@@ -288,7 +296,7 @@ public class Automate {
         List<Etat> nouveauxActifs = new ArrayList<>();
         for (Etat e : etatsActifs) {
             for (Etat etatCible : e.cibleND(lettre)) {
-                if (!nouveauxActifs.contains(etatCible)){
+                if (!nouveauxActifs.contains(etatCible)) {
                     nouveauxActifs.add(etatCible);
                 }
             }
