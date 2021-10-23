@@ -61,20 +61,8 @@ public class VuePrincipale extends BorderPane {
         }
     };
 
-    //edit
-    private EventHandler<ActionEvent> eventClear = new EventHandler<>() {
-        @Override
-        public void handle(ActionEvent actionEvent) {
-            Automate automate = getVueAutomate().getAutomate();
-            List<Etat> etats = automate.getEtats();
-            if (!etats.isEmpty()) {
-                int l = etats.size();
-                for(int i=0;i<l;i++) {
-                    automate.supprimerEtat(etats.get(0));
-                }
-            }
-
-        }
+    private EventHandler<ActionEvent> eventClear = actionEvent -> {
+        vueAutomate.clear();
     };
 
     public VuePrincipale() {

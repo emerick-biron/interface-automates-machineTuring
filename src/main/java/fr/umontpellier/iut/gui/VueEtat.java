@@ -131,7 +131,7 @@ public class VueEtat extends StackPane {
             imageViewInitial.setTranslateY(-40);
             getChildren().add(imageViewInitial);
         }
-        if (etat.estTerminal()){
+        if (etat.estTerminal()) {
             imageViewTerminal.setFitWidth(15);
             imageViewTerminal.setPreserveRatio(true);
             imageViewTerminal.setTranslateX(40);
