@@ -62,7 +62,14 @@ public class VueAutomate extends Pane {
                 }
             }
             VueTransition vueTransition = getVueTransition(t);
-            vueTransition.setFlechesVisible(n <= 0);
+            if (n > 0){
+                vueTransition.setFlechesVisible(false);
+                vueTransition.toFront();
+            } else {
+                vueTransition.setFlechesVisible(true);
+                vueTransition.toBack();
+            }
+            vueTransition.positionnerLabelEtiquette(n);
         }
     };
 

@@ -64,8 +64,8 @@ public class VueTransition extends Group {
         ligne.endXProperty().bind(xB);
         ligne.endYProperty().bind(yB);
 
-        DoubleBinding xPosEnd = xA.add(xB.subtract(xA).multiply(6).divide(10));
-        DoubleBinding yPosEnd = yA.add(yB.subtract(yA).multiply(6).divide(10));
+        DoubleBinding xPosEnd = xA.add(xB.subtract(xA).multiply(6.5).divide(10));
+        DoubleBinding yPosEnd = yA.add(yB.subtract(yA).multiply(6.5).divide(10));
 
         double l1 = 20;
         double l2 = 10;
@@ -119,6 +119,22 @@ public class VueTransition extends Group {
     }
 
     public void initLabel() {
+        positionnerLabelEtiquette(0);
+
+        labelEtiquette.setStyle("-fx-font-weight: bold; -fx-font-size: 17;");
+    }
+
+    public Label getLabelEtiquette() {
+        return labelEtiquette;
+    }
+
+    public void setFlechesVisible(boolean b) {
+        ligne.setVisible(b);
+        ligneBasFleche.setVisible(b);
+        ligneHautFleche.setVisible(b);
+    }
+
+    public void positionnerLabelEtiquette(int index) {
         if (transition.getEtatDepart() != transition.getEtatArrivee()) {
             //coordonnees du centre du cercle de la vue etat de depart
             DoubleBinding xA = vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().getRadius());
@@ -128,29 +144,17 @@ public class VueTransition extends Group {
             DoubleBinding xB = vueEtatFin.layoutXProperty().add(vueEtatFin.getCercle().getRadius());
             DoubleBinding yB = vueEtatFin.layoutYProperty().add(vueEtatFin.getCercle().getRadius());
 
-            DoubleBinding xPos = xA.add(xB.subtract(xA).multiply(6).divide(10)).subtract(5);
-            DoubleBinding yPos = yA.add(yB.subtract(yA).multiply(6).divide(10));
+            DoubleBinding xPos = xA.add(xB.subtract(xA).multiply(6.5).divide(10)).subtract(5).add(index * 10);
+            DoubleBinding yPos = yA.add(yB.subtract(yA).multiply(6.5).divide(10));
 
             labelEtiquette.layoutXProperty().bind(xPos);
             labelEtiquette.layoutYProperty().bind(yPos);
         } else {
             labelEtiquette.layoutXProperty()
-                    .bind(vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().radiusProperty()));
+                    .bind(vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().radiusProperty()).add(index * 10));
             labelEtiquette.layoutYProperty()
                     .bind(vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().radiusProperty().multiply(2)));
         }
-
-        labelEtiquette.setStyle("-fx-font-weight: bold; -fx-font-size: 17;");
-    }
-
-    private Label getLabelEtiquette() {
-        return labelEtiquette;
-    }
-
-    public void setFlechesVisible(boolean b) {
-        ligne.setVisible(b);
-        ligneBasFleche.setVisible(b);
-        ligneHautFleche.setVisible(b);
     }
 }
 
