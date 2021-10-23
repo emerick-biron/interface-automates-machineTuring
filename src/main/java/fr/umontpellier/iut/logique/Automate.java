@@ -12,7 +12,6 @@ import java.util.List;
 public class Automate {
     private ObservableList<Etat> etats;
     private ObservableList<Transition> transitions;
-
     private List<Etat> etatsActifs;
 
     public Automate(List<Etat> etats) {
@@ -31,6 +30,10 @@ public class Automate {
         etats = FXCollections.observableArrayList();
         transitions = FXCollections.observableArrayList();
         etatsActifs = new ArrayList<>();
+    }
+
+    public ObservableList<Transition> getTransitions() {
+        return transitions;
     }
 
     public ObservableList<Transition> transitionsProperty() {
