@@ -52,7 +52,17 @@ public class VueAutomate extends Pane {
                     getChildren().remove(getVueTransition(t));
                 }
             }
-
+        }
+        for (Transition t : automate.getTransitions()) {
+            int n = 0;
+            for (int i = 0; i < automate.getTransitions().indexOf(t); i++) {
+                Transition t2 = automate.getTransitions().get(i);
+                if (t.getEtatDepart() == t2.getEtatDepart() && t.getEtatArrivee() == t2.getEtatArrivee()) {
+                    n++;
+                }
+            }
+            VueTransition vueTransition = getVueTransition(t);
+            vueTransition.setFlechesVisible(n <= 0);
         }
     };
 
@@ -143,7 +153,7 @@ public class VueAutomate extends Pane {
                 Etat etat = automate.getEtats().get(numEtat);
                 VueEtat vueEtat = getVueEtat(etat);
 
-                //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
+//Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
                 double taille = vueEtat.getCercle().getRadius() * 2 + 20;
                 if (xPos >= 0 && xPos + taille <= getBoundsInLocal().getMaxX()) {
                     vueEtat.setLayoutX(xPos);

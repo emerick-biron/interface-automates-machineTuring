@@ -146,4 +146,40 @@ public class VueTransition extends Group {
     private Label getLabelEtiquette() {
         return labelEtiquette;
     }
+
+    public void setFlechesVisible(boolean b) {
+        ligne.setVisible(b);
+        ligneBasFleche.setVisible(b);
+        ligneHautFleche.setVisible(b);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
