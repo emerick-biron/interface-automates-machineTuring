@@ -26,8 +26,8 @@ public class App extends Application {
         primaryStage.setTitle("Automates");
         VuePrincipale vuePrincipale = new VuePrincipale();
 
-        primaryStage.setScene(new Scene(vuePrincipale, 800, 600));
-        primaryStage.setWidth(800);
+        primaryStage.setScene(new Scene(vuePrincipale));
+        primaryStage.setWidth(900);
         primaryStage.setHeight(600);
 
         primaryStage.show();
