@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
@@ -80,6 +83,11 @@ public class VuePrincipale extends BorderPane {
         public void handle(ActionEvent actionEvent) {
             fileChooser = new FileChooser();
             fileChooser.setTitle("Sauvegarder automate");
+
+            Path path = Paths.get("./automates_txt");
+            if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
+            else fileChooser.setInitialDirectory(new File("./"));
+
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
             File selectedFile = fileChooser.showOpenDialog(new Stage());
             if (selectedFile != null) {
@@ -91,11 +99,16 @@ public class VuePrincipale extends BorderPane {
             }
         }
     };
-    private EventHandler<ActionEvent> eventCharger = new EventHandler<ActionEvent>() {
+    private EventHandler<ActionEvent> eventCharger = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
             fileChooser = new FileChooser();
             fileChooser.setTitle("Charger automate");
+
+            Path path = Paths.get("./automates_txt");
+            if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
+            else fileChooser.setInitialDirectory(new File("./"));
+
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
             File selectedFile = fileChooser.showOpenDialog(new Stage());
             if (selectedFile != null) {
