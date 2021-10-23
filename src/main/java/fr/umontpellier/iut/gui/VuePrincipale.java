@@ -21,18 +21,23 @@ import java.util.regex.Pattern;
 public class VuePrincipale extends BorderPane {
 
     private ActionSouris actionSouris = ActionSouris.DEPLACER_ETAT;
+    private VueAutomate vueAutomate;
+    private HBox barreDeMenu;
+
     private Button boutonCreerEtat;
     private Button boutonSupprimerEtat;
     private Button boutonAjouterTransition;
     private Button boutonSauvegarder;
     private Button boutonCharger;
     private Button boutonClear;
-    private VueAutomate vueAutomate;
-    private HBox barreDeMenu;
     private Button boutonLancer;
+
     private CheckBox checkBoxEstInitial;
     private CheckBox checkBoxEstTerminal;
-    private TextField textFieldMotAutomate = new TextField();
+
+    private TextField textFieldMotAutomate;
+    private TextField textFieldEtiquette;
+
     private UnaryOperator<TextFormatter.Change> textFilterAjoutTransition = change -> {
         String input = change.getControlNewText();
         if (!change.isContentChange()) {
@@ -43,7 +48,6 @@ public class VuePrincipale extends BorderPane {
         }
         return change;
     };
-    private TextField textFieldEtiquette = new TextField();
     private EventHandler<ActionEvent> eventAjouterEtat = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
@@ -63,7 +67,6 @@ public class VuePrincipale extends BorderPane {
             }
         }
     };
-
     private EventHandler<ActionEvent> eventClear = actionEvent -> {
         vueAutomate.clear();
     };
@@ -95,6 +98,8 @@ public class VuePrincipale extends BorderPane {
         boutonAjouterTransition = new Button("Ajouter transition");
         checkBoxEstInitial = new CheckBox("Initial");
         checkBoxEstTerminal = new CheckBox("Terminal");
+        textFieldEtiquette = new TextField();
+        textFieldMotAutomate = new TextField();
     }
 
     public void initSetOnAction() {
