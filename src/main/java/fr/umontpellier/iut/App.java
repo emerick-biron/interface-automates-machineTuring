@@ -31,7 +31,5 @@ public class App extends Application {
         primaryStage.setHeight(600);
 
         primaryStage.show();
-        vuePrincipale.getVueAutomate().chargerFichier("src/main/resources/input2.txt");
-
     }
 }

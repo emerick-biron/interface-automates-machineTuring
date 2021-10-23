@@ -1,4 +1,6 @@
 8
+initial 0
+terminal 6
 0 a 1
 0 b 3
 1 b 3

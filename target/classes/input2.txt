@@ -1,9 +1,6 @@
 7
-
 initial 0
-
 terminal 6
-
 0 a 1
 0 b 3
 3 b 5

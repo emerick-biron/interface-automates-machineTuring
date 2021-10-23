@@ -11,7 +11,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,8 @@ public class VuePrincipale extends BorderPane {
 
     private TextField textFieldMotAutomate;
     private TextField textFieldEtiquette;
+
+    private FileChooser fileChooser;
 
     private UnaryOperator<TextFormatter.Change> textFilterAjoutTransition = change -> {
         String input = change.getControlNewText();
@@ -69,6 +74,38 @@ public class VuePrincipale extends BorderPane {
     };
     private EventHandler<ActionEvent> eventClear = actionEvent -> {
         vueAutomate.clear();
+    };
+    private EventHandler<ActionEvent> eventSauvegarder = new EventHandler<>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            fileChooser = new FileChooser();
+            fileChooser.setTitle("Sauvegarder automate");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
+            File selectedFile = fileChooser.showOpenDialog(new Stage());
+            if (selectedFile != null) {
+                try {
+                    vueAutomate.sauvegarder(selectedFile.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
+    private EventHandler<ActionEvent> eventCharger = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            fileChooser = new FileChooser();
+            fileChooser.setTitle("Charger automate");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
+            File selectedFile = fileChooser.showOpenDialog(new Stage());
+            if (selectedFile != null) {
+                try {
+                    vueAutomate.chargerFichier(selectedFile.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     };
 
     public VuePrincipale() {
@@ -110,6 +147,8 @@ public class VuePrincipale extends BorderPane {
         boutonLancer.setOnAction(eventLancerAutomate);
         boutonAjouterTransition.setOnAction(actionEvent -> actionSouris = ActionSouris.AJOUTER_TRANSITION);
         boutonClear.setOnAction(eventClear);
+        boutonCharger.setOnAction(eventCharger);
+        boutonSauvegarder.setOnAction(eventSauvegarder);
     }
 
     public TextField getTextFieldEtiquette() {
