@@ -36,7 +36,7 @@ public class VueEtat extends StackPane {
         labelNumEtat = new Label();
         imageViewInitial = new ImageView("imgEtatInitial.png");
         imageViewTerminal = new ImageView("imgEtatTerminal.png");
-        cercle = new Circle(50, 50, 50, Color.RED);
+        cercle = new Circle(50, 50, 46, Color.RED);
         getChildren().add(cercle);
         init();
     }

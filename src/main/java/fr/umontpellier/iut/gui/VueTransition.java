@@ -18,6 +18,8 @@ public class VueTransition extends Group {
     private Line ligneHautFleche;
     private Line ligneBasFleche;
     private ImageView imgAutoTransition;
+    private VueEtat vueEtatDep;
+    private VueEtat vueEtatFin;
 
     public VueTransition(Transition transition, VueAutomate vueAutomate) {
         this.transition = transition;
@@ -27,6 +29,8 @@ public class VueTransition extends Group {
         ligneBasFleche = new Line();
         labelEtiquette = new Label(String.valueOf(transition.getEtiquette()));
         imgAutoTransition = new ImageView("imgAutoTransition.png");
+        vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
+        vueEtatFin = vueAutomate.getVueEtat(transition.getEtatArrivee());
 
         init();
 
@@ -46,9 +50,6 @@ public class VueTransition extends Group {
     }
 
     public void initCoordonnesLignes() {
-        VueEtat vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
-        VueEtat vueEtatFin = vueAutomate.getVueEtat(transition.getEtatArrivee());
-
         //coordonnees du centre du cercle de la vue etat de depart
         DoubleBinding xA = vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().getRadius());
         DoubleBinding yA = vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().getRadius());
@@ -98,8 +99,6 @@ public class VueTransition extends Group {
     }
 
     public void initAutoTransition() {
-        VueEtat vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
-
         imgAutoTransition.setFitHeight(25);
         imgAutoTransition.setPreserveRatio(true);
         imgAutoTransition.layoutXProperty()
@@ -121,9 +120,6 @@ public class VueTransition extends Group {
 
     public void initLabel() {
         if (transition.getEtatDepart() != transition.getEtatArrivee()) {
-            VueEtat vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
-            VueEtat vueEtatFin = vueAutomate.getVueEtat(transition.getEtatArrivee());
-
             //coordonnees du centre du cercle de la vue etat de depart
             DoubleBinding xA = vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().getRadius());
             DoubleBinding yA = vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().getRadius());
@@ -138,8 +134,6 @@ public class VueTransition extends Group {
             labelEtiquette.layoutXProperty().bind(xPos);
             labelEtiquette.layoutYProperty().bind(yPos);
         } else {
-            VueEtat vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
-
             labelEtiquette.layoutXProperty()
                     .bind(vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().radiusProperty()));
             labelEtiquette.layoutYProperty()
