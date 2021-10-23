@@ -106,7 +106,7 @@ public class Automate {
         }
     }
 
-    public void supprimerTransition(Transition... transitions) {
+    public void supprimerTransition(List<Transition> transitions) {
         this.transitions.removeAll(transitions);
         for (Transition t : transitions) {
             t.getEtatDepart().getListeTransitions().remove(t);
@@ -257,7 +257,7 @@ public class Automate {
             if (t.getEtatDepart() == etat) transitionsASupprimer.add(t);
             else if (t.getEtatArrivee() == etat) transitionsASupprimer.add(t);
         }
-        transitions.removeAll(transitionsASupprimer);
+        supprimerTransition(transitionsASupprimer);
         etats.remove(etat);
     }
 
