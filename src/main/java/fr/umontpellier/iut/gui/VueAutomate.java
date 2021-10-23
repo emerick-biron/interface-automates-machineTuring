@@ -11,9 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Shape;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -136,30 +134,52 @@ public class VueAutomate extends Pane {
         while (ligne != null) {
             String[] split = ligne.split(" ");
 
-            if (split.length < 3) break;
+            if (split.length >= 3) {
 
-            int numEtat = Integer.parseInt(split[0]);
-            double xPos = Double.parseDouble(split[1]);
-            double yPos = Double.parseDouble(split[2]);
+                int numEtat = Integer.parseInt(split[0]);
+                double xPos = Double.parseDouble(split[1]);
+                double yPos = Double.parseDouble(split[2]);
 
-            Etat etat = automate.getEtats().get(numEtat);
-            VueEtat vueEtat = getVueEtat(etat);
+                Etat etat = automate.getEtats().get(numEtat);
+                VueEtat vueEtat = getVueEtat(etat);
 
-            //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-            double taille = vueEtat.getCercle().getRadius() * 2 + 20;
-            if (xPos >= 0 && xPos + taille <= getBoundsInLocal().getMaxX()) {
-                vueEtat.setLayoutX(xPos);
+                //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
+                double taille = vueEtat.getCercle().getRadius() * 2 + 20;
+                if (xPos >= 0 && xPos + taille <= getBoundsInLocal().getMaxX()) {
+                    vueEtat.setLayoutX(xPos);
+                }
+                if (yPos >= 0 && yPos + taille <= getBoundsInLocal().getMaxY() - 50) {
+                    vueEtat.setLayoutY(yPos);
+                }
+
             }
-            if (yPos >= 0 && yPos + taille <= getBoundsInLocal().getMaxY() - 50) {
-                vueEtat.setLayoutY(yPos);
-            }
-
             ligne = bf.readLine();
         }
 
 
         bf.close();
         fr.close();
+    }
+
+    public void sauvegarder(String nomFichier) throws IOException {
+        automate.sauvegarder(nomFichier);
+
+        Writer fileWriter = new FileWriter(nomFichier, true);
+        BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+        bufferedWriter.write("###");
+        bufferedWriter.newLine();
+
+        List<Etat> listEtats = automate.getEtats();
+
+        for (Etat e : listEtats) {
+            VueEtat vueEtat = getVueEtat(e);
+            bufferedWriter.write(listEtats.indexOf(e) + " " + vueEtat.getLayoutX() + " " + vueEtat.getLayoutY());
+            bufferedWriter.newLine();
+        }
+
+        bufferedWriter.close();
+        fileWriter.close();
     }
 }
 

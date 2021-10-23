@@ -59,33 +59,30 @@ public class Automate {
         ArrayList<Transition> transitionArrayList = new ArrayList<>();
 
         String ligne = bf.readLine();
-        String[] split = ligne.split(" ");
-        int m = split.length;
 
-        while (m > 1) {
-            if (split[0].equals("initial")) for (int i = 1; i < m; i++) {
-                int numEtatInit = Integer.parseInt(split[i]);
-                etats[numEtatInit].setEstInitial(true);
-            }
-            else if (split[0].equals("terminal")) for (int i = 1; i < m; i++) {
-                int numEtatTerm = Integer.parseInt(split[i]);
-                etats[numEtatTerm].setEstTerminal(true);
-            }
-            else {
-                int numE1 = Integer.parseInt(split[0]);
-                int numE2 = Integer.parseInt(split[2]);
-                char lettre = split[1].charAt(0);
+        while (!(ligne == null || ligne.contains("###"))) {
+            String[] split = ligne.split(" ");
+            int m = split.length;
 
-                transitionArrayList.add(new Transition(etats[numE1], etats[numE2], lettre));
-            }
+            if (m > 1) {
 
+                if (split[0].equals("initial")) for (int i = 1; i < m; i++) {
+                    int numEtatInit = Integer.parseInt(split[i]);
+                    etats[numEtatInit].setEstInitial(true);
+                }
+                else if (split[0].equals("terminal")) for (int i = 1; i < m; i++) {
+                    int numEtatTerm = Integer.parseInt(split[i]);
+                    etats[numEtatTerm].setEstTerminal(true);
+                }
+                else {
+                    int numE1 = Integer.parseInt(split[0]);
+                    int numE2 = Integer.parseInt(split[2]);
+                    char lettre = split[1].charAt(0);
+
+                    transitionArrayList.add(new Transition(etats[numE1], etats[numE2], lettre));
+                }
+            }
             ligne = bf.readLine();
-            if (ligne == null || ligne.contains("###")) {
-                m = 0;
-            } else{
-                split = ligne.split(" ");
-                m = split.length;
-            }
         }
 
         bf.close();
@@ -195,7 +192,7 @@ public class Automate {
      * @param nomFichier nom du fichier dans lequel sauvegarder l'automate
      * @throws IOException
      */
-    public void ecrit(String nomFichier) throws IOException {
+    public void sauvegarder(String nomFichier) throws IOException {
         Writer fileWriter = new FileWriter(nomFichier, false); //overwrites file
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
@@ -246,7 +243,6 @@ public class Automate {
         return res;
     }
 
-    //edit
     public List<Etat> getEtats() {
         return etats;
     }

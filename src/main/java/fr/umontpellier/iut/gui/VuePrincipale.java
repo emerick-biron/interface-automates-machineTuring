@@ -46,6 +46,11 @@ public class VuePrincipale extends BorderPane {
         public void handle(ActionEvent actionEvent) {
             vueAutomate.getAutomate()
                     .ajouterEtat(new Etat(checkBoxEstInitial.isSelected(), checkBoxEstTerminal.isSelected()));
+            try {
+                vueAutomate.sauvegarder("src/main/resources/ecriture.txt");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     };
     private EventHandler<ActionEvent> eventLancerAutomate = new EventHandler<>() {
