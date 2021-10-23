@@ -1,6 +1,7 @@
 package fr.umontpellier.iut.gui;
 
 import fr.umontpellier.iut.logique.Transition;
+import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -27,9 +28,9 @@ public class VueTransition extends Group {
         labelEtiquette = new Label(String.valueOf(transition.getEtiquette()));
         imgAutoTransition = new ImageView("imgAutoTransition.png");
 
-        getChildren().add(labelEtiquette);
-
         init();
+
+        getChildren().add(labelEtiquette);
     }
 
     public Transition getTransition() {
@@ -48,24 +49,48 @@ public class VueTransition extends Group {
         VueEtat vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
         VueEtat vueEtatFin = vueAutomate.getVueEtat(transition.getEtatArrivee());
 
-        ligne.startXProperty().bind(vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().getRadius()));
-        ligne.startYProperty().bind(vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().getRadius()));
-        ligne.endXProperty().bind(vueEtatFin.layoutXProperty().add(vueEtatFin.getCercle().getRadius()));
-        ligne.endYProperty().bind(vueEtatFin.layoutYProperty().add(vueEtatFin.getCercle().getRadius()));
+        //coordonnees du centre du cercle de la vue etat de depart
+        DoubleBinding xA = vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().getRadius());
+        DoubleBinding yA = vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().getRadius());
+
+        //coordonnees du centre du cercle de la vue etat d'arrivee
+        DoubleBinding xB = vueEtatFin.layoutXProperty().add(vueEtatFin.getCercle().getRadius());
+        DoubleBinding yB = vueEtatFin.layoutYProperty().add(vueEtatFin.getCercle().getRadius());
 
 
-        DoubleBinding xPosMiddleBinding = ligne.endXProperty().add(ligne.startXProperty()).divide(2);
-        DoubleBinding yPosMidlleBinding = ligne.endYProperty().add(ligne.startYProperty()).divide(2);
+        ligne.startXProperty().bind(xA);
+        ligne.startYProperty().bind(yA);
+        ligne.endXProperty().bind(xB);
+        ligne.endYProperty().bind(yB);
 
-        ligneHautFleche.endXProperty().bind(xPosMiddleBinding);
-        ligneHautFleche.endYProperty().bind(yPosMidlleBinding);
-        ligneHautFleche.startXProperty().bind(xPosMiddleBinding.subtract(20));
-        ligneHautFleche.startYProperty().bind(yPosMidlleBinding.subtract(10));
+        DoubleBinding xPosEnd = xA.add(xB.subtract(xA).multiply(6).divide(10));
+        DoubleBinding yPosEnd = yA.add(yB.subtract(yA).multiply(6).divide(10));
 
-        ligneBasFleche.endXProperty().bind(xPosMiddleBinding);
-        ligneBasFleche.endYProperty().bind(yPosMidlleBinding);
-        ligneBasFleche.startXProperty().bind(xPosMiddleBinding.subtract(20));
-        ligneBasFleche.startYProperty().bind(yPosMidlleBinding.add(10));
+        double l1 = 20;
+        double l2 = 10;
+
+        DoubleBinding norme = Bindings.createDoubleBinding(
+                () -> Math.sqrt(Math.pow(xB.get() - xA.get(), 2) + Math.pow(yB.get() - yA.get(), 2)), xA, xB, yA, yB);
+
+        DoubleBinding xPosStartTop = xPosEnd.subtract(xB.subtract(xA).divide(norme).multiply(l1))
+                .add(yA.subtract(yB).divide(norme).multiply(l2));
+        DoubleBinding yPosStartTop = yPosEnd.subtract(yB.subtract(yA).divide(norme).multiply(l1))
+                .add(xB.subtract(xA).divide(norme).multiply(l2));
+
+        DoubleBinding xPosStartBot = xPosEnd.subtract(xB.subtract(xA).divide(norme).multiply(l1))
+                .subtract(yA.subtract(yB).divide(norme).multiply(l2));
+        DoubleBinding yPosStartBot = yPosEnd.subtract(yB.subtract(yA).divide(norme).multiply(l1))
+                .subtract(xB.subtract(xA).divide(norme).multiply(l2));
+
+        ligneHautFleche.endXProperty().bind(xPosEnd);
+        ligneHautFleche.endYProperty().bind(yPosEnd);
+        ligneHautFleche.startXProperty().bind(xPosStartTop);
+        ligneHautFleche.startYProperty().bind(yPosStartTop);
+
+        ligneBasFleche.endXProperty().bind(xPosEnd);
+        ligneBasFleche.endYProperty().bind(yPosEnd);
+        ligneBasFleche.startXProperty().bind(xPosStartBot);
+        ligneBasFleche.startYProperty().bind(yPosStartBot);
 
         getChildren().add(ligneHautFleche);
         getChildren().add(ligneBasFleche);
@@ -78,8 +103,7 @@ public class VueTransition extends Group {
         imgAutoTransition.setFitHeight(25);
         imgAutoTransition.setPreserveRatio(true);
         imgAutoTransition.layoutXProperty()
-                .bind(vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().radiusProperty())
-                        .subtract(30));
+                .bind(vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().radiusProperty()).subtract(30));
         imgAutoTransition.layoutYProperty()
                 .bind(vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().radiusProperty().multiply(2)));
 
@@ -90,18 +114,29 @@ public class VueTransition extends Group {
         ligne.setStrokeWidth(3);
         ligne.setStroke(Color.GRAY);
         ligneHautFleche.setStrokeWidth(3);
-        ligneHautFleche.setStroke(Color.RED);
+        ligneHautFleche.setStroke(Color.GRAY);
         ligneBasFleche.setStrokeWidth(3);
-        ligneBasFleche.setStroke(Color.BLUE);
+        ligneBasFleche.setStroke(Color.GRAY);
     }
 
     public void initLabel() {
         if (transition.getEtatDepart() != transition.getEtatArrivee()) {
-            DoubleBinding xPosMiddleBinding = ligne.endXProperty().add(ligne.startXProperty()).divide(2);
-            DoubleBinding yPosMidlleBinding = ligne.endYProperty().add(ligne.startYProperty()).divide(2);
+            VueEtat vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
+            VueEtat vueEtatFin = vueAutomate.getVueEtat(transition.getEtatArrivee());
 
-            labelEtiquette.layoutXProperty().bind(xPosMiddleBinding);
-            labelEtiquette.layoutYProperty().bind(yPosMidlleBinding);
+            //coordonnees du centre du cercle de la vue etat de depart
+            DoubleBinding xA = vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().getRadius());
+            DoubleBinding yA = vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().getRadius());
+
+            //coordonnees du centre du cercle de la vue etat d'arrivee
+            DoubleBinding xB = vueEtatFin.layoutXProperty().add(vueEtatFin.getCercle().getRadius());
+            DoubleBinding yB = vueEtatFin.layoutYProperty().add(vueEtatFin.getCercle().getRadius());
+
+            DoubleBinding xPos = xA.add(xB.subtract(xA).multiply(6).divide(10)).subtract(5);
+            DoubleBinding yPos = yA.add(yB.subtract(yA).multiply(6).divide(10));
+
+            labelEtiquette.layoutXProperty().bind(xPos);
+            labelEtiquette.layoutYProperty().bind(yPos);
         } else {
             VueEtat vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
 
