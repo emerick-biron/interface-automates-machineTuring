@@ -82,8 +82,10 @@ public class VuePrincipale extends BorderPane {
         textFieldEtiquette.setTextFormatter(new TextFormatter<>(textFilterAjoutTransition));
         textFieldEtiquette.setPrefWidth(30);
 
-        barreDeMenu = new HBox(boutonCreerEtat, checkBoxEstInitial, checkBoxEstTerminal, boutonSupprimerEtat,
-                boutonAjouterTransition, textFieldEtiquette, boutonLancer, textFieldMotAutomate, boutonClear);
+        barreDeMenu =
+                new HBox(boutonCharger, boutonSauvegarder, boutonCreerEtat, checkBoxEstInitial, checkBoxEstTerminal,
+                        boutonSupprimerEtat, boutonAjouterTransition, textFieldEtiquette, boutonLancer,
+                        textFieldMotAutomate, boutonClear);
         setTop(barreDeMenu);
         setCenter(vueAutomate);
     }
