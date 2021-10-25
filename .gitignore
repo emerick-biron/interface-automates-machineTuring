@@ -97,3 +97,4 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 javafx-sdk-17.0.1/
+target/
