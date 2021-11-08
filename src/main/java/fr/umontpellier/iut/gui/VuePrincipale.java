@@ -2,13 +2,13 @@ package fr.umontpellier.iut.gui;
 
 import fr.umontpellier.iut.logique.Automate;
 import fr.umontpellier.iut.logique.Etat;
+import fr.umontpellier.iut.logique.Transition;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
@@ -26,10 +26,10 @@ import java.util.regex.Pattern;
 
 public class VuePrincipale extends BorderPane {
 
-    private ActionSouris actionSouris = ActionSouris.DEPLACER_ETAT;
     private VueAutomate vueAutomate;
     private HBox barreDeMenu;
 
+    private boolean ctrlPresse;
     private Button boutonCreerEtat;
     private Button boutonSupprimerEtat;
     private Button boutonAjouterTransition;
@@ -84,12 +84,12 @@ public class VuePrincipale extends BorderPane {
             fileChooser = new FileChooser();
             fileChooser.setTitle("Sauvegarder automate");
 
-            Path path = Paths.get("./automates_txt");
+            Path path = Paths.get("./automates_atmt");
             if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
             else fileChooser.setInitialDirectory(new File("./"));
 
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
-            File selectedFile = fileChooser.showOpenDialog(new Stage());
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("ATMT", "*.atmt"));
+            File selectedFile = fileChooser.showSaveDialog(new Stage());
             if (selectedFile != null) {
                 try {
                     vueAutomate.sauvegarder(selectedFile.getAbsolutePath());
@@ -105,11 +105,11 @@ public class VuePrincipale extends BorderPane {
             fileChooser = new FileChooser();
             fileChooser.setTitle("Charger automate");
 
-            Path path = Paths.get("./automates_txt");
+            Path path = Paths.get("./automates_atmt");
             if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
             else fileChooser.setInitialDirectory(new File("./"));
 
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT", "*.txt"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("ATMT", "*.ATMT"));
             File selectedFile = fileChooser.showOpenDialog(new Stage());
             if (selectedFile != null) {
                 try {
@@ -117,6 +117,60 @@ public class VuePrincipale extends BorderPane {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    };
+    private EventHandler<KeyEvent> eventToucheCtrlPresse = new EventHandler<KeyEvent>() {
+        @Override
+        public void handle(KeyEvent keyEvent) {
+            ctrlPresse = keyEvent.isControlDown();
+        }
+    };
+    private EventHandler<ActionEvent> eventSupprimerEtats = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            ArrayList<fr.umontpellier.iut.gui.VueEtat> vuesEtatADeSelectionner = new ArrayList<>();
+            for (fr.umontpellier.iut.gui.VueEtat vueEtat : vueAutomate.getVuesEtatSelectionnes()) {
+                vuesEtatADeSelectionner.add(vueEtat);
+                vueAutomate.getAutomate().supprimerEtat(vueEtat.getEtat());
+            }
+            for (fr.umontpellier.iut.gui.VueEtat vueEtat : vuesEtatADeSelectionner) {
+                vueEtat.deSelectionner();
+            }
+        }
+    };
+    private EventHandler<ActionEvent> eventAjouterTransition = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            ObservableList<VueEtat> vuesEtatSelectionnes = vueAutomate.getVuesEtatSelectionnes();
+            if (vuesEtatSelectionnes.size() > 2 || vuesEtatSelectionnes.size() < 1) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Problème ajout transition");
+                alert.setHeaderText(null);
+                alert.setContentText("Vous devez sélectionner exactement 2 etats");
+                alert.showAndWait();
+            } else {
+                String etiquette = textFieldEtiquette.getText();
+                fr.umontpellier.iut.gui.VueEtat vueEtatDep = vuesEtatSelectionnes.get(0);
+                VueEtat vueEtatArrivee;
+                if (vuesEtatSelectionnes.size() == 1) vueEtatArrivee = vueEtatDep;
+                else vueEtatArrivee = vuesEtatSelectionnes.get(1);
+                if (etiquette.length() >= 1) {
+                    boolean nouvelleTrans = true;
+                    for (Transition t : vueAutomate.getAutomate().getTransitions()) {
+                        if (t.getEtatDepart() == vueEtatDep.getEtat() &&
+                                t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
+                                t.getEtiquette() == etiquette.charAt(0)) {
+                            nouvelleTrans = false;
+                            break;
+                        }
+                    }
+                    if (nouvelleTrans) {
+                        vueAutomate.getAutomate().ajoutTransition(
+                                new Transition(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0)));
+                    }
+                }
+                textFieldEtiquette.setText("");
             }
         }
     };
@@ -128,16 +182,31 @@ public class VuePrincipale extends BorderPane {
         Automate automate = new Automate();
         vueAutomate = new VueAutomate(automate, this);
 
+        ctrlPresse = false;
+        setOnKeyPressed(eventToucheCtrlPresse);
+        setOnKeyReleased(eventToucheCtrlPresse);
 
         textFieldEtiquette.setTextFormatter(new TextFormatter<>(textFilterAjoutTransition));
         textFieldEtiquette.setPrefWidth(30);
 
         barreDeMenu =
                 new HBox(boutonCharger, boutonSauvegarder, boutonCreerEtat, checkBoxEstInitial, checkBoxEstTerminal,
-                        boutonSupprimerEtat, boutonAjouterTransition, textFieldEtiquette, boutonLancer,
-                        textFieldMotAutomate, boutonClear);
+                        boutonLancer, textFieldMotAutomate, boutonClear, boutonSupprimerEtat, boutonAjouterTransition,
+                        textFieldEtiquette);
         setTop(barreDeMenu);
         setCenter(vueAutomate);
+    }
+
+    public Button getBoutonSupprimerEtat() {
+        return boutonSupprimerEtat;
+    }
+
+    public Button getBoutonAjouterTransition() {
+        return boutonAjouterTransition;
+    }
+
+    public boolean ctrlPresse() {
+        return ctrlPresse;
     }
 
     public void initComposants() {
@@ -156,31 +225,34 @@ public class VuePrincipale extends BorderPane {
 
     public void initSetOnAction() {
         boutonCreerEtat.setOnAction(eventAjouterEtat);
-        boutonSupprimerEtat.setOnAction(actionEvent -> actionSouris = ActionSouris.SUPPRIMER_ETAT);
+        boutonSupprimerEtat.setOnAction(eventSupprimerEtats);
         boutonLancer.setOnAction(eventLancerAutomate);
-        boutonAjouterTransition.setOnAction(actionEvent -> actionSouris = ActionSouris.AJOUTER_TRANSITION);
+        boutonAjouterTransition.setOnAction(eventAjouterTransition);
         boutonClear.setOnAction(eventClear);
         boutonCharger.setOnAction(eventCharger);
         boutonSauvegarder.setOnAction(eventSauvegarder);
+    }
+
+    public CheckBox getCheckBoxEstInitial() {
+        return checkBoxEstInitial;
+    }
+
+    public CheckBox getCheckBoxEstTerminal() {
+        return checkBoxEstTerminal;
     }
 
     public TextField getTextFieldEtiquette() {
         return textFieldEtiquette;
     }
 
-    public ActionSouris getActionsSouris() {
-        return actionSouris;
-    }
-
-    public void setActionsSouris(ActionSouris actionSouris) {
-        this.actionSouris = actionSouris;
-    }
-
-    public void setDefaultActionSouris() {
-        this.actionSouris = ActionSouris.DEPLACER_ETAT;
-    }
-
     public VueAutomate getVueAutomate() {
         return vueAutomate;
+    }
+
+    public void unbindCheckBoxes() {
+        for (Etat e : vueAutomate.getAutomate().getEtats()) {
+            checkBoxEstInitial.selectedProperty().unbindBidirectional(e.estInitialProperty());
+            checkBoxEstTerminal.selectedProperty().unbindBidirectional(e.estTerminalProperty());
+        }
     }
 }

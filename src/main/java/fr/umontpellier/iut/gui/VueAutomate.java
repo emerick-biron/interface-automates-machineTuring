@@ -3,13 +3,14 @@ package fr.umontpellier.iut.gui;
 import fr.umontpellier.iut.logique.Automate;
 import fr.umontpellier.iut.logique.Etat;
 import fr.umontpellier.iut.logique.Transition;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Shape;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeType;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 public class VueAutomate extends Pane {
     private Automate automate;
     private VuePrincipale vuePrincipale;
-    private VueEtat vueEtatSelectionne = null;
+    private ObservableList<VueEtat> vuesEtatSelectionnes = FXCollections.observableArrayList();
     private ListChangeListener<Etat> miseAJourEtats = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
@@ -43,7 +44,8 @@ public class VueAutomate extends Pane {
         while (change.next()) {
             if (change.wasAdded()) {
                 for (Transition t : change.getAddedSubList()) {
-                    VueTransition vueTransition = new VueTransition(t, VueAutomate.this);
+                    fr.umontpellier.iut.gui.VueTransition
+                            vueTransition = new fr.umontpellier.iut.gui.VueTransition(t, VueAutomate.this);
                     getChildren().add(vueTransition);
                     vueTransition.toBack();
                 }
@@ -72,27 +74,45 @@ public class VueAutomate extends Pane {
             vueTransition.positionnerLabelEtiquette(n);
         }
     };
+    private ListChangeListener<VueEtat> miseAJourVuesEtatSelectionnes = change -> {
+        while (change.next()) {
+            if (change.wasAdded()) {
+                for (VueEtat vueEtat : change.getAddedSubList()) {
+                    vueEtat.getCercle().setStroke(Color.valueOf("#003576"));
+                    vueEtat.getCercle().setStrokeType(StrokeType.INSIDE);
+                    vueEtat.getCercle().setStrokeWidth(3);
+                }
+            }
+            if (change.wasRemoved()) {
+                for (VueEtat vueEtat : change.getRemoved()) {
+                    vueEtat.getCercle().setStroke(null);
+                }
+            }
+        }
+        vuePrincipale.getBoutonSupprimerEtat().setVisible(vuesEtatSelectionnes.size() > 0);
+        vuePrincipale.getBoutonAjouterTransition()
+                .setVisible(vuesEtatSelectionnes.size() <= 2 && vuesEtatSelectionnes.size() >= 1);
+        vuePrincipale.getTextFieldEtiquette()
+                .setVisible(vuesEtatSelectionnes.size() <= 2 && vuesEtatSelectionnes.size() >= 1);
+    };
 
     public VueAutomate(Automate automate, VuePrincipale vuePrincipale) {
         this.vuePrincipale = vuePrincipale;
         this.automate = automate;
         this.automate.etatsProperty().addListener(miseAJourEtats);
         this.automate.transitionsProperty().addListener(miseAJourTransition);
+        vuesEtatSelectionnes.addListener(miseAJourVuesEtatSelectionnes);
 
         setOnMousePressed(mouseEvent -> {
             if (mouseEvent.getTarget() == this) {
-                vuePrincipale.setDefaultActionSouris();
-                vueEtatSelectionne = null;
+                deSelectionnerVuesEtat();
+                vuePrincipale.unbindCheckBoxes();
             }
         });
     }
 
-    public VueEtat getVueEtatSelectionne() {
-        return vueEtatSelectionne;
-    }
-
-    public void setVueEtatSelectionne(VueEtat vueEtatSelectionne) {
-        this.vueEtatSelectionne = vueEtatSelectionne;
+    public ObservableList<VueEtat> getVuesEtatSelectionnes() {
+        return vuesEtatSelectionnes;
     }
 
     public VuePrincipale getVuePrincipale() {
@@ -197,6 +217,13 @@ public class VueAutomate extends Pane {
 
         bufferedWriter.close();
         fileWriter.close();
+    }
+
+    public void deSelectionnerVuesEtat() {
+        for (Etat e : automate.getEtats()) {
+            VueEtat vueEtat = getVueEtat(e);
+            vueEtat.deSelectionner();
+        }
     }
 }
 

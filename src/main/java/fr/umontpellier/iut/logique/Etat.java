@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Etat {
-    private boolean estInitial;
-    private boolean estTerminal;
+    private BooleanProperty estInitial;
+    private BooleanProperty estTerminal;
     /**
      * Liste des transitions SORTANTES de l'etat
      */
@@ -25,26 +25,26 @@ public class Etat {
     }
 
     public Etat() {
-        estInitial = false;
-        estTerminal = false;
+        estInitial = new SimpleBooleanProperty(false);
+        estTerminal = new SimpleBooleanProperty(false);
         listeTransitions = new ArrayList<>();
         estActif = new SimpleBooleanProperty(false);
 
     }
 
     public Etat(boolean estInitial, boolean estTerminal) {
-        this.estInitial = estInitial;
-        this.estTerminal = estTerminal;
+        this.estInitial = new SimpleBooleanProperty(estInitial);
+        this.estTerminal = new SimpleBooleanProperty(estTerminal);
         listeTransitions = new ArrayList<>();
         estActif = new SimpleBooleanProperty(false);
     }
 
     public void setEstInitial(boolean estInitial) {
-        this.estInitial = estInitial;
+        this.estInitial.set(estInitial);
     }
 
     public void setEstTerminal(boolean estTerminal) {
-        this.estTerminal = estTerminal;
+        this.estTerminal.set(estTerminal);
     }
 
     /**
@@ -61,11 +61,11 @@ public class Etat {
     }
 
     public boolean estInitial() {
-        return estInitial;
+        return estInitial.getValue();
     }
 
     public boolean estTerminal() {
-        return estTerminal;
+        return estTerminal.getValue();
     }
 
     public ArrayList<Transition> getListeTransitions() {
@@ -108,6 +108,14 @@ public class Etat {
 
     public void desactive() {
         estActif.set(false);
+    }
+
+    public BooleanProperty estInitialProperty() {
+        return estInitial;
+    }
+
+    public BooleanProperty estTerminalProperty() {
+        return estTerminal;
     }
 
     public boolean estActif() {

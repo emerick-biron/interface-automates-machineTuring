@@ -1,10 +1,12 @@
 package fr.umontpellier.iut.gui;
 
 import fr.umontpellier.iut.logique.Etat;
-import fr.umontpellier.iut.logique.Transition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -20,6 +22,7 @@ public class VueEtat extends StackPane {
     private double mouseY;
     private ImageView imageViewInitial;
     private ImageView imageViewTerminal;
+    private BooleanProperty estSelectionne;
     private ChangeListener<Boolean> changementActivationEtat = new ChangeListener<Boolean>() {
         @Override
         public void changed(ObservableValue<? extends Boolean> observableValue, Boolean ancienneValeur,
@@ -28,15 +31,47 @@ public class VueEtat extends StackPane {
             else cercle.setFill(Color.RED);
         }
     };
+    private ChangeListener<Boolean> changementEstInitial = new ChangeListener<Boolean>() {
+        @Override
+        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+            if (observableValue.getValue()) getChildren().add(imageViewInitial);
+            else getChildren().remove(imageViewInitial);
+        }
+    };
+    private ChangeListener<Boolean> changementEstTerminal = new ChangeListener<Boolean>() {
+        @Override
+        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+            if (observableValue.getValue()) getChildren().add(imageViewTerminal);
+            else getChildren().remove(imageViewTerminal);
+        }
+    };
+    private ChangeListener<Boolean> changementSelection = new ChangeListener<Boolean>() {
+        @Override
+        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+            if (aBoolean != t1) {
+                if (observableValue.getValue()) {
+                    vueAutomate.getVuesEtatSelectionnes().add(VueEtat.this);
+                } else {
+                    vueAutomate.getVuesEtatSelectionnes().remove(VueEtat.this);
+                }
+            }
+        }
+    };
 
     public VueEtat(Etat etat, VueAutomate vueAutomate) {
         this.vueAutomate = vueAutomate;
         this.etat = etat;
-        this.etat.estActifProperty().addListener(changementActivationEtat);
+        estSelectionne = new SimpleBooleanProperty(false);
         labelNumEtat = new Label();
         imageViewInitial = new ImageView("imgEtatInitial.png");
         imageViewTerminal = new ImageView("imgEtatTerminal.png");
         cercle = new Circle(50, 50, 46, Color.RED);
+
+        this.etat.estActifProperty().addListener(changementActivationEtat);
+        this.etat.estInitialProperty().addListener(changementEstInitial);
+        this.etat.estTerminalProperty().addListener(changementEstTerminal);
+        estSelectionne.addListener(changementSelection);
+
         getChildren().add(cercle);
         init();
     }
@@ -59,63 +94,46 @@ public class VueEtat extends StackPane {
 
     public void initMouseEvents() {
         setOnMousePressed(mouseEvent -> {
-            ActionSouris actionSouris = vueAutomate.getVuePrincipale().getActionsSouris();
-            if (actionSouris == ActionSouris.DEPLACER_ETAT) {
-                setCursor(Cursor.MOVE);
-                mouseX = mouseEvent.getSceneX();
-                mouseY = mouseEvent.getSceneY();
-            } else if (actionSouris == ActionSouris.SUPPRIMER_ETAT) {
-                //Permet de supprimer un etat
-                vueAutomate.getAutomate().supprimerEtat(etat);
-                vueAutomate.getVuePrincipale().setDefaultActionSouris();
-            } else if (actionSouris == ActionSouris.AJOUTER_TRANSITION) {
-                VueEtat vueEtatSelectionne = vueAutomate.getVueEtatSelectionne();
-                if (vueEtatSelectionne == null) {
-                    vueAutomate.setVueEtatSelectionne(this);
-                } else {
-                    String etiquette = vueAutomate.getVuePrincipale().getTextFieldEtiquette().getText();
-                    if (etiquette.length() >= 1) {
-                        boolean nouvelleTrans = true;
-                        for (Transition t : vueAutomate.getAutomate().getTransitions()) {
-                            if (t.getEtatDepart() == vueEtatSelectionne.getEtat() && t.getEtatArrivee() == etat &&
-                                    t.getEtiquette() == etiquette.charAt(0)) {
-                                nouvelleTrans = false;
-                                break;
-                            }
-                        }
-                        if (nouvelleTrans) {
-                            vueAutomate.getAutomate().ajoutTransition(
-                                    new Transition(vueEtatSelectionne.getEtat(), etat, etiquette.charAt(0)));
-                        }
-                    }
-                    vueAutomate.setVueEtatSelectionne(null);
-                    vueAutomate.getVuePrincipale().getTextFieldEtiquette().setText("");
-                    vueAutomate.getVuePrincipale().setDefaultActionSouris();
-                }
+            if (!vueAutomate.getVuePrincipale().ctrlPresse()) {
+                vueAutomate.deSelectionnerVuesEtat();
             }
+            if (estSelectionne()) {
+                deSelectionner();
+            } else {
+                selectionner();
+            }
+
+            vueAutomate.getVuePrincipale().unbindCheckBoxes();
+
+            CheckBox cbEstInitial = vueAutomate.getVuePrincipale().getCheckBoxEstInitial();
+            CheckBox cbEstTerminal = vueAutomate.getVuePrincipale().getCheckBoxEstTerminal();
+
+            cbEstInitial.selectedProperty().bindBidirectional(etat.estInitialProperty());
+            cbEstTerminal.selectedProperty().bindBidirectional(etat.estTerminalProperty());
+
+            setCursor(Cursor.MOVE);
+            mouseX = mouseEvent.getSceneX();
+            mouseY = mouseEvent.getSceneY();
         });
 
         setOnMouseReleased(mouseEvent -> setCursor(Cursor.HAND));
 
         setOnMouseDragged(mouseEvent -> {
-            ActionSouris actionSouris = vueAutomate.getVuePrincipale().getActionsSouris();
-            if (actionSouris == ActionSouris.DEPLACER_ETAT) {
-                //Permet de deplacer la vueEtat a la souris
-                double deltaX = mouseEvent.getSceneX() - mouseX;
-                double deltaY = mouseEvent.getSceneY() - mouseY;
-                double newXpos = getLayoutX() + deltaX;
-                double newYPos = getLayoutY() + deltaY;
+            //Permet de deplacer la vueEtat a la souris
+            double deltaX = mouseEvent.getSceneX() - mouseX;
+            double deltaY = mouseEvent.getSceneY() - mouseY;
+            double newXpos = getLayoutX() + deltaX;
+            double newYPos = getLayoutY() + deltaY;
 
-                //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-                if (newXpos >= 0 && newXpos + getWidth() <= vueAutomate.getBoundsInLocal().getMaxX()) {
-                    setLayoutX(newXpos);
-                    mouseX = mouseEvent.getSceneX();
-                }
-                //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-                if (newYPos >= 0 && newYPos + getHeight() <= vueAutomate.getBoundsInLocal().getMaxY() - 25) {
-                    setLayoutY(newYPos);
-                    mouseY = mouseEvent.getSceneY();
-                }
+            //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
+            if (newXpos >= 0 && newXpos + getWidth() <= vueAutomate.getBoundsInLocal().getMaxX()) {
+                setLayoutX(newXpos);
+                mouseX = mouseEvent.getSceneX();
+            }
+            //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
+            if (newYPos >= 0 && newYPos + getHeight() <= vueAutomate.getBoundsInLocal().getMaxY() - 25) {
+                setLayoutY(newYPos);
+                mouseY = mouseEvent.getSceneY();
             }
         });
 
@@ -134,23 +152,36 @@ public class VueEtat extends StackPane {
     }
 
     private void initImages() {
-        if (etat.estInitial()) {
-            imageViewInitial.setFitWidth(15);
-            imageViewInitial.setPreserveRatio(true);
-            imageViewInitial.setTranslateX(-40);
-            imageViewInitial.setTranslateY(-40);
-            getChildren().add(imageViewInitial);
-        }
-        if (etat.estTerminal()) {
-            imageViewTerminal.setFitWidth(15);
-            imageViewTerminal.setPreserveRatio(true);
-            imageViewTerminal.setTranslateX(40);
-            imageViewTerminal.setTranslateY(-40);
-            getChildren().add(imageViewTerminal);
-        }
+        imageViewInitial.setFitWidth(15);
+        imageViewInitial.setPreserveRatio(true);
+        imageViewInitial.setTranslateX(-40);
+        imageViewInitial.setTranslateY(-40);
+        imageViewTerminal.setFitWidth(15);
+        imageViewTerminal.setPreserveRatio(true);
+        imageViewTerminal.setTranslateX(40);
+        imageViewTerminal.setTranslateY(-40);
+        if (etat.estInitial()) getChildren().add(imageViewInitial);
+        if (etat.estTerminal()) getChildren().add(imageViewTerminal);
+
     }
 
     public Circle getCercle() {
         return cercle;
+    }
+
+    public boolean estSelectionne() {
+        return estSelectionne.get();
+    }
+
+    public BooleanProperty estSelectionneProperty() {
+        return estSelectionne;
+    }
+
+    public void selectionner() {
+        this.estSelectionne.set(true);
+    }
+
+    public void deSelectionner() {
+        this.estSelectionne.set(false);
     }
 }
