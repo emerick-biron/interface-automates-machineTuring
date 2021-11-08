@@ -129,12 +129,12 @@ public class VuePrincipale extends BorderPane {
     private EventHandler<ActionEvent> eventSupprimerEtats = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent actionEvent) {
-            ArrayList<fr.umontpellier.iut.gui.VueEtat> vuesEtatADeSelectionner = new ArrayList<>();
-            for (fr.umontpellier.iut.gui.VueEtat vueEtat : vueAutomate.getVuesEtatSelectionnes()) {
+            ArrayList<VueEtat> vuesEtatADeSelectionner = new ArrayList<>();
+            for (VueEtat vueEtat : vueAutomate.getVuesEtatSelectionnes()) {
                 vuesEtatADeSelectionner.add(vueEtat);
                 vueAutomate.getAutomate().supprimerEtat(vueEtat.getEtat());
             }
-            for (fr.umontpellier.iut.gui.VueEtat vueEtat : vuesEtatADeSelectionner) {
+            for (VueEtat vueEtat : vuesEtatADeSelectionner) {
                 vueEtat.deSelectionner();
             }
         }
@@ -151,7 +151,7 @@ public class VuePrincipale extends BorderPane {
                 alert.showAndWait();
             } else {
                 String etiquette = textFieldEtiquette.getText();
-                fr.umontpellier.iut.gui.VueEtat vueEtatDep = vuesEtatSelectionnes.get(0);
+                VueEtat vueEtatDep = vuesEtatSelectionnes.get(0);
                 VueEtat vueEtatArrivee;
                 if (vuesEtatSelectionnes.size() == 1) vueEtatArrivee = vueEtatDep;
                 else vueEtatArrivee = vuesEtatSelectionnes.get(1);
