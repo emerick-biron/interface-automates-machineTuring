@@ -95,7 +95,7 @@ public class VueEtat extends StackPane {
     public void initMouseEvents() {
         setOnMousePressed(mouseEvent -> {
             if (!vueAutomate.getVuePrincipale().ctrlPresse()) {
-                vueAutomate.deSelectionnerVuesEtat();
+                vueAutomate.deSelectionnerVues();
             }
             if (estSelectionne()) {
                 deSelectionner();

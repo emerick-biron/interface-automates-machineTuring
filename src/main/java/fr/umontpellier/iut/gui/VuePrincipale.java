@@ -109,7 +109,7 @@ public class VuePrincipale extends BorderPane {
             if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
             else fileChooser.setInitialDirectory(new File("./"));
 
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("ATMT", "*.ATMT"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("ATMT", "*.atmt"));
             File selectedFile = fileChooser.showOpenDialog(new Stage());
             if (selectedFile != null) {
                 try {

@@ -7,7 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
@@ -20,6 +19,7 @@ public class VueAutomate extends Pane {
     private Automate automate;
     private VuePrincipale vuePrincipale;
     private ObservableList<VueEtat> vuesEtatSelectionnes = FXCollections.observableArrayList();
+    private ObservableList<VueTransition> vuesTransitionSelectionnes = FXCollections.observableArrayList();
     private ListChangeListener<Etat> miseAJourEtats = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
@@ -44,8 +44,7 @@ public class VueAutomate extends Pane {
         while (change.next()) {
             if (change.wasAdded()) {
                 for (Transition t : change.getAddedSubList()) {
-                    VueTransition
-                            vueTransition = new VueTransition(t, VueAutomate.this);
+                    VueTransition vueTransition = new VueTransition(t, VueAutomate.this);
                     getChildren().add(vueTransition);
                     vueTransition.toBack();
                 }
@@ -64,7 +63,7 @@ public class VueAutomate extends Pane {
                 }
             }
             VueTransition vueTransition = getVueTransition(t);
-            if (n > 0){
+            if (n > 0) {
                 vueTransition.setFlechesVisible(false);
                 vueTransition.toFront();
             } else {
@@ -95,6 +94,20 @@ public class VueAutomate extends Pane {
         vuePrincipale.getTextFieldEtiquette()
                 .setVisible(vuesEtatSelectionnes.size() <= 2 && vuesEtatSelectionnes.size() >= 1);
     };
+    private ListChangeListener<VueTransition> miseAJourVuesTransitionSelectionnes = change -> {
+        while (change.next()) {
+            if (change.wasAdded()) {
+                for (VueTransition vueTransition : change.getAddedSubList()) {
+                    vueTransition.setCouleurSelection(true);
+                }
+            }
+            if (change.wasRemoved()) {
+                for (VueTransition vueTransition : change.getRemoved()) {
+                    vueTransition.setCouleurSelection(false);
+                }
+            }
+        }
+    };
 
     public VueAutomate(Automate automate, VuePrincipale vuePrincipale) {
         this.vuePrincipale = vuePrincipale;
@@ -102,13 +115,18 @@ public class VueAutomate extends Pane {
         this.automate.etatsProperty().addListener(miseAJourEtats);
         this.automate.transitionsProperty().addListener(miseAJourTransition);
         vuesEtatSelectionnes.addListener(miseAJourVuesEtatSelectionnes);
+        vuesTransitionSelectionnes.addListener(miseAJourVuesTransitionSelectionnes);
 
         setOnMousePressed(mouseEvent -> {
             if (mouseEvent.getTarget() == this) {
-                deSelectionnerVuesEtat();
+                deSelectionnerVues();
                 vuePrincipale.unbindCheckBoxes();
             }
         });
+    }
+
+    public ObservableList<VueTransition> getVuesTransitionSelectionnes() {
+        return vuesTransitionSelectionnes;
     }
 
     public ObservableList<VueEtat> getVuesEtatSelectionnes() {
@@ -141,6 +159,14 @@ public class VueAutomate extends Pane {
             }
         }
         return null;
+    }
+
+    public ArrayList<VueTransition> getVuesTransition(VueEtat vueEtatDeb, VueEtat vueEtatFin) {
+        ArrayList<VueTransition> res = new ArrayList<>();
+        for (Transition t : vueEtatDeb.getEtat().getListeTransitions()) {
+            if (t.getEtatArrivee() == vueEtatFin.getEtat()) res.add(getVueTransition(t));
+        }
+        return res;
     }
 
     public void clear() {
@@ -219,10 +245,22 @@ public class VueAutomate extends Pane {
         fileWriter.close();
     }
 
+    public void deSelectionnerVues(){
+        deSelectionnerVuesEtat();
+        deSelectionnerVuesTransition();
+    }
+
     public void deSelectionnerVuesEtat() {
         for (Etat e : automate.getEtats()) {
             VueEtat vueEtat = getVueEtat(e);
             vueEtat.deSelectionner();
+        }
+    }
+
+    public void deSelectionnerVuesTransition() {
+        for (Transition t : automate.getTransitions()) {
+            VueTransition vueTransition = getVueTransition(t);
+            vueTransition.deSelectionner();
         }
     }
 }

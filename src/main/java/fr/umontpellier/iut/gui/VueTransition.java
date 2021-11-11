@@ -5,9 +5,10 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -23,6 +24,22 @@ public class VueTransition extends Group {
     private VueEtat vueEtatDep;
     private VueEtat vueEtatFin;
     private BooleanProperty estSelectionne;
+    private ChangeListener<Boolean> changementSelection = new ChangeListener<Boolean>() {
+        @Override
+        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
+            if (aBoolean != t1) {
+                if (observableValue.getValue()) {
+                    for (VueTransition vueTransition : vueAutomate.getVuesTransition(vueEtatDep, vueEtatFin)) {
+                        vueAutomate.getVuesTransitionSelectionnes().add(vueTransition);
+                    }
+                } else {
+                    for (VueTransition vueTransition : vueAutomate.getVuesTransition(vueEtatDep, vueEtatFin)) {
+                        vueAutomate.getVuesTransitionSelectionnes().remove(vueTransition);
+                    }
+                }
+            }
+        }
+    };
 
     public VueTransition(Transition transition, VueAutomate vueAutomate) {
         this.transition = transition;
@@ -35,6 +52,8 @@ public class VueTransition extends Group {
         imgAutoTransition = new ImageView("imgAutoTransition.png");
         vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
         vueEtatFin = vueAutomate.getVueEtat(transition.getEtatArrivee());
+
+        estSelectionne.addListener(changementSelection);
 
         init();
 
@@ -50,6 +69,7 @@ public class VueTransition extends Group {
         if (transition.getEtatDepart() != transition.getEtatArrivee()) initCoordonnesLignes();
         else initAutoTransition();
         initLabel();
+        initMouseEvents();
         this.toBack();
     }
 
@@ -138,6 +158,18 @@ public class VueTransition extends Group {
         ligneHautFleche.setVisible(b);
     }
 
+    public void setCouleurSelection(boolean estSelectionne){
+        if (estSelectionne) {
+            ligne.setStroke(Color.valueOf("#003576"));
+            ligneBasFleche.setStroke(Color.valueOf("#003576"));
+            ligneHautFleche.setStroke(Color.valueOf("#003576"));
+        }else {
+            ligne.setStroke(Color.GRAY);
+            ligneBasFleche.setStroke(Color.GRAY);
+            ligneHautFleche.setStroke(Color.GRAY);
+        }
+    }
+
     public void positionnerLabelEtiquette(int index) {
         if (transition.getEtatDepart() != transition.getEtatArrivee()) {
             //coordonnees du centre du cercle de la vue etat de depart
@@ -159,6 +191,19 @@ public class VueTransition extends Group {
             labelEtiquette.layoutYProperty()
                     .bind(vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().radiusProperty().multiply(2)));
         }
+    }
+
+    public void initMouseEvents() {
+        setOnMousePressed(mouseEvent -> {
+            if (!vueAutomate.getVuePrincipale().ctrlPresse()) {
+                vueAutomate.deSelectionnerVues();
+            }
+            if (estSelectionne()) {
+                deSelectionner();
+            } else {
+                selectionner();
+            }
+        });
     }
 
     public boolean estSelectionne() {
