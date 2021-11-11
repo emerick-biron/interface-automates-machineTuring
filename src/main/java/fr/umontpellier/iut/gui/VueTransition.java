@@ -9,6 +9,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -163,10 +164,13 @@ public class VueTransition extends Group {
             ligne.setStroke(Color.valueOf("#003576"));
             ligneBasFleche.setStroke(Color.valueOf("#003576"));
             ligneHautFleche.setStroke(Color.valueOf("#003576"));
+            imgAutoTransition.setImage(new Image("imgAutoTransitionSelect.png"));
         }else {
             ligne.setStroke(Color.GRAY);
             ligneBasFleche.setStroke(Color.GRAY);
             ligneHautFleche.setStroke(Color.GRAY);
+            imgAutoTransition.setImage(new Image("imgAutoTransition.png"));
+
         }
     }
 

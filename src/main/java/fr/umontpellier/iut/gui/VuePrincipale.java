@@ -131,6 +131,11 @@ public class VuePrincipale extends BorderPane {
         public void handle(ActionEvent actionEvent) {
             ArrayList<VueEtat> vuesEtatADeSelectionner = new ArrayList<>();
             for (VueEtat vueEtat : vueAutomate.getVuesEtatSelectionnes()) {
+                for (Transition t : vueEtat.getEtat().getListeTransitions()) {
+                    VueTransition vueTransition = vueAutomate.getVueTransition(t);
+                    vueTransition.deSelectionner();
+                }
+
                 vuesEtatADeSelectionner.add(vueEtat);
                 vueAutomate.getAutomate().supprimerEtat(vueEtat.getEtat());
             }
