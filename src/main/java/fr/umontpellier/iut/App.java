@@ -1,5 +1,6 @@
 package fr.umontpellier.iut;
 
+import fr.umontpellier.iut.gui.StageSupTrans;
 import fr.umontpellier.iut.gui.VueAutomate;
 import fr.umontpellier.iut.gui.VueEtat;
 import fr.umontpellier.iut.gui.VuePrincipale;
@@ -10,6 +11,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
