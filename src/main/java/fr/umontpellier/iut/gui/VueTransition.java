@@ -3,6 +3,8 @@ package fr.umontpellier.iut.gui;
 import fr.umontpellier.iut.logique.Transition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -20,10 +22,12 @@ public class VueTransition extends Group {
     private ImageView imgAutoTransition;
     private VueEtat vueEtatDep;
     private VueEtat vueEtatFin;
+    private BooleanProperty estSelectionne;
 
     public VueTransition(Transition transition, VueAutomate vueAutomate) {
         this.transition = transition;
         this.vueAutomate = vueAutomate;
+        estSelectionne = new SimpleBooleanProperty(false);
         ligne = new Line();
         ligneHautFleche = new Line();
         ligneBasFleche = new Line();
@@ -155,6 +159,22 @@ public class VueTransition extends Group {
             labelEtiquette.layoutYProperty()
                     .bind(vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().radiusProperty().multiply(2)));
         }
+    }
+
+    public boolean estSelectionne() {
+        return estSelectionne.get();
+    }
+
+    public BooleanProperty estSelectionneProperty() {
+        return estSelectionne;
+    }
+
+    public void selectionner() {
+        this.estSelectionne.set(true);
+    }
+
+    public void deSelectionner() {
+        this.estSelectionne.set(false);
     }
 }
 

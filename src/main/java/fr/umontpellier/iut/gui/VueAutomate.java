@@ -44,8 +44,8 @@ public class VueAutomate extends Pane {
         while (change.next()) {
             if (change.wasAdded()) {
                 for (Transition t : change.getAddedSubList()) {
-                    fr.umontpellier.iut.gui.VueTransition
-                            vueTransition = new fr.umontpellier.iut.gui.VueTransition(t, VueAutomate.this);
+                    VueTransition
+                            vueTransition = new VueTransition(t, VueAutomate.this);
                     getChildren().add(vueTransition);
                     vueTransition.toBack();
                 }
