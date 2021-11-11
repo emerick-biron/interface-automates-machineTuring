@@ -92,7 +92,7 @@ public class VuePrincipale extends BorderPane {
             File selectedFile = fileChooser.showSaveDialog(new Stage());
             if (selectedFile != null) {
                 try {
-                    vueAutomate.sauvegarder(selectedFile.getAbsolutePath());
+                    vueAutomate.sauvegarder(selectedFile.getAbsolutePath() + ".atmt");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

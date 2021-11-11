@@ -107,6 +107,7 @@ public class VueAutomate extends Pane {
                 }
             }
         }
+        System.out.println(vuesTransitionSelectionnes);
     };
 
     public VueAutomate(Automate automate, VuePrincipale vuePrincipale) {
@@ -161,10 +162,17 @@ public class VueAutomate extends Pane {
         return null;
     }
 
-    public ArrayList<VueTransition> getVuesTransition(VueEtat vueEtatDeb, VueEtat vueEtatFin) {
+    public ArrayList<VueTransition> getVuesTransition(VueEtat vueEtat1, VueEtat vueEtat2) {
         ArrayList<VueTransition> res = new ArrayList<>();
-        for (Transition t : vueEtatDeb.getEtat().getListeTransitions()) {
-            if (t.getEtatArrivee() == vueEtatFin.getEtat()) res.add(getVueTransition(t));
+        for (Transition t : vueEtat1.getEtat().getListeTransitions()) {
+            if (t.getEtatArrivee() == vueEtat2.getEtat()) {
+                if (!res.contains(getVueTransition(t))) res.add(getVueTransition(t));
+            }
+        }
+        for (Transition t : vueEtat2.getEtat().getListeTransitions()) {
+            if (t.getEtatArrivee() == vueEtat1.getEtat()) {
+                if (!res.contains(getVueTransition(t))) res.add(getVueTransition(t));
+            }
         }
         return res;
     }
@@ -245,7 +253,7 @@ public class VueAutomate extends Pane {
         fileWriter.close();
     }
 
-    public void deSelectionnerVues(){
+    public void deSelectionnerVues() {
         deSelectionnerVuesEtat();
         deSelectionnerVuesTransition();
     }

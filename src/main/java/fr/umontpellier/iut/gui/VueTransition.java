@@ -134,11 +134,11 @@ public class VueTransition extends Group {
     }
 
     public void initStyleLignes() {
-        ligne.setStrokeWidth(3);
+        ligne.setStrokeWidth(3.8);
         ligne.setStroke(Color.GRAY);
-        ligneHautFleche.setStrokeWidth(3);
+        ligneHautFleche.setStrokeWidth(3.8);
         ligneHautFleche.setStroke(Color.GRAY);
-        ligneBasFleche.setStrokeWidth(3);
+        ligneBasFleche.setStrokeWidth(3.8);
         ligneBasFleche.setStroke(Color.GRAY);
     }
 
