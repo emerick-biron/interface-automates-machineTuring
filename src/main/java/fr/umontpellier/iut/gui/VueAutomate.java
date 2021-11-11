@@ -88,7 +88,6 @@ public class VueAutomate extends Pane {
                 }
             }
         }
-        vuePrincipale.getBoutonSupprimerEtat().setVisible(vuesEtatSelectionnes.size() > 0);
         vuePrincipale.getBoutonAjouterTransition()
                 .setVisible(vuesEtatSelectionnes.size() <= 2 && vuesEtatSelectionnes.size() >= 1);
         vuePrincipale.getTextFieldEtiquette()
@@ -107,7 +106,6 @@ public class VueAutomate extends Pane {
                 }
             }
         }
-        System.out.println(vuesTransitionSelectionnes);
     };
 
     public VueAutomate(Automate automate, VuePrincipale vuePrincipale) {
@@ -178,6 +176,8 @@ public class VueAutomate extends Pane {
     }
 
     public void clear() {
+        vuesEtatSelectionnes.clear();
+        vuesTransitionSelectionnes.clear();
         List<Etat> etats = automate.getEtats();
         if (!etats.isEmpty()) {
             int l = etats.size();

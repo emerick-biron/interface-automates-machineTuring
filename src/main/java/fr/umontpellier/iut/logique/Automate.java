@@ -116,6 +116,11 @@ public class Automate {
         }
     }
 
+    public void supprimerTransition(Transition t) {
+        this.transitions.remove(t);
+        t.getEtatDepart().getListeTransitions().remove(t);
+    }
+
     public ObservableList<Etat> etatsProperty() {
         return etats;
     }

@@ -34,6 +34,7 @@ public class VueTransition extends Group {
                         vueAutomate.getVuesTransitionSelectionnes().add(vueTransition);
                     }
                 } else {
+                    vueAutomate.getVuesTransitionSelectionnes().remove(VueTransition.this);
                     for (VueTransition vueTransition : vueAutomate.getVuesTransition(vueEtatDep, vueEtatFin)) {
                         vueAutomate.getVuesTransitionSelectionnes().remove(vueTransition);
                     }
@@ -224,6 +225,14 @@ public class VueTransition extends Group {
 
     public void deSelectionner() {
         this.estSelectionne.set(false);
+    }
+
+    public VueEtat getVueEtatDep() {
+        return vueEtatDep;
+    }
+
+    public VueEtat getVueEtatFin() {
+        return vueEtatFin;
     }
 }
 

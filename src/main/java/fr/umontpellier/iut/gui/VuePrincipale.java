@@ -1,5 +1,6 @@
 package fr.umontpellier.iut.gui;
 
+import fr.umontpellier.iut.App;
 import fr.umontpellier.iut.logique.Automate;
 import fr.umontpellier.iut.logique.Etat;
 import fr.umontpellier.iut.logique.Transition;
@@ -20,7 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
@@ -126,21 +127,43 @@ public class VuePrincipale extends BorderPane {
             ctrlPresse = keyEvent.isControlDown();
         }
     };
-    private EventHandler<ActionEvent> eventSupprimerEtats = new EventHandler<ActionEvent>() {
+    private EventHandler<ActionEvent> eventSupprimer = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent actionEvent) {
             ArrayList<VueEtat> vuesEtatADeSelectionner = new ArrayList<>();
             for (VueEtat vueEtat : vueAutomate.getVuesEtatSelectionnes()) {
-                for (Transition t : vueEtat.getEtat().getListeTransitions()) {
-                    VueTransition vueTransition = vueAutomate.getVueTransition(t);
-                    vueTransition.deSelectionner();
+                for (Transition t : vueAutomate.getAutomate().getTransitions()) {
+                    if (t.getEtatDepart() == vueEtat.getEtat() || t.getEtatArrivee() == vueEtat.getEtat()) {
+                        VueTransition vueTransition = vueAutomate.getVueTransition(t);
+                        vueTransition.deSelectionner();
+                    }
                 }
-
                 vuesEtatADeSelectionner.add(vueEtat);
                 vueAutomate.getAutomate().supprimerEtat(vueEtat.getEtat());
             }
             for (VueEtat vueEtat : vuesEtatADeSelectionner) {
                 vueEtat.deSelectionner();
+            }
+
+            HashSet<VueTransition> vuesTransitionADeDelectionner = new HashSet<>();
+            for (VueTransition vueTransition : vueAutomate.getVuesTransitionSelectionnes()) {
+                if (vueAutomate.getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
+                        .size() == 1) {
+                    vueAutomate.getAutomate().supprimerTransition(vueTransition.getTransition());
+                    vuesTransitionADeDelectionner.add(vueTransition);
+                }
+            }
+            vueAutomate.getVuesTransitionSelectionnes().removeAll(vuesTransitionADeDelectionner);
+            for (VueTransition vueTransition : vuesTransitionADeDelectionner) {
+                vueTransition.deSelectionner();
+            }
+
+            StageSupTrans stageSupTrans =
+                    new StageSupTrans(vueAutomate.getVuesTransitionSelectionnes(), App.getPrimStage());
+            ArrayList<VueTransition> transitionsASupprimer = stageSupTrans.showOpenDialog();
+            for (VueTransition vueTransition : transitionsASupprimer) {
+                vueAutomate.getAutomate().supprimerTransition(vueTransition.getTransition());
+                vueTransition.deSelectionner();
             }
         }
     };
@@ -230,7 +253,7 @@ public class VuePrincipale extends BorderPane {
 
     public void initSetOnAction() {
         boutonCreerEtat.setOnAction(eventAjouterEtat);
-        boutonSupprimerEtat.setOnAction(eventSupprimerEtats);
+        boutonSupprimerEtat.setOnAction(eventSupprimer);
         boutonLancer.setOnAction(eventLancerAutomate);
         boutonAjouterTransition.setOnAction(eventAjouterTransition);
         boutonClear.setOnAction(eventClear);

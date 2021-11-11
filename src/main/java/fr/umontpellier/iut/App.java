@@ -1,30 +1,26 @@
 package fr.umontpellier.iut;
 
-import fr.umontpellier.iut.gui.StageSupTrans;
-import fr.umontpellier.iut.gui.VueAutomate;
-import fr.umontpellier.iut.gui.VueEtat;
 import fr.umontpellier.iut.gui.VuePrincipale;
-import fr.umontpellier.iut.logique.Etat;
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class App extends Application {
+    private static Stage primStage;
 
     public static void main(String[] args) {
         launch(args);
     }
 
+    public static Stage getPrimStage() {
+        return primStage;
+    }
+
     @Override
     public void start(Stage primaryStage) throws IOException {
+        primStage = primaryStage;
         primaryStage.setTitle("Automates");
         VuePrincipale vuePrincipale = new VuePrincipale();
 
