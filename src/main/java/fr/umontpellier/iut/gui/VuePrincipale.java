@@ -164,7 +164,7 @@ public class VuePrincipale extends BorderPane {
             }
 
             if (vueAutomate.getVuesTransitionSelectionnes().size() > 0) {
-                StageSupTrans stageSupTrans = new StageSupTrans(vueAutomate.getVuesTransitionSelectionnes(), App.getPrimStage());
+                StageSupTrans stageSupTrans = new StageSupTrans(vueAutomate.getVuesTransitionSelectionnes(), app.getPrimaryStage());
                 ArrayList<VueTransition> transitionsASupprimer = stageSupTrans.showOpenDialog();
                 for (VueTransition vueTransition : transitionsASupprimer) {
                     vueAutomate.getAutomate().supprimerTransition(vueTransition.getTransition());
