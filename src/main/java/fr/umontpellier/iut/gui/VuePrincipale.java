@@ -8,6 +8,8 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -26,9 +28,12 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 public class VuePrincipale extends BorderPane {
+    private App app;
 
     private VueAutomate vueAutomate;
     private HBox barreDeMenu;
+    private HBox hBoxLancerAutomate;
+    private HBox hBoxAjoutTransition;
 
     private boolean ctrlPresse;
     private Button boutonCreerEtat;
@@ -159,7 +164,7 @@ public class VuePrincipale extends BorderPane {
             }
 
             StageSupTrans stageSupTrans =
-                    new StageSupTrans(vueAutomate.getVuesTransitionSelectionnes(), App.getPrimStage());
+                    new StageSupTrans(vueAutomate.getVuesTransitionSelectionnes(), app.getPrimaryStage());
             ArrayList<VueTransition> transitionsASupprimer = stageSupTrans.showOpenDialog();
             for (VueTransition vueTransition : transitionsASupprimer) {
                 vueAutomate.getAutomate().supprimerTransition(vueTransition.getTransition());
@@ -203,7 +208,8 @@ public class VuePrincipale extends BorderPane {
         }
     };
 
-    public VuePrincipale() {
+    public VuePrincipale(App app) {
+        this.app = app;
         initComposants();
         initSetOnAction();
 
@@ -217,12 +223,17 @@ public class VuePrincipale extends BorderPane {
         textFieldEtiquette.setTextFormatter(new TextFormatter<>(textFilterAjoutTransition));
         textFieldEtiquette.setPrefWidth(30);
 
+        hBoxAjoutTransition = new HBox(boutonAjouterTransition, textFieldEtiquette);
+        hBoxLancerAutomate = new HBox(boutonLancer, textFieldMotAutomate);
+
         barreDeMenu =
                 new HBox(boutonCharger, boutonSauvegarder, boutonCreerEtat, checkBoxEstInitial, checkBoxEstTerminal,
-                        boutonLancer, textFieldMotAutomate, boutonClear, boutonSupprimerEtat, boutonAjouterTransition,
-                        textFieldEtiquette);
+                        boutonClear, boutonSupprimerEtat, hBoxAjoutTransition);
+        initStyle();
+
         setTop(barreDeMenu);
         setCenter(vueAutomate);
+        setBottom(hBoxLancerAutomate);
     }
 
     public Button getBoutonSupprimerEtat() {
@@ -282,5 +293,12 @@ public class VuePrincipale extends BorderPane {
             checkBoxEstInitial.selectedProperty().unbindBidirectional(e.estInitialProperty());
             checkBoxEstTerminal.selectedProperty().unbindBidirectional(e.estTerminalProperty());
         }
+    }
+
+    private void initStyle() {
+        barreDeMenu.setSpacing(20);
+        barreDeMenu.setAlignment(Pos.CENTER_LEFT);
+        hBoxLancerAutomate.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxLancerAutomate.setPadding(new Insets(0, 10, 10, 0));
     }
 }

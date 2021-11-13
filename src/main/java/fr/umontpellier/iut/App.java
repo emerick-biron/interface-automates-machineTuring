@@ -1,33 +1,49 @@
 package fr.umontpellier.iut;
 
+import fr.umontpellier.iut.gui.VueDepart;
 import fr.umontpellier.iut.gui.VuePrincipale;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class App extends Application {
-    private static Stage primStage;
+    private Stage primaryStage;
+    private VueDepart vueDepart;
+    private EventHandler<ActionEvent> eventLancerAutomate = new EventHandler<ActionEvent>() {
+        @Override
+        public void handle(ActionEvent actionEvent) {
+            vueDepart.hide();
+
+            primaryStage.setScene(new Scene(new VuePrincipale(App.this)));
+            primaryStage.setWidth(1200);
+            primaryStage.setHeight(750);
+            primaryStage.setTitle("Automates");
+
+            primaryStage.show();
+        }
+    };
 
     public static void main(String[] args) {
         launch(args);
     }
 
-    public static Stage getPrimStage() {
-        return primStage;
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public VueDepart getVueDepart() {
+        return vueDepart;
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        primStage = primaryStage;
-        primaryStage.setTitle("Automates");
-        VuePrincipale vuePrincipale = new VuePrincipale();
-
-        primaryStage.setScene(new Scene(vuePrincipale));
-        primaryStage.setWidth(900);
-        primaryStage.setHeight(600);
-
-        primaryStage.show();
+        this.primaryStage = primaryStage;
+        vueDepart = new VueDepart();
+        vueDepart.setTitle("Projet S3");
+        vueDepart.getBoutonAutomate().setOnAction(eventLancerAutomate);
     }
 }
