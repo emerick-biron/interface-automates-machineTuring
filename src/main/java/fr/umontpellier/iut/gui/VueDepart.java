@@ -50,7 +50,7 @@ public class VueDepart extends Stage {
     }
 
     private String getLabelInformation(){
-        return "Projet S3 \"Interface pour automates et machine de Turing\"\n"+
+        return "Projet S3 \"Interface pour automates et machine de Turing\"\n\n"+
                 "Membres :\n"+
                 "  - Lénais Desbos\n"+
                 "  - Alexandre Roussel\n"+

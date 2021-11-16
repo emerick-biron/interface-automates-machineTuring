@@ -51,7 +51,7 @@ public class VueTransition extends Group {
         ligneHautFleche = new Line();
         ligneBasFleche = new Line();
         labelEtiquette = new Label(String.valueOf(transition.getEtiquette()));
-        imgAutoTransition = new ImageView("imgAutoTransition.png");
+        imgAutoTransition = new ImageView("auto_transition.png");
         vueEtatDep = vueAutomate.getVueEtat(transition.getEtatDepart());
         vueEtatFin = vueAutomate.getVueEtat(transition.getEtatArrivee());
 
@@ -165,12 +165,12 @@ public class VueTransition extends Group {
             ligne.setStroke(Color.valueOf("#003576"));
             ligneBasFleche.setStroke(Color.valueOf("#003576"));
             ligneHautFleche.setStroke(Color.valueOf("#003576"));
-            imgAutoTransition.setImage(new Image("imgAutoTransitionSelect.png"));
+            imgAutoTransition.setImage(new Image("auto_transition_select.png"));
         }else {
             ligne.setStroke(Color.GRAY);
             ligneBasFleche.setStroke(Color.GRAY);
             ligneHautFleche.setStroke(Color.GRAY);
-            imgAutoTransition.setImage(new Image("imgAutoTransition.png"));
+            imgAutoTransition.setImage(new Image("auto_transition.png"));
 
         }
     }

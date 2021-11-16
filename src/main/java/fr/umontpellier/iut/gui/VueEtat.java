@@ -63,8 +63,8 @@ public class VueEtat extends StackPane {
         this.etat = etat;
         estSelectionne = new SimpleBooleanProperty(false);
         labelNumEtat = new Label();
-        imageViewInitial = new ImageView("imgEtatInitial.png");
-        imageViewTerminal = new ImageView("imgEtatTerminal.png");
+        imageViewInitial = new ImageView("etat_initial.png");
+        imageViewTerminal = new ImageView("etat_terminal.png");
         cercle = new Circle(50, 50, 46, Color.RED);
 
         this.etat.estActifProperty().addListener(changementActivationEtat);

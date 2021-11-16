@@ -37,7 +37,7 @@ public class VuePrincipale extends BorderPane {
 
     private boolean ctrlPresse;
     private Button boutonCreerEtat;
-    private Button boutonSupprimerEtat;
+    private Button boutonSupprimer;
     private Button boutonAjouterTransition;
     private Button boutonSauvegarder;
     private Button boutonCharger;
@@ -98,7 +98,7 @@ public class VuePrincipale extends BorderPane {
             File selectedFile = fileChooser.showSaveDialog(new Stage());
             if (selectedFile != null) {
                 try {
-                    vueAutomate.sauvegarder(selectedFile.getAbsolutePath() + ".atmt");
+                    vueAutomate.sauvegarder(selectedFile.getAbsolutePath());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -229,7 +229,7 @@ public class VuePrincipale extends BorderPane {
 
         barreDeMenu =
                 new HBox(boutonCharger, boutonSauvegarder, boutonCreerEtat, checkBoxEstInitial, checkBoxEstTerminal,
-                        boutonClear, boutonSupprimerEtat, hBoxAjoutTransition);
+                        boutonClear, boutonSupprimer, hBoxAjoutTransition);
         initStyle();
 
         setTop(barreDeMenu);
@@ -237,8 +237,8 @@ public class VuePrincipale extends BorderPane {
         setBottom(hBoxLancerAutomate);
     }
 
-    public Button getBoutonSupprimerEtat() {
-        return boutonSupprimerEtat;
+    public Button getBoutonSupprimer() {
+        return boutonSupprimer;
     }
 
     public Button getBoutonAjouterTransition() {
@@ -250,7 +250,7 @@ public class VuePrincipale extends BorderPane {
     }
 
     public void initComposants() {
-        boutonSupprimerEtat = new Button("Supprimer Etat");
+        boutonSupprimer = new Button("Supprimer");
         boutonCreerEtat = new Button("Ajouter etat");
         boutonLancer = new Button("Lancer");
         boutonClear = new Button("Clear");
@@ -265,7 +265,7 @@ public class VuePrincipale extends BorderPane {
 
     public void initSetOnAction() {
         boutonCreerEtat.setOnAction(eventAjouterEtat);
-        boutonSupprimerEtat.setOnAction(eventSupprimer);
+        boutonSupprimer.setOnAction(eventSupprimer);
         boutonLancer.setOnAction(eventLancerAutomate);
         boutonAjouterTransition.setOnAction(eventAjouterTransition);
         boutonClear.setOnAction(eventClear);

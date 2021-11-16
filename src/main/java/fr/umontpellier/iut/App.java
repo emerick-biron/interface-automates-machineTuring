@@ -43,7 +43,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws IOException {
         this.primaryStage = primaryStage;
         vueDepart = new VueDepart();
-        vueDepart.setTitle("Projet S3");
+        vueDepart.setTitle("Interface pour automates et machine de Turing");
         vueDepart.getBoutonAutomate().setOnAction(eventLancerAutomate);
     }
 }
