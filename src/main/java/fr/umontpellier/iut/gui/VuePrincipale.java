@@ -181,7 +181,7 @@ public class VuePrincipale extends BorderPane {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Problème ajout transition");
                 alert.setHeaderText(null);
-                alert.setContentText("Vous devez sélectionner exactement 2 etats");
+                alert.setContentText("Vous devez sélectionner 1 ou 2 etats");
                 alert.showAndWait();
             } else {
                 String etiquette = textFieldEtiquette.getText();

@@ -1,4 +1,4 @@
-## Manuel :
+## Manuels :
 
 Lors du lancement de l'application une fenêtre s'ouvrira et vous permettra de choisir de lancer l'application de gestion
 d'automates [[1]](#fentre-de-dpart) ou l'application de gestion de machines de Turing [[2]](#fentre-de-dpart)
@@ -60,4 +60,6 @@ le bouton "Clear" [[14]](#interface-dun-automate-).
 ![plusieurs_trans_select](../ressources/plusieurs_trans_select.PNG)
 ![dialog_sup_trans](../ressources/dialog_sup_trans.PNG)
 
-##### Lancement d'un automate
+##### Lancement d'un automate :
+
+![lancement_automate](../ressources/lancement_automate.gif)
