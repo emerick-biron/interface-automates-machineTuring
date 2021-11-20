@@ -1,11 +1,9 @@
-package fr.umontpellier.iut;
+package machines;
 
-import fr.umontpellier.iut.gui.VueDepart;
-import fr.umontpellier.iut.gui.VuePrincipale;
+import machines.gui.VueDepart;
+import machines.automates.gui.VuePrincipaleAtmt;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -24,7 +22,7 @@ public class App extends Application {
         public void handle(ActionEvent actionEvent) {
             vueDepart.hide();
 
-            VuePrincipale vuePrincipale = new VuePrincipale(App.this);
+            VuePrincipaleAtmt vuePrincipale = new VuePrincipaleAtmt(App.this);
 
             primaryStage.setScene(new Scene(vuePrincipale));
             primaryStage.setWidth(1200);

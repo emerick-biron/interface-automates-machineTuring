@@ -1,6 +1,6 @@
-package fr.umontpellier.iut.gui;
+package machines.automates.gui;
 
-import fr.umontpellier.iut.logique.Etat;
+import machines.automates.logique.EtatAtmt;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -13,8 +13,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-public class VueEtat extends StackPane {
-    private Etat etat;
+public class VueEtatAtmt extends StackPane {
+    private EtatAtmt etat;
     private Circle cercle;
     private Label labelNumEtat;
     private VueAutomate vueAutomate;
@@ -50,15 +50,15 @@ public class VueEtat extends StackPane {
         public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
             if (aBoolean != t1) {
                 if (observableValue.getValue()) {
-                    vueAutomate.getVuesEtatSelectionnes().add(VueEtat.this);
+                    vueAutomate.getVuesEtatSelectionnes().add(VueEtatAtmt.this);
                 } else {
-                    vueAutomate.getVuesEtatSelectionnes().remove(VueEtat.this);
+                    vueAutomate.getVuesEtatSelectionnes().remove(VueEtatAtmt.this);
                 }
             }
         }
     };
 
-    public VueEtat(Etat etat, VueAutomate vueAutomate) {
+    public VueEtatAtmt(EtatAtmt etat, VueAutomate vueAutomate) {
         this.vueAutomate = vueAutomate;
         this.etat = etat;
         estSelectionne = new SimpleBooleanProperty(false);
@@ -80,7 +80,7 @@ public class VueEtat extends StackPane {
         return vueAutomate;
     }
 
-    public Etat getEtat() {
+    public EtatAtmt getEtat() {
         return etat;
     }
 

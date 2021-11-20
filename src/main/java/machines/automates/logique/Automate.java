@@ -1,43 +1,27 @@
-package fr.umontpellier.iut.logique;
+package machines.automates.logique;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import machines.logique.Machine;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Arrays;
 import java.util.List;
 
-public class Automate {
-    private ObservableList<Etat> etats;
-    private ObservableList<Transition> transitions;
-    private List<Etat> etatsActifs;
+public class Automate extends Machine<EtatAtmt, TransitionAtmt> {
 
-    public Automate(List<Etat> etats) {
-        this.etats = FXCollections.observableArrayList(etats);
-        transitions = FXCollections.observableArrayList();
-        etatsActifs = new ArrayList<>();
+    public Automate(List<EtatAtmt> etats) {
+        super(etats);
     }
 
-    public Automate(Etat... etats) {
-        this.etats = FXCollections.observableArrayList(etats);
-        transitions = FXCollections.observableArrayList();
-        etatsActifs = new ArrayList<>();
+    public Automate(EtatAtmt... etats) {
+        super(etats);
     }
 
     public Automate() {
-        etats = FXCollections.observableArrayList();
-        transitions = FXCollections.observableArrayList();
-        etatsActifs = new ArrayList<>();
-    }
-
-    public ObservableList<Transition> getTransitions() {
-        return transitions;
-    }
-
-    public ObservableList<Transition> transitionsProperty() {
-        return transitions;
+        super();
     }
 
     /**
@@ -47,19 +31,19 @@ public class Automate {
      * @throws IOException
      */
     public void chargerFichier(String nomFichier) throws IOException {
-        this.etats.clear();
+        getEtats().clear();
 
         FileReader fr = new FileReader(nomFichier);
         BufferedReader bf = new BufferedReader(fr);
 
         int nbEtat = Integer.parseInt(bf.readLine());
-        Etat[] etats = new Etat[nbEtat];
+        EtatAtmt[] etats = new EtatAtmt[nbEtat];
 
         for (int i = 0; i < nbEtat; i++) {
-            etats[i] = new Etat();
+            etats[i] = new EtatAtmt();
         }
 
-        ArrayList<Transition> transitionArrayList = new ArrayList<>();
+        ArrayList<TransitionAtmt> transitionArrayList = new ArrayList<>();
 
         String ligne = bf.readLine();
 
@@ -82,7 +66,7 @@ public class Automate {
                     int numE2 = Integer.parseInt(split[2]);
                     char lettre = split[1].charAt(0);
 
-                    transitionArrayList.add(new Transition(etats[numE1], etats[numE2], lettre));
+                    transitionArrayList.add(new TransitionAtmt(etats[numE1], etats[numE2], lettre));
                 }
             }
             ligne = bf.readLine();
@@ -91,38 +75,8 @@ public class Automate {
         bf.close();
         fr.close();
 
-        this.etats.addAll(etats);
+        getEtats().addAll(Arrays.asList(etats));
         ajoutTransition(transitionArrayList);
-    }
-
-    public void ajoutTransition(Transition... transitions) {
-        this.transitions.addAll(transitions);
-        for (Transition t : transitions) {
-            t.getEtatDepart().getListeTransitions().add(t);
-        }
-    }
-
-    public void ajoutTransition(ArrayList<Transition> transitions) {
-        this.transitions.addAll(transitions);
-        for (Transition t : transitions) {
-            t.getEtatDepart().getListeTransitions().add(t);
-        }
-    }
-
-    public void supprimerTransition(List<Transition> transitions) {
-        this.transitions.removeAll(transitions);
-        for (Transition t : transitions) {
-            t.getEtatDepart().getListeTransitions().remove(t);
-        }
-    }
-
-    public void supprimerTransition(Transition t) {
-        this.transitions.remove(t);
-        t.getEtatDepart().getListeTransitions().remove(t);
-    }
-
-    public ObservableList<Etat> etatsProperty() {
-        return etats;
     }
 
     /**
@@ -130,8 +84,8 @@ public class Automate {
      *
      * @return l'etat initial de l'automate
      */
-    public Etat getEtatInitial() {
-        for (Etat etat : etats) {
+    public EtatAtmt getEtatInitial() {
+        for (EtatAtmt etat : getEtats()) {
             if (etat.estInitial()) return etat;
         }
         return null;
@@ -144,7 +98,7 @@ public class Automate {
      * @return true si l'automate reconnait le mot sinon false
      */
     public boolean reconnait(String mot) {
-        Etat courant = getEtatInitial();
+        EtatAtmt courant = getEtatInitial();
         char lettre;
         for (int i = 0; i < mot.length(); i++) {
             lettre = mot.charAt(i);
@@ -161,15 +115,15 @@ public class Automate {
      * @param mot  mot a tester
      * @return true si le mot est reconnu sinon false
      */
-    public boolean reconnAux(Etat etat, String mot) {
+    public boolean reconnAux(EtatAtmt etat, String mot) {
         if (mot.length() < 1) {
             return etat.estTerminal();
         } else {
-            ArrayList<Transition> transitions = etat.getListeTransitions();
+            ArrayList<TransitionAtmt> transitions = etat.getListeTransitions();
             char lettre = mot.charAt(0);
             int i = 0;
             while (i < transitions.size()) {
-                Transition t = transitions.get(i);
+                TransitionAtmt t = transitions.get(i);
                 if (t.getEtiquette() == lettre) {
                     if (reconnAux(t.getEtatArrivee(), mot.substring(1, mot.length()))) return true;
                 }
@@ -186,7 +140,7 @@ public class Automate {
      * @return true si l'automate reconnait le mot sinon false
      */
     public boolean reconnaitND(String mot) {
-        for (Etat etat : etats) {
+        for (EtatAtmt etat : getEtats()) {
             if (etat.estInitial()) {
                 if (reconnAux(etat, mot)) return true;
             }
@@ -205,31 +159,31 @@ public class Automate {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
         //ecriture nbr etat
-        bufferedWriter.write(String.valueOf(etats.size()));
+        bufferedWriter.write(String.valueOf(getEtats().size()));
         bufferedWriter.newLine();
 
         //ecriture etats initiaux
-        for (Etat etat : etats) {
+        for (EtatAtmt etat : getEtats()) {
             if (etat.estInitial()) {
-                bufferedWriter.write("initial " + etats.indexOf(etat));
+                bufferedWriter.write("initial " + getEtats().indexOf(etat));
                 bufferedWriter.newLine();
             }
         }
 
         //ecriture etats terminaux
-        for (Etat etat : etats) {
+        for (EtatAtmt etat : getEtats()) {
             if (etat.estTerminal()) {
-                bufferedWriter.write("terminal " + etats.indexOf(etat));
+                bufferedWriter.write("terminal " + getEtats().indexOf(etat));
                 bufferedWriter.newLine();
             }
         }
 
         //ecriture transitions
-        for (Etat etat : etats) {
-            ArrayList<Transition> transitions = etat.getListeTransitions();
-            for (Transition t : transitions) {
-                bufferedWriter.write(etats.indexOf(t.getEtatDepart()) + " " + t.getEtiquette() + " " +
-                        etats.indexOf(t.getEtatArrivee()));
+        for (EtatAtmt etat : getEtats()) {
+            ArrayList<TransitionAtmt> transitions = etat.getListeTransitions();
+            for (TransitionAtmt t : transitions) {
+                bufferedWriter.write(getEtats().indexOf(t.getEtatDepart()) + " " + t.getEtiquette() + " " +
+                        getEtats().indexOf(t.getEtatArrivee()));
                 bufferedWriter.newLine();
             }
         }
@@ -238,47 +192,16 @@ public class Automate {
         fileWriter.close();
     }
 
-    /**
-     * Permet d'obtenir tous les etats initiaux d'un automate non deterministe
-     *
-     * @return liste des etats initiaux
-     */
-    public List<Etat> getEtatsInitiaux() {
-        List<Etat> res = new ArrayList<>();
-        for (Etat etat : etats) {
-            if (etat.estInitial()) res.add(etat);
-        }
-        return res;
-    }
-
-    public List<Etat> getEtats() {
-        return etats;
-    }
-
-    public void ajouterEtat(Etat etat) {
-        etats.add(etat);
-    }
-
-    public void supprimerEtat(Etat etat) {
-        ArrayList<Transition> transitionsASupprimer = new ArrayList<>();
-        for (Transition t : transitions) {
-            if (t.getEtatDepart() == etat) transitionsASupprimer.add(t);
-            else if (t.getEtatArrivee() == etat) transitionsASupprimer.add(t);
-        }
-        supprimerTransition(transitionsASupprimer);
-        etats.remove(etat);
-    }
-
     public Task<Void> getTaskLancer(String mot, long dellayMillis) {
         Task<Void> taskLancer = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                for (Etat e : etatsActifs) {
+                for (EtatAtmt e : getEtatsActifs()) {
                     e.desactive();
                 }
-                etatsActifs.clear();
-                etatsActifs.addAll(getEtatsInitiaux());
-                for (Etat e : etatsActifs) {
+                getEtatsActifs().clear();
+                getEtatsActifs().addAll(getEtatsInitiaux());
+                for (EtatAtmt e : getEtatsActifs()) {
                     e.active();
                 }
                 for (int i = 0; i < mot.length(); i++) {
@@ -297,29 +220,25 @@ public class Automate {
     }
 
     public void step(char lettre) {
-        List<Etat> nouveauxActifs = new ArrayList<>();
-        for (Etat e : etatsActifs) {
-            for (Etat etatCible : e.cibleND(lettre)) {
+        List<EtatAtmt> nouveauxActifs = new ArrayList<>();
+        for (EtatAtmt e : getEtatsActifs()) {
+            for (EtatAtmt etatCible : e.cibleND(lettre)) {
                 if (!nouveauxActifs.contains(etatCible)) {
                     nouveauxActifs.add(etatCible);
                 }
             }
         }
 
-        for (Etat e : etatsActifs) {
+        for (EtatAtmt e : getEtatsActifs()) {
             e.desactive();
         }
 
-        etatsActifs.clear();
-        etatsActifs.addAll(nouveauxActifs);
+        getEtatsActifs().clear();
+        getEtatsActifs().addAll(nouveauxActifs);
 
-        for (Etat e : etatsActifs) {
+        for (EtatAtmt e : getEtatsActifs()) {
             e.active();
         }
-    }
-
-    public List<Etat> getEtatsActifs() {
-        return etatsActifs;
     }
 
 }

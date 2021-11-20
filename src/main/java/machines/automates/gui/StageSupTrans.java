@@ -1,4 +1,4 @@
-package fr.umontpellier.iut.gui;
+package machines.automates.gui;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -23,7 +23,7 @@ public class StageSupTrans extends Stage {
     private ScrollPane scrollPane;
     private VBox contenuScrollPane;
     private VBox contenuPrincipal;
-    private HashMap<VueTransition, CheckBox> transitionAvecCB;
+    private HashMap<VueTransitionAtmt, CheckBox> transitionAvecCB;
     private CheckBox cbToutSelectionner;
     private Label labelInformations;
     private Button boutonSupprimer;
@@ -32,7 +32,7 @@ public class StageSupTrans extends Stage {
     private HBox hBoxToutSelect;
     private HBox hBoxInfo;
     private Label labelToutSelect;
-    private ArrayList<VueTransition> transitionsASupprimmer;
+    private ArrayList<VueTransitionAtmt> transitionsASupprimmer;
     private ChangeListener<Boolean> changementCbToutSelect = new ChangeListener<Boolean>() {
         @Override
         public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
@@ -50,16 +50,16 @@ public class StageSupTrans extends Stage {
     private EventHandler<ActionEvent> eventSupprimer = new EventHandler<ActionEvent>() {
         @Override
         public void handle(ActionEvent actionEvent) {
-            for (VueTransition key : transitionAvecCB.keySet() ) {
+            for (VueTransitionAtmt key : transitionAvecCB.keySet() ) {
                 if (transitionAvecCB.get(key).selectedProperty().get()) transitionsASupprimmer.add(key);
             }
             close();
         }
     };
 
-    public StageSupTrans(ObservableList<VueTransition> vuesTransition, Stage primaryStage) {
+    public StageSupTrans(ObservableList<VueTransitionAtmt> vuesTransition, Stage primaryStage) {
         transitionAvecCB = new HashMap<>();
-        for (VueTransition vueTransition : vuesTransition) {
+        for (VueTransitionAtmt vueTransition : vuesTransition) {
             CheckBox cb = new CheckBox();
             transitionAvecCB.put(vueTransition, cb);
         }
@@ -110,7 +110,7 @@ public class StageSupTrans extends Stage {
 
         contenuScrollPane = new VBox();
 
-        for (VueTransition key : transitionAvecCB.keySet()) {
+        for (VueTransitionAtmt key : transitionAvecCB.keySet()) {
             Label label = new Label(
                     key.getVueEtatDep().getLabelNumEtat().getText() + key.getLabelEtiquette().getText() +
                             key.getVueEtatFin().getLabelNumEtat().getText());
@@ -124,7 +124,7 @@ public class StageSupTrans extends Stage {
         return scrollPane;
     }
 
-    public ArrayList<VueTransition> showOpenDialog(){
+    public ArrayList<VueTransitionAtmt> showOpenDialog(){
         showAndWait();
         return transitionsASupprimmer;
     }

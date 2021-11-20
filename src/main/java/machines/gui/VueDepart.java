@@ -1,4 +1,4 @@
-package fr.umontpellier.iut.gui;
+package machines.gui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

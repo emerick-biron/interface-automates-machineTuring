@@ -1,6 +1,6 @@
-package fr.umontpellier.iut.gui;
+package machines.automates.gui;
 
-import fr.umontpellier.iut.logique.Transition;
+import machines.automates.logique.TransitionAtmt;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
@@ -14,28 +14,28 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
-public class VueTransition extends Group {
-    private Transition transition;
+public class VueTransitionAtmt extends Group {
+    private TransitionAtmt transition;
     private VueAutomate vueAutomate;
     private Line ligne;
     private Label labelEtiquette;
     private Line ligneHautFleche;
     private Line ligneBasFleche;
     private ImageView imgAutoTransition;
-    private VueEtat vueEtatDep;
-    private VueEtat vueEtatFin;
+    private VueEtatAtmt vueEtatDep;
+    private VueEtatAtmt vueEtatFin;
     private BooleanProperty estSelectionne;
     private ChangeListener<Boolean> changementSelection = new ChangeListener<Boolean>() {
         @Override
         public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
             if (aBoolean != t1) {
                 if (observableValue.getValue()) {
-                    for (VueTransition vueTransition : vueAutomate.getVuesTransition(vueEtatDep, vueEtatFin)) {
+                    for (VueTransitionAtmt vueTransition : vueAutomate.getVuesTransition(vueEtatDep, vueEtatFin)) {
                         vueAutomate.getVuesTransitionSelectionnes().add(vueTransition);
                     }
                 } else {
-                    vueAutomate.getVuesTransitionSelectionnes().remove(VueTransition.this);
-                    for (VueTransition vueTransition : vueAutomate.getVuesTransition(vueEtatDep, vueEtatFin)) {
+                    vueAutomate.getVuesTransitionSelectionnes().remove(VueTransitionAtmt.this);
+                    for (VueTransitionAtmt vueTransition : vueAutomate.getVuesTransition(vueEtatDep, vueEtatFin)) {
                         vueAutomate.getVuesTransitionSelectionnes().remove(vueTransition);
                     }
                 }
@@ -43,7 +43,7 @@ public class VueTransition extends Group {
         }
     };
 
-    public VueTransition(Transition transition, VueAutomate vueAutomate) {
+    public VueTransitionAtmt(TransitionAtmt transition, VueAutomate vueAutomate) {
         this.transition = transition;
         this.vueAutomate = vueAutomate;
         estSelectionne = new SimpleBooleanProperty(false);
@@ -62,7 +62,7 @@ public class VueTransition extends Group {
         getChildren().add(labelEtiquette);
     }
 
-    public Transition getTransition() {
+    public TransitionAtmt getTransition() {
         return transition;
     }
 
@@ -227,11 +227,11 @@ public class VueTransition extends Group {
         this.estSelectionne.set(false);
     }
 
-    public VueEtat getVueEtatDep() {
+    public VueEtatAtmt getVueEtatDep() {
         return vueEtatDep;
     }
 
-    public VueEtat getVueEtatFin() {
+    public VueEtatAtmt getVueEtatFin() {
         return vueEtatFin;
     }
 }

@@ -1,4 +1,4 @@
-package fr.umontpellier.iut;
+package machines;
 
 public class Laucher {
     public static void main(String[] args) {
