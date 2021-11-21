@@ -80,75 +80,6 @@ public class Automate extends Machine<EtatAtmt, TransitionAtmt> {
     }
 
     /**
-     * Permet d'obtenir l'etat initial (ne fonctionne que pour une automate deterministe)
-     *
-     * @return l'etat initial de l'automate
-     */
-    public EtatAtmt getEtatInitial() {
-        for (EtatAtmt etat : getEtats()) {
-            if (etat.estInitial()) return etat;
-        }
-        return null;
-    }
-
-    /**
-     * Permet de savoir si l'automate reconnait un mot (ne fonctionne que pour un automate deterministe)
-     *
-     * @param mot mot a tester
-     * @return true si l'automate reconnait le mot sinon false
-     */
-    public boolean reconnait(String mot) {
-        EtatAtmt courant = getEtatInitial();
-        char lettre;
-        for (int i = 0; i < mot.length(); i++) {
-            lettre = mot.charAt(i);
-            if (!courant.existeTrans(lettre)) return false;
-            courant = courant.cible(lettre);
-        }
-        return courant.estTerminal();
-    }
-
-    /**
-     * Permet de savoir si un mot peut etre reconnu a partir d'un certain etat
-     *
-     * @param etat etat de depart
-     * @param mot  mot a tester
-     * @return true si le mot est reconnu sinon false
-     */
-    public boolean reconnAux(EtatAtmt etat, String mot) {
-        if (mot.length() < 1) {
-            return etat.estTerminal();
-        } else {
-            ArrayList<TransitionAtmt> transitions = etat.getListeTransitions();
-            char lettre = mot.charAt(0);
-            int i = 0;
-            while (i < transitions.size()) {
-                TransitionAtmt t = transitions.get(i);
-                if (t.getEtiquette() == lettre) {
-                    if (reconnAux(t.getEtatArrivee(), mot.substring(1, mot.length()))) return true;
-                }
-                i++;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Permet de savoir si un automate non deterministe reconnait un certain mot
-     *
-     * @param mot mot a tester
-     * @return true si l'automate reconnait le mot sinon false
-     */
-    public boolean reconnaitND(String mot) {
-        for (EtatAtmt etat : getEtats()) {
-            if (etat.estInitial()) {
-                if (reconnAux(etat, mot)) return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Permet de sauvegarder l'automate dans un fichier
      *
      * @param nomFichier nom du fichier dans lequel sauvegarder l'automate
@@ -192,7 +123,16 @@ public class Automate extends Machine<EtatAtmt, TransitionAtmt> {
         fileWriter.close();
     }
 
-    public Task<Void> getTaskLancer(String mot, long dellayMillis) {
+    public void lancer(String mot,  long dellayMillis) {
+        new Thread(getTaskLancer(mot, dellayMillis)).start();
+    }
+
+    @Override
+    public void lancer(String mot) {
+        new Thread(getTaskLancer(mot, 0)).start();
+    }
+
+    private Task<Void> getTaskLancer(String mot, long dellayMillis) {
         Task<Void> taskLancer = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -215,11 +155,7 @@ public class Automate extends Machine<EtatAtmt, TransitionAtmt> {
         return taskLancer;
     }
 
-    public void lancer(Task<Void> taskLancer) throws InterruptedException {
-        new Thread(taskLancer).start();
-    }
-
-    public void step(char lettre) {
+    private void step(char lettre) {
         List<EtatAtmt> nouveauxActifs = new ArrayList<>();
         for (EtatAtmt e : getEtatsActifs()) {
             for (EtatAtmt etatCible : e.cibleND(lettre)) {
