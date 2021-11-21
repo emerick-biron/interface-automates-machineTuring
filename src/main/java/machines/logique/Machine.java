@@ -38,6 +38,8 @@ public abstract class Machine<E extends Etat<E, T>, T extends Transition<T, E>> 
 
     public abstract void sauvegarder(String nomFichier) throws IOException;
 
+    public abstract void lancer(String mot);
+
     @SafeVarargs
     public final void ajoutTransition(T... transitions) {
         this.transitions.addAll(transitions);
