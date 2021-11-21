@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Machine<E extends Etat, T extends Transition> {
+public abstract class Machine<E extends Etat<E, T>, T extends Transition<T, E>> {
     private ObservableList<E> etats;
     private ObservableList<T> transitions;
     private List<E> etatsActifs;

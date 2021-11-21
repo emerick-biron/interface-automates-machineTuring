@@ -2,7 +2,7 @@ package machines.logique;
 
 import machines.automates.logique.EtatAtmt;
 
-    public abstract class Transition<E extends Etat> {
+public class Transition<T extends Transition<T, E>, E extends Etat<E, T>> {
     private E etatDepart;
     private E etatArrivee;
     private char etiquette;

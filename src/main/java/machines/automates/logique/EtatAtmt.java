@@ -7,7 +7,7 @@ import machines.logique.Etat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EtatAtmt extends Etat<TransitionAtmt> {
+public class EtatAtmt extends Etat<EtatAtmt, TransitionAtmt> {
 
     public EtatAtmt() {
         super();

@@ -6,7 +6,7 @@ import machines.automates.logique.TransitionAtmt;
 
 import java.util.ArrayList;
 
-public abstract class Etat<T extends Transition> {
+public abstract class Etat<E extends Etat<E, T>, T extends Transition<T, E>> {
     private BooleanProperty estInitial;
     private BooleanProperty estTerminal;
     /**
