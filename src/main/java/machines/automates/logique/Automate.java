@@ -138,7 +138,7 @@ public class Automate extends Machine<EtatAtmt, TransitionAtmt> {
                     e.active();
                 }
                 for (int i = 0; i < mot.length(); i++) {
-                    updateProgress(i, mot.length() - 1);
+                    updateProgress(i, mot.length());
                     Thread.sleep(dellayMillis);
                     char lettre = mot.charAt(i);
                     step(lettre);

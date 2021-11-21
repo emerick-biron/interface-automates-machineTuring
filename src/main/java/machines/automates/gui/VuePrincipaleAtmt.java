@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
+import javafx.scene.Node;
 import javafx.stage.Popup;
 import machines.App;
 import machines.automates.logique.Automate;
@@ -40,6 +41,7 @@ public class VuePrincipaleAtmt extends
     private HBox barreDeMenu;
     private HBox hBoxLancerAutomate;
     private HBox hBoxAjoutTransition;
+    private HBox hBoxLabelsLettres;
 
     private FileChooser fileChooser;
 
@@ -59,6 +61,24 @@ public class VuePrincipaleAtmt extends
     private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> {
         //TODO Faire des tests pour voir si les entrees sont ok
         Task<Boolean> taskLancer = vueAutomate.getAutomate().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
+        taskLancer.progressProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                String text = getTextFieldMotAutomate().getText();
+                int indice = (int) (t1.doubleValue() * text.length());
+                if (indice == 0){
+                    hBoxLabelsLettres = new HBox();
+                    hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
+                    hBoxLabelsLettres.setPadding(new Insets(0,20,0,0));
+                    for (int i = 0; i < text.length(); i++) {
+                        Label labelLettre = new Label(String.valueOf(text.charAt(i)));
+                        hBoxLabelsLettres.getChildren().add(labelLettre);
+                    }
+                    hBoxLancerAutomate.getChildren().add(0, hBoxLabelsLettres);
+                }
+                hBoxLabelsLettres.getChildren().get(indice).setStyle("-fx-text-fill: #037fdb");
+            }
+        });
         taskLancer.setOnSucceeded(workerStateEvent -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Résultat");
@@ -66,6 +86,7 @@ public class VuePrincipaleAtmt extends
             if (taskLancer.getValue()) alert.setContentText("Mot reconnu");
             else alert.setContentText("Mot non reconnu");
             alert.showAndWait();
+            hBoxLancerAutomate.getChildren().remove(hBoxLabelsLettres);
         });
         vueAutomate.getAutomate().lancer(taskLancer);
     };
@@ -212,10 +233,10 @@ public class VuePrincipaleAtmt extends
 
     @Override
     public void unbindCheckBoxes() {
-            for (EtatAtmt e : getVueMachine().getMachine().getEtats()) {
-                getCheckBoxEstInitial().selectedProperty().unbindBidirectional(e.estInitialProperty());
-                getCheckBoxEstTerminal().selectedProperty().unbindBidirectional(e.estTerminalProperty());
-            }
+        for (EtatAtmt e : getVueMachine().getMachine().getEtats()) {
+            getCheckBoxEstInitial().selectedProperty().unbindBidirectional(e.estInitialProperty());
+            getCheckBoxEstTerminal().selectedProperty().unbindBidirectional(e.estTerminalProperty());
+        }
     }
 
     public void initSetOnAction() {
