@@ -41,10 +41,6 @@ public abstract class VuePrincipale<VP extends VuePrincipale<VP, VM, VE, VT, M, 
 
     private TextField textFieldMotAutomate;
     private TextField textFieldEtiquette;
-    private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> {
-        //TODO Faire des tests pour voir si les entrees sont ok
-        vueMachine.getMachine().lancer(textFieldMotAutomate.getText(), 1000);
-    };
     private EventHandler<ActionEvent> eventClear = actionEvent -> {
         vueMachine.clear();
     };
@@ -77,7 +73,6 @@ public abstract class VuePrincipale<VP extends VuePrincipale<VP, VM, VE, VT, M, 
     }
 
     public void initSetOnAction() {
-        boutonLancer.setOnAction(eventLancerAutomate);
         boutonClear.setOnAction(eventClear);
     }
 

@@ -38,9 +38,9 @@ public abstract class Machine<E extends Etat<E, T>, T extends Transition<T, E>> 
 
     public abstract void sauvegarder(String nomFichier) throws IOException;
 
-    public abstract void lancer(String mot);
+    public abstract boolean lancer(String mot);
 
-    public abstract void lancer(String mot, long dellayMillis);
+    public abstract boolean lancer(String mot, long dellayMillis);
 
     @SafeVarargs
     public final void ajoutTransition(T... transitions) {

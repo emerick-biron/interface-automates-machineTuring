@@ -1,5 +1,6 @@
 package machines.automates.gui;
 
+import javafx.stage.Popup;
 import machines.App;
 import machines.automates.logique.Automate;
 import machines.automates.logique.EtatAtmt;
@@ -47,6 +48,16 @@ public class VuePrincipaleAtmt extends
             return null;
         }
         return change;
+    };
+    private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> {
+        //TODO Faire des tests pour voir si les entrees sont ok
+        boolean resultat = vueAutomate.getAutomate().lancer(getTextFieldMotAutomate().getText(), 1000);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Résultat");
+        alert.setHeaderText(null);
+        if (resultat) alert.setContentText("Mot reconnu");
+        else alert.setContentText("Mot non reconnu");
+        alert.showAndWait();
     };
     private EventHandler<ActionEvent> eventAjouterEtat = actionEvent -> getVueAutomate().getAutomate()
             .ajouterEtat(new EtatAtmt(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
@@ -104,8 +115,8 @@ public class VuePrincipaleAtmt extends
 
         HashSet<VueTransitionAtmt> vuesTransitionADeDelectionner = new HashSet<>();
         for (VueTransitionAtmt vueTransition : getVueAutomate().getVuesTransitionSelectionnes()) {
-            if (getVueAutomate().getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin()).size() ==
-                    1) {
+            if (getVueAutomate().getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
+                    .size() == 1) {
                 getVueAutomate().getAutomate().supprimerTransition(vueTransition.getTransition());
                 vuesTransitionADeDelectionner.add(vueTransition);
             }
@@ -142,8 +153,7 @@ public class VuePrincipaleAtmt extends
             if (etiquette.length() >= 1) {
                 boolean nouvelleTrans = true;
                 for (TransitionAtmt t : getVueAutomate().getAutomate().getTransitions()) {
-                    if (t.getEtatDepart() == vueEtatDep.getEtat() &&
-                            t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
+                    if (t.getEtatDepart() == vueEtatDep.getEtat() && t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
                             t.getEtiquette() == etiquette.charAt(0)) {
                         nouvelleTrans = false;
                         break;
@@ -151,8 +161,7 @@ public class VuePrincipaleAtmt extends
                 }
                 if (nouvelleTrans) {
                     getVueAutomate().getAutomate().ajoutTransition(
-                            new TransitionAtmt(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(),
-                                    etiquette.charAt(0)));
+                            new TransitionAtmt(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0)));
                 }
             }
             getTextFieldEtiquette().setText("");
@@ -185,13 +194,14 @@ public class VuePrincipaleAtmt extends
         return getVueAutomate();
     }
 
-    public VueAutomate getVueAutomate(){
+    public VueAutomate getVueAutomate() {
         return vueAutomate;
     }
 
     @Override
     public void initSetOnAction() {
         super.initSetOnAction();
+        getBoutonLancer().setOnAction(eventLancerAutomate);
         getBoutonCreerEtat().setOnAction(eventAjouterEtat);
         getBoutonSupprimer().setOnAction(eventSupprimer);
         getBoutonAjouterTransition().setOnAction(eventAjouterTransition);

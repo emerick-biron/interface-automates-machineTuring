@@ -124,19 +124,23 @@ public class Automate extends Machine<EtatAtmt, TransitionAtmt> {
     }
 
     @Override
-    public void lancer(String mot,  long dellayMillis) {
-        new Thread(getTaskLancer(mot, dellayMillis)).start();
+    public boolean lancer(String mot,  long dellayMillis) {
+        Task<Boolean> taskLancer = getTaskLancer(mot, dellayMillis);
+        new Thread(taskLancer).start();
+        return taskLancer.getValue();
     }
 
     @Override
-    public void lancer(String mot) {
-        new Thread(getTaskLancer(mot, 0)).start();
+    public boolean lancer(String mot) {
+        Task<Boolean> taskLancer = getTaskLancer(mot, 0);
+        new Thread(taskLancer).start();
+        return taskLancer.getValue();
     }
 
-    private Task<Void> getTaskLancer(String mot, long dellayMillis) {
-        Task<Void> taskLancer = new Task<Void>() {
+    private Task<Boolean> getTaskLancer(String mot, long dellayMillis) {
+        return new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Boolean call() throws Exception {
                 for (EtatAtmt e : getEtatsActifs()) {
                     e.desactive();
                 }
@@ -149,11 +153,15 @@ public class Automate extends Machine<EtatAtmt, TransitionAtmt> {
                     Thread.sleep(dellayMillis);
                     char lettre = mot.charAt(i);
                     step(lettre);
+                    if (i == mot.length()-1){
+                        for (EtatAtmt etat : getEtats()) {
+                            if (etat.estActif()) return true;
+                        }
+                    }
                 }
-                return null;
+                return false;
             }
         };
-        return taskLancer;
     }
 
     private void step(char lettre) {
