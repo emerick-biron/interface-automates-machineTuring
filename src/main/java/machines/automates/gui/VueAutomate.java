@@ -7,7 +7,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 import machines.gui.VueMachine;
@@ -18,10 +17,6 @@ import java.util.List;
 
 public class VueAutomate extends
         VueMachine<VuePrincipaleAtmt, VueAutomate, VueEtatAtmt, VueTransitionAtmt, Automate, EtatAtmt, TransitionAtmt> {
-    private Automate automate;
-    private VuePrincipaleAtmt vuePrincipale;
-    private ObservableList<VueEtatAtmt> vuesEtatSelectionnes = FXCollections.observableArrayList();
-    private ObservableList<VueTransitionAtmt> vuesTransitionSelectionnes = FXCollections.observableArrayList();
     private ListChangeListener<EtatAtmt> miseAJourEtats = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
@@ -38,7 +33,7 @@ public class VueAutomate extends
         for (Node n : getChildren()) {
             if (n instanceof VueEtatAtmt) {
                 VueEtatAtmt vueEtat = (VueEtatAtmt) n;
-                vueEtat.setLabelNumEtat(automate.etatsProperty().indexOf(vueEtat.getEtat()));
+                vueEtat.setLabelNumEtat(getAutomate().etatsProperty().indexOf(vueEtat.getEtat()));
             }
         }
     };
@@ -56,10 +51,10 @@ public class VueAutomate extends
                 }
             }
         }
-        for (TransitionAtmt t : automate.getTransitions()) {
+        for (TransitionAtmt t : getAutomate().getTransitions()) {
             int n = 0;
-            for (int i = 0; i < automate.getTransitions().indexOf(t); i++) {
-                TransitionAtmt t2 = automate.getTransitions().get(i);
+            for (int i = 0; i < getAutomate().getTransitions().indexOf(t); i++) {
+                TransitionAtmt t2 = getAutomate().getTransitions().get(i);
                 if (t.getEtatDepart() == t2.getEtatDepart() && t.getEtatArrivee() == t2.getEtatArrivee()) {
                     n++;
                 }
@@ -90,10 +85,10 @@ public class VueAutomate extends
                 }
             }
         }
-        vuePrincipale.getBoutonAjouterTransition()
-                .setVisible(vuesEtatSelectionnes.size() <= 2 && vuesEtatSelectionnes.size() >= 1);
-        vuePrincipale.getTextFieldEtiquette()
-                .setVisible(vuesEtatSelectionnes.size() <= 2 && vuesEtatSelectionnes.size() >= 1);
+        getVuePrincipale().getBoutonAjouterTransition()
+                .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
+        getVuePrincipale().getTextFieldEtiquette()
+                .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
     };
     private ListChangeListener<VueTransitionAtmt> miseAJourVuesTransitionSelectionnes = change -> {
         while (change.next()) {
@@ -111,87 +106,24 @@ public class VueAutomate extends
     };
 
     public VueAutomate(Automate automate, VuePrincipaleAtmt vuePrincipale) {
-        this.vuePrincipale = vuePrincipale;
-        this.automate = automate;
-        this.automate.etatsProperty().addListener(miseAJourEtats);
-        this.automate.transitionsProperty().addListener(miseAJourTransition);
-        vuesEtatSelectionnes.addListener(miseAJourVuesEtatSelectionnes);
-        vuesTransitionSelectionnes.addListener(miseAJourVuesTransitionSelectionnes);
-
-        setOnMousePressed(mouseEvent -> {
-            if (mouseEvent.getTarget() == this) {
-                deSelectionnerVues();
-                vuePrincipale.unbindCheckBoxes();
-            }
-        });
+        super(automate, vuePrincipale);
     }
 
-    public ObservableList<VueTransitionAtmt> getVuesTransitionSelectionnes() {
-        return vuesTransitionSelectionnes;
-    }
-
-    public ObservableList<VueEtatAtmt> getVuesEtatSelectionnes() {
-        return vuesEtatSelectionnes;
-    }
-
-    public VuePrincipaleAtmt getVuePrincipale() {
-        return vuePrincipale;
+    @Override
+    public void initListeners() {
+        getAutomate().etatsProperty().addListener(miseAJourEtats);
+        getAutomate().transitionsProperty().addListener(miseAJourTransition);
+        getVuesEtatSelectionnes().addListener(miseAJourVuesEtatSelectionnes);
+        getVuesTransitionSelectionnes().addListener(miseAJourVuesTransitionSelectionnes);
     }
 
     public Automate getAutomate() {
-        return automate;
-    }
-
-    public VueEtatAtmt getVueEtat(EtatAtmt etat) {
-        for (Node n : getChildren()) {
-            if (n instanceof VueEtatAtmt) {
-                VueEtatAtmt vueEtat = (VueEtatAtmt) n;
-                if (vueEtat.getEtat().equals(etat)) return vueEtat;
-            }
-        }
-        return null;
-    }
-
-    public VueTransitionAtmt getVueTransition(TransitionAtmt transition) {
-        for (Node n : getChildren()) {
-            if (n instanceof VueTransitionAtmt) {
-                VueTransitionAtmt vueTransition = (VueTransitionAtmt) n;
-                if (vueTransition.getTransition().equals(transition)) return vueTransition;
-            }
-        }
-        return null;
-    }
-
-    public ArrayList<VueTransitionAtmt> getVuesTransition(VueEtatAtmt vueEtat1, VueEtatAtmt vueEtat2) {
-        ArrayList<VueTransitionAtmt> res = new ArrayList<>();
-        for (TransitionAtmt t : vueEtat1.getEtat().getListeTransitions()) {
-            if (t.getEtatArrivee() == vueEtat2.getEtat()) {
-                if (!res.contains(getVueTransition(t))) res.add(getVueTransition(t));
-            }
-        }
-        for (TransitionAtmt t : vueEtat2.getEtat().getListeTransitions()) {
-            if (t.getEtatArrivee() == vueEtat1.getEtat()) {
-                if (!res.contains(getVueTransition(t))) res.add(getVueTransition(t));
-            }
-        }
-        return res;
-    }
-
-    public void clear() {
-        vuesEtatSelectionnes.clear();
-        vuesTransitionSelectionnes.clear();
-        List<EtatAtmt> etats = automate.getEtats();
-        if (!etats.isEmpty()) {
-            int l = etats.size();
-            for (int i = 0; i < l; i++) {
-                automate.supprimerEtat(etats.get(0));
-            }
-        }
+        return super.getMachine();
     }
 
     public void chargerFichier(String nomFichier) throws IOException {
         clear();
-        automate.chargerFichier(nomFichier);
+        getAutomate().chargerFichier(nomFichier);
 
         FileReader fr = new FileReader(nomFichier);
         BufferedReader bf = new BufferedReader(fr);
@@ -213,7 +145,7 @@ public class VueAutomate extends
                 double xPos = Double.parseDouble(split[1]);
                 double yPos = Double.parseDouble(split[2]);
 
-                EtatAtmt etat = automate.getEtats().get(numEtat);
+                EtatAtmt etat = getAutomate().getEtats().get(numEtat);
                 VueEtatAtmt vueEtat = getVueEtat(etat);
 
                 //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
@@ -235,7 +167,7 @@ public class VueAutomate extends
     }
 
     public void sauvegarder(String nomFichier) throws IOException {
-        automate.sauvegarder(nomFichier);
+        getAutomate().sauvegarder(nomFichier);
 
         Writer fileWriter = new FileWriter(nomFichier, true);
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
@@ -243,7 +175,7 @@ public class VueAutomate extends
         bufferedWriter.write("###");
         bufferedWriter.newLine();
 
-        List<EtatAtmt> listEtats = automate.getEtats();
+        List<EtatAtmt> listEtats = getAutomate().getEtats();
 
         for (EtatAtmt e : listEtats) {
             VueEtatAtmt vueEtat = getVueEtat(e);
@@ -253,25 +185,6 @@ public class VueAutomate extends
 
         bufferedWriter.close();
         fileWriter.close();
-    }
-
-    public void deSelectionnerVues() {
-        deSelectionnerVuesEtat();
-        deSelectionnerVuesTransition();
-    }
-
-    public void deSelectionnerVuesEtat() {
-        for (EtatAtmt e : automate.getEtats()) {
-            VueEtatAtmt vueEtat = getVueEtat(e);
-            vueEtat.deSelectionner();
-        }
-    }
-
-    public void deSelectionnerVuesTransition() {
-        for (TransitionAtmt t : automate.getTransitions()) {
-            VueTransitionAtmt vueTransition = getVueTransition(t);
-            vueTransition.deSelectionner();
-        }
     }
 }
 

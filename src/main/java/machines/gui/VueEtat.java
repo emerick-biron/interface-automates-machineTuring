@@ -15,9 +15,9 @@ import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
 
-public abstract class VueEtat<VP extends VuePrincipale, VM extends VueMachine<VP, VM, VE, VT, M, E, T>,
-        VE extends VueEtat<VP, VM, VE, VT, M, E, T>, VT extends VueTransition<VP, VM, VE, VT, M, E, T>, M extends Machine<E, T>,
-        E extends Etat<E, T>, T extends Transition<T, E>>
+public abstract class VueEtat<VP extends VuePrincipale<VP, VM, VE, VT, M, E, T>, VM extends VueMachine<VP, VM, VE, VT, M, E, T>,
+        VE extends VueEtat<VP, VM, VE, VT, M, E, T>, VT extends VueTransition<VP, VM, VE, VT, M, E, T>,
+        M extends Machine<E, T>, E extends Etat<E, T>, T extends Transition<T, E>>
         extends StackPane {
     private E etat;
     private Circle cercle;
@@ -28,40 +28,6 @@ public abstract class VueEtat<VP extends VuePrincipale, VM extends VueMachine<VP
     private ImageView imageViewInitial;
     private ImageView imageViewTerminal;
     private BooleanProperty estSelectionne;
-    private ChangeListener<Boolean> changementActivationEtat = new ChangeListener<>() {
-        @Override
-        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean ancienneValeur,
-                            Boolean nouvelleValeur) {
-            if (observableValue.getValue()) cercle.setFill(Color.GREEN);
-            else cercle.setFill(Color.RED);
-        }
-    };
-    private ChangeListener<Boolean> changementEstInitial = new ChangeListener<>() {
-        @Override
-        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-            if (observableValue.getValue()) getChildren().add(imageViewInitial);
-            else getChildren().remove(imageViewInitial);
-        }
-    };
-    private ChangeListener<Boolean> changementEstTerminal = new ChangeListener<>() {
-        @Override
-        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-            if (observableValue.getValue()) getChildren().add(imageViewTerminal);
-            else getChildren().remove(imageViewTerminal);
-        }
-    };
-    private ChangeListener<Boolean> changementSelection = new ChangeListener<>() {
-        @Override
-        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-            if (aBoolean != t1) {
-                if (observableValue.getValue()) {
-                    vueMachine.getVuesEtatSelectionnes().add(VueEtat.this);
-                } else {
-                    vueMachine.getVuesEtatSelectionnes().remove(VueEtat.this);
-                }
-            }
-        }
-    };
 
     public VueEtat(E etat, VM vueMachine) {
         this.vueMachine = vueMachine;
@@ -72,13 +38,20 @@ public abstract class VueEtat<VP extends VuePrincipale, VM extends VueMachine<VP
         imageViewTerminal = new ImageView("etat_terminal.png");
         cercle = new Circle(50, 50, 46, Color.RED);
 
-        this.etat.estActifProperty().addListener(changementActivationEtat);
-        this.etat.estInitialProperty().addListener(changementEstInitial);
-        this.etat.estTerminalProperty().addListener(changementEstTerminal);
-        estSelectionne.addListener(changementSelection);
+        initListeners();
 
         getChildren().add(cercle);
         init();
+    }
+
+    public abstract void initListeners();
+
+    public ImageView getImageViewInitial() {
+        return imageViewInitial;
+    }
+
+    public ImageView getImageViewTerminal() {
+        return imageViewTerminal;
     }
 
     public VM getVueMachine() {

@@ -4,25 +4,19 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import machines.automates.gui.VueAutomate;
-import machines.automates.gui.VueEtatAtmt;
-import machines.automates.gui.VueTransitionAtmt;
-import machines.automates.logique.TransitionAtmt;
 import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
 
-public abstract class VueTransition<VP extends VuePrincipale, VM extends VueMachine<VP, VM, VE, VT, M, E, T>,
-        VE extends VueEtat<VP, VM, VE, VT, M, E, T>, VT extends VueTransition<VP, VM, VE, VT, M, E, T>, M extends Machine<E, T>,
-        E extends Etat<E, T>, T extends Transition<T, E>>
+public abstract class VueTransition<VP extends VuePrincipale<VP, VM, VE, VT, M, E, T>, VM extends VueMachine<VP, VM, VE, VT, M, E, T>,
+        VE extends VueEtat<VP, VM, VE, VT, M, E, T>, VT extends VueTransition<VP, VM, VE, VT, M, E, T>,
+        M extends Machine<E, T>, E extends Etat<E, T>, T extends Transition<T, E>>
         extends Group {
     private T transition;
     private VM vueMachine;
@@ -34,23 +28,6 @@ public abstract class VueTransition<VP extends VuePrincipale, VM extends VueMach
     private VE vueEtatDep;
     private VE vueEtatFin;
     private BooleanProperty estSelectionne;
-    private ChangeListener<Boolean> changementSelection = new ChangeListener<>() {
-        @Override
-        public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-            if (aBoolean != t1) {
-                if (observableValue.getValue()) {
-                    for (VueTransition<VP, VM, VE, VT, M, E, T> vueTransition : vueMachine.getVuesTransition(vueEtatDep, vueEtatFin)) {
-                        vueMachine.getVuesTransitionSelectionnes().add(vueTransition);
-                    }
-                } else {
-                    vueMachine.getVuesTransitionSelectionnes().remove(VueTransition.this);
-                    for (VueTransition<VP, VM, VE, VT, M, E, T> vueTransition : vueMachine.getVuesTransition(vueEtatDep, vueEtatFin)) {
-                        vueMachine.getVuesTransitionSelectionnes().remove(vueTransition);
-                    }
-                }
-            }
-        }
-    };
 
     public VueTransition(T transition, VM vueMachine) {
         this.transition = transition;
@@ -64,11 +41,17 @@ public abstract class VueTransition<VP extends VuePrincipale, VM extends VueMach
         vueEtatDep = vueMachine.getVueEtat(transition.getEtatDepart());
         vueEtatFin = vueMachine.getVueEtat(transition.getEtatArrivee());
 
-        estSelectionne.addListener(changementSelection);
+        initListeners();
 
         init();
 
         getChildren().add(labelEtiquette);
+    }
+
+    public abstract void initListeners();
+
+    public VM getVueMachine() {
+        return vueMachine;
     }
 
     public T getTransition() {

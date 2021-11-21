@@ -40,6 +40,8 @@ public abstract class Machine<E extends Etat<E, T>, T extends Transition<T, E>> 
 
     public abstract void lancer(String mot);
 
+    public abstract void lancer(String mot, long dellayMillis);
+
     @SafeVarargs
     public final void ajoutTransition(T... transitions) {
         this.transitions.addAll(transitions);

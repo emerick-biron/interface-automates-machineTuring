@@ -38,7 +38,7 @@ public class App extends Application {
                 File file = path.toFile();
                 if (!choix.equals("nouveau") && file.isFile()) {
                     try {
-                        vuePrincipale.getVueAutomate().chargerFichier(file.getAbsolutePath());
+                        vuePrincipale.getVueMachine().chargerFichier(file.getAbsolutePath());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -123,6 +123,7 @@ public class Automate extends Machine<EtatAtmt, TransitionAtmt> {
         fileWriter.close();
     }
 
+    @Override
     public void lancer(String mot,  long dellayMillis) {
         new Thread(getTaskLancer(mot, dellayMillis)).start();
     }
