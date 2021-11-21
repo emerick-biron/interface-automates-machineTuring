@@ -31,22 +31,6 @@ public class EtatAtmt extends Etat<EtatAtmt, TransitionAtmt> {
     }
 
     /**
-     * Permet d'obtenir l'etat qui peut etre atteint a partir de l'etat courant avec une certaine lettre (ne
-     * fonctionne que pour un automate deterministe)
-     *
-     * @param c lettre a tester
-     * @return null si il n'exite pas de transition sortante portant la lettre c sinon l'etat qui peut etre atteint
-     * avec la lettre c
-     */
-    public EtatAtmt cible(char c) {
-        if (!existeTrans(c)) return null;
-        for (TransitionAtmt transition : getListeTransitions()) {
-            if (transition.getEtiquette() == c) return transition.getEtatArrivee();
-        }
-        return null;
-    }
-
-    /**
      * Permet d'obtenir la liste des etat qui peuvent etre atteint a partir de l'etat qui courant avec la lettre c
      *
      * @param c lettre a tester
