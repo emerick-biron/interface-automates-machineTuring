@@ -4,5 +4,5 @@ module projet_s3_desbos_moret_roussel_biron {
     requires javafx.base;
     requires javafx.fxml;
 
-    opens fr.umontpellier.iut;
+    opens machines;
 }
