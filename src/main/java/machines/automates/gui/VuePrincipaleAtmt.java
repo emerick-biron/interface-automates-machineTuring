@@ -5,17 +5,16 @@ import machines.automates.logique.Automate;
 import machines.automates.logique.EtatAtmt;
 import machines.automates.logique.TransitionAtmt;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import machines.gui.VuePrincipale;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +26,7 @@ import java.util.HashSet;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
-public class VuePrincipaleAtmt extends BorderPane {
+public class VuePrincipaleAtmt extends VuePrincipale {
     private App app;
 
     private VueAutomate vueAutomate;
@@ -65,7 +64,7 @@ public class VuePrincipaleAtmt extends BorderPane {
     private EventHandler<ActionEvent> eventAjouterEtat = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
-            vueAutomate.getAutomate()
+            vueAutomate.getMachine()
                     .ajouterEtat(new EtatAtmt(checkBoxEstInitial.isSelected(), checkBoxEstTerminal.isSelected()));
         }
     };
@@ -73,7 +72,7 @@ public class VuePrincipaleAtmt extends BorderPane {
         @Override
         public void handle(ActionEvent actionEvent) {
             //TODO Faire des tests pour voir si les entrees sont ok
-            vueAutomate.getAutomate().lancer(textFieldMotAutomate.getText(), 1000);
+            vueAutomate.getMachine().lancer(textFieldMotAutomate.getText(), 1000);
         }
     };
     private EventHandler<ActionEvent> eventClear = actionEvent -> {
@@ -132,14 +131,14 @@ public class VuePrincipaleAtmt extends BorderPane {
         public void handle(ActionEvent actionEvent) {
             ArrayList<VueEtatAtmt> vuesEtatADeSelectionner = new ArrayList<>();
             for (VueEtatAtmt vueEtat : vueAutomate.getVuesEtatSelectionnes()) {
-                for (TransitionAtmt t : vueAutomate.getAutomate().getTransitions()) {
+                for (TransitionAtmt t : vueAutomate.getMachine().getTransitions()) {
                     if (t.getEtatDepart() == vueEtat.getEtat() || t.getEtatArrivee() == vueEtat.getEtat()) {
                         VueTransitionAtmt vueTransition = vueAutomate.getVueTransition(t);
                         vueTransition.deSelectionner();
                     }
                 }
                 vuesEtatADeSelectionner.add(vueEtat);
-                vueAutomate.getAutomate().supprimerEtat(vueEtat.getEtat());
+                vueAutomate.getMachine().supprimerEtat(vueEtat.getEtat());
             }
             for (VueEtatAtmt vueEtat : vuesEtatADeSelectionner) {
                 vueEtat.deSelectionner();
@@ -149,7 +148,7 @@ public class VuePrincipaleAtmt extends BorderPane {
             for (VueTransitionAtmt vueTransition : vueAutomate.getVuesTransitionSelectionnes()) {
                 if (vueAutomate.getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
                         .size() == 1) {
-                    vueAutomate.getAutomate().supprimerTransition(vueTransition.getTransition());
+                    vueAutomate.getMachine().supprimerTransition(vueTransition.getTransition());
                     vuesTransitionADeDelectionner.add(vueTransition);
                 }
             }
@@ -162,7 +161,7 @@ public class VuePrincipaleAtmt extends BorderPane {
                 StageSupTrans stageSupTrans = new StageSupTrans(vueAutomate.getVuesTransitionSelectionnes(), app.getPrimaryStage());
                 ArrayList<VueTransitionAtmt> transitionsASupprimer = stageSupTrans.showOpenDialog();
                 for (VueTransitionAtmt vueTransition : transitionsASupprimer) {
-                    vueAutomate.getAutomate().supprimerTransition(vueTransition.getTransition());
+                    vueAutomate.getMachine().supprimerTransition(vueTransition.getTransition());
                     vueTransition.deSelectionner();
                 }
             }
@@ -186,7 +185,7 @@ public class VuePrincipaleAtmt extends BorderPane {
                 else vueEtatArrivee = vuesEtatSelectionnes.get(1);
                 if (etiquette.length() >= 1) {
                     boolean nouvelleTrans = true;
-                    for (TransitionAtmt t : vueAutomate.getAutomate().getTransitions()) {
+                    for (TransitionAtmt t : vueAutomate.getMachine().getTransitions()) {
                         if (t.getEtatDepart() == vueEtatDep.getEtat() &&
                                 t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
                                 t.getEtiquette() == etiquette.charAt(0)) {
@@ -195,7 +194,7 @@ public class VuePrincipaleAtmt extends BorderPane {
                         }
                     }
                     if (nouvelleTrans) {
-                        vueAutomate.getAutomate().ajoutTransition(
+                        vueAutomate.getMachine().ajoutTransition(
                                 new TransitionAtmt(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0)));
                     }
                 }
@@ -285,7 +284,7 @@ public class VuePrincipaleAtmt extends BorderPane {
     }
 
     public void unbindCheckBoxes() {
-        for (EtatAtmt e : vueAutomate.getAutomate().getEtats()) {
+        for (EtatAtmt e : vueAutomate.getMachine().getEtats()) {
             checkBoxEstInitial.selectedProperty().unbindBidirectional(e.estInitialProperty());
             checkBoxEstTerminal.selectedProperty().unbindBidirectional(e.estTerminalProperty());
         }

@@ -10,12 +10,14 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
+import machines.gui.VueMachine;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VueAutomate extends Pane {
+public class VueAutomate extends
+        VueMachine<VuePrincipaleAtmt, VueAutomate, VueEtatAtmt, VueTransitionAtmt, Automate, EtatAtmt, TransitionAtmt> {
     private Automate automate;
     private VuePrincipaleAtmt vuePrincipale;
     private ObservableList<VueEtatAtmt> vuesEtatSelectionnes = FXCollections.observableArrayList();
