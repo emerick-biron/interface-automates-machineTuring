@@ -72,13 +72,8 @@ public class VuePrincipaleAtmt extends BorderPane {
     private EventHandler<ActionEvent> eventLancerAutomate = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
-            Task<Void> taskLancer = vueAutomate.getAutomate().getTaskLancer(textFieldMotAutomate.getText(), 1000);
             //TODO Faire des tests pour voir si les entrees sont ok
-            try {
-                vueAutomate.getAutomate().lancer(taskLancer);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            vueAutomate.getAutomate().lancer(textFieldMotAutomate.getText(), 1000);
         }
     };
     private EventHandler<ActionEvent> eventClear = actionEvent -> {
