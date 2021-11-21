@@ -31,8 +31,6 @@ public abstract class VueMachine<VP extends VuePrincipale<VP, VM, VE, VT, M, E, 
         this.vuePrincipale = vuePrincipale;
         this.machine = machine;
 
-        initListeners();
-
         setOnMousePressed(mouseEvent -> {
             if (mouseEvent.getTarget() == this) {
                 deSelectionnerVues();

@@ -34,6 +34,7 @@ public class VueEtatAtmt extends
 
     public VueEtatAtmt(EtatAtmt etat, VueAutomate vueAutomate) {
         super(etat, vueAutomate);
+        initListeners();
     }
 
     @Override

@@ -2,6 +2,7 @@ package machines.logique;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import machines.automates.logique.EtatAtmt;
 import machines.automates.logique.TransitionAtmt;
 
@@ -38,9 +39,9 @@ public abstract class Machine<E extends Etat<E, T>, T extends Transition<T, E>> 
 
     public abstract void sauvegarder(String nomFichier) throws IOException;
 
-    public abstract boolean lancer(String mot);
-
-    public abstract boolean lancer(String mot, long dellayMillis);
+    public void lancer(Task<Boolean> taskLancer){
+        new Thread(taskLancer).start();
+    }
 
     @SafeVarargs
     public final void ajoutTransition(T... transitions) {

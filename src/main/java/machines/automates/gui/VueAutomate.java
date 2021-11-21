@@ -107,6 +107,7 @@ public class VueAutomate extends
 
     public VueAutomate(Automate automate, VuePrincipaleAtmt vuePrincipale) {
         super(automate, vuePrincipale);
+        initListeners();
     }
 
     @Override

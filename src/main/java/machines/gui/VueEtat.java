@@ -38,8 +38,6 @@ public abstract class VueEtat<VP extends VuePrincipale<VP, VM, VE, VT, M, E, T>,
         imageViewTerminal = new ImageView("etat_terminal.png");
         cercle = new Circle(50, 50, 46, Color.RED);
 
-        initListeners();
-
         getChildren().add(cercle);
         init();
     }

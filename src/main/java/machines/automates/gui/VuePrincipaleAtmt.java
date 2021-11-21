@@ -1,5 +1,9 @@
 package machines.automates.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.stage.Popup;
 import machines.App;
 import machines.automates.logique.Automate;
@@ -49,15 +53,21 @@ public class VuePrincipaleAtmt extends
         }
         return change;
     };
+    private EventHandler<ActionEvent> eventClear = actionEvent -> {
+        getVueAutomate().clear();
+    };
     private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> {
         //TODO Faire des tests pour voir si les entrees sont ok
-        boolean resultat = vueAutomate.getAutomate().lancer(getTextFieldMotAutomate().getText(), 1000);
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Résultat");
-        alert.setHeaderText(null);
-        if (resultat) alert.setContentText("Mot reconnu");
-        else alert.setContentText("Mot non reconnu");
-        alert.showAndWait();
+        Task<Boolean> taskLancer = vueAutomate.getAutomate().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
+        taskLancer.setOnSucceeded(workerStateEvent -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Résultat");
+            alert.setHeaderText(null);
+            if (taskLancer.getValue()) alert.setContentText("Mot reconnu");
+            else alert.setContentText("Mot non reconnu");
+            alert.showAndWait();
+        });
+        vueAutomate.getAutomate().lancer(taskLancer);
     };
     private EventHandler<ActionEvent> eventAjouterEtat = actionEvent -> getVueAutomate().getAutomate()
             .ajouterEtat(new EtatAtmt(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
@@ -170,8 +180,10 @@ public class VuePrincipaleAtmt extends
 
     public VuePrincipaleAtmt(App app) {
         super(app);
+        initSetOnAction();
 
         vueAutomate = new VueAutomate(new Automate(), this);
+
 
         getTextFieldEtiquette().setTextFormatter(new TextFormatter<>(textFilterAjoutTransition));
         getTextFieldEtiquette().setPrefWidth(30);
@@ -186,10 +198,10 @@ public class VuePrincipaleAtmt extends
         initStyle();
 
         setTop(barreDeMenu);
+        setCenter(vueAutomate);
         setBottom(hBoxLancerAutomate);
     }
 
-    @Override
     public VueAutomate getVueMachine() {
         return getVueAutomate();
     }
@@ -199,8 +211,16 @@ public class VuePrincipaleAtmt extends
     }
 
     @Override
+    public void unbindCheckBoxes() {
+            for (EtatAtmt e : getVueMachine().getMachine().getEtats()) {
+                getCheckBoxEstInitial().selectedProperty().unbindBidirectional(e.estInitialProperty());
+                getCheckBoxEstTerminal().selectedProperty().unbindBidirectional(e.estTerminalProperty());
+            }
+    }
+
     public void initSetOnAction() {
-        super.initSetOnAction();
+        Button b = getBoutonClear();
+        getBoutonClear().setOnAction(eventClear);
         getBoutonLancer().setOnAction(eventLancerAutomate);
         getBoutonCreerEtat().setOnAction(eventAjouterEtat);
         getBoutonSupprimer().setOnAction(eventSupprimer);

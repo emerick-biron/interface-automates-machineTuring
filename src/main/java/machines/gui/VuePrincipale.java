@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import machines.App;
 import machines.automates.gui.VueAutomate;
+import machines.automates.logique.Automate;
 import machines.automates.logique.EtatAtmt;
 import machines.logique.Etat;
 import machines.logique.Machine;
@@ -24,8 +25,6 @@ public abstract class VuePrincipale<VP extends VuePrincipale<VP, VM, VE, VT, M, 
         T>, M extends Machine<E, T>, E extends Etat<E, T>, T extends Transition<T, E>>
         extends BorderPane {
     private App app;
-
-    private VM vueMachine;
 
     private boolean ctrlPresse;
     private Button boutonCreerEtat;
@@ -41,9 +40,6 @@ public abstract class VuePrincipale<VP extends VuePrincipale<VP, VM, VE, VT, M, 
 
     private TextField textFieldMotAutomate;
     private TextField textFieldEtiquette;
-    private EventHandler<ActionEvent> eventClear = actionEvent -> {
-        vueMachine.clear();
-    };
     private EventHandler<KeyEvent> eventToucheCtrlPresse = new EventHandler<>() {
         @Override
         public void handle(KeyEvent keyEvent) {
@@ -54,34 +50,18 @@ public abstract class VuePrincipale<VP extends VuePrincipale<VP, VM, VE, VT, M, 
     public VuePrincipale(App app) {
         this.app = app;
 
-        vueMachine = getVueMachine();
-
         initComposants();
-        initSetOnAction();
 
         ctrlPresse = false;
         setOnKeyPressed(eventToucheCtrlPresse);
         setOnKeyReleased(eventToucheCtrlPresse);
-
-        setCenter(vueMachine);
     }
-
-    public abstract VM getVueMachine();
 
     public App getApp() {
         return app;
     }
 
-    public void initSetOnAction() {
-        boutonClear.setOnAction(eventClear);
-    }
-
-    public void unbindCheckBoxes() {
-        for (E e : vueMachine.getMachine().getEtats()) {
-            checkBoxEstInitial.selectedProperty().unbindBidirectional(e.estInitialProperty());
-            checkBoxEstTerminal.selectedProperty().unbindBidirectional(e.estTerminalProperty());
-        }
-    }
+    public abstract void unbindCheckBoxes();
 
     public Button getBoutonSupprimer() {
         return boutonSupprimer;

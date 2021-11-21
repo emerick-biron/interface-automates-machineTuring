@@ -3,6 +3,8 @@ package machines.automates.logique;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import machines.logique.Machine;
 
 import java.io.*;
@@ -123,21 +125,7 @@ public class Automate extends Machine<EtatAtmt, TransitionAtmt> {
         fileWriter.close();
     }
 
-    @Override
-    public boolean lancer(String mot,  long dellayMillis) {
-        Task<Boolean> taskLancer = getTaskLancer(mot, dellayMillis);
-        new Thread(taskLancer).start();
-        return taskLancer.getValue();
-    }
-
-    @Override
-    public boolean lancer(String mot) {
-        Task<Boolean> taskLancer = getTaskLancer(mot, 0);
-        new Thread(taskLancer).start();
-        return taskLancer.getValue();
-    }
-
-    private Task<Boolean> getTaskLancer(String mot, long dellayMillis) {
+    public Task<Boolean> getTaskLancer(String mot, long dellayMillis) {
         return new Task<>() {
             @Override
             protected Boolean call() throws Exception {
@@ -150,12 +138,13 @@ public class Automate extends Machine<EtatAtmt, TransitionAtmt> {
                     e.active();
                 }
                 for (int i = 0; i < mot.length(); i++) {
+                    updateProgress(i, mot.length() - 1);
                     Thread.sleep(dellayMillis);
                     char lettre = mot.charAt(i);
                     step(lettre);
-                    if (i == mot.length()-1){
+                    if (i == mot.length() - 1) {
                         for (EtatAtmt etat : getEtats()) {
-                            if (etat.estActif()) return true;
+                            if (etat.estTerminal() && etat.estActif()) return true;
                         }
                     }
                 }

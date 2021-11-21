@@ -29,6 +29,7 @@ public class VueTransitionAtmt extends
 
     public VueTransitionAtmt(TransitionAtmt transition, VueAutomate vueAutomate) {
         super(transition, vueAutomate);
+        initListeners();
     }
 
     @Override

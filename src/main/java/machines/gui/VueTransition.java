@@ -41,8 +41,6 @@ public abstract class VueTransition<VP extends VuePrincipale<VP, VM, VE, VT, M, 
         vueEtatDep = vueMachine.getVueEtat(transition.getEtatDepart());
         vueEtatFin = vueMachine.getVueEtat(transition.getEtatArrivee());
 
-        initListeners();
-
         init();
 
         getChildren().add(labelEtiquette);
