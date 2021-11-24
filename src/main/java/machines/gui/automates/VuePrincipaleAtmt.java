@@ -100,7 +100,13 @@ public class VuePrincipaleAtmt extends
         File selectedFile = fileChooser.showSaveDialog(new Stage());
         if (selectedFile != null) {
             try {
-                getVueAutomate().sauvegarder(selectedFile.getAbsolutePath());
+                String fileName = selectedFile.getAbsolutePath();
+                int index = selectedFile.getName().lastIndexOf('.');
+                if (index < 0 || !selectedFile.getName().substring(index).equals(".atmt")){
+                    fileName = fileName.concat(".atmt");
+                }
+
+                getVueAutomate().sauvegarder(fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
