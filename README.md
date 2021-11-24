@@ -2,8 +2,6 @@
 
 ![logo_fac](ressources/logo_fac.png)
 ![logo_iut](ressources/logo_iut.png)
-![logo_info](ressources/logo_info.png)
-
 ## Introduction :
 
 **Membres :**
