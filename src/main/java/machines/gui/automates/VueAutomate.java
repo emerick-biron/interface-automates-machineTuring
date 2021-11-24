@@ -1,5 +1,6 @@
 package machines.gui.automates;
 
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import machines.logique.automates.Automate;
 import machines.logique.automates.EtatAtmt;
@@ -134,18 +135,39 @@ public class VueAutomate extends
             ligne = bf.readLine();
         }
 
-        double largeur;
-        double hauteur;
+        double largeurVA;
+        double hauteurVA;
 
         ligne = bf.readLine();
-        if (ligne.contains("dimensions")) {
+        if (ligne.contains("DIM")) {
+            Screen sreen = Screen.getPrimary();
             String[] dimensions = ligne.split(" ");
-            largeur = Double.parseDouble(dimensions[1]);
-            hauteur = Double.parseDouble(dimensions[2]);
+            double largeurVP = Double.parseDouble(dimensions[1]);
+            double hauteurVP = Double.parseDouble(dimensions[2]);
+            double largeurEcran = sreen.getBounds().getWidth();
+            double hauteurEcran = sreen.getBounds().getHeight();
+            double deltaHauteur = 1;
+            double deltaLargeur = 1;
+
+            if (largeurEcran < largeurVP){
+                deltaLargeur = largeurEcran/largeurVP;
+            }
+            if (hauteurEcran < hauteurVP){
+                deltaHauteur = hauteurEcran/hauteurVP;
+            }
+
+            largeurVA = Double.parseDouble(dimensions[3]) * deltaLargeur;
+            hauteurVA = Double.parseDouble(dimensions[4]) * deltaHauteur;
+
             Stage primaryStage = getVuePrincipale().getApp().getPrimaryStage();
-            primaryStage.setWidth(largeur);
-            primaryStage.setHeight(hauteur);
+
+            primaryStage.setWidth(largeurVP * deltaLargeur);
+            primaryStage.setHeight(hauteurVP * deltaHauteur);
+
             ligne = bf.readLine();
+        } else {
+            largeurVA = getWidth();
+            hauteurVA = getHeight();
         }
 
         while (ligne != null) {
@@ -162,11 +184,10 @@ public class VueAutomate extends
 
                 //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
                 double taille = vueEtat.getCercle().getRadius() * 2 + 20;
-                System.out.println(getBoundsInLocal().getMaxX());
-                if (xPos >= 0 && xPos + taille <= getBoundsInLocal().getMaxX()) {
+                if (xPos >= 0 && xPos + taille <= largeurVA) {
                     vueEtat.setLayoutX(xPos);
                 }
-                if (yPos >= 0 && yPos + taille <= getBoundsInLocal().getMaxY() - 50) {
+                if (yPos >= 0 && yPos + taille <= hauteurVA - 50) {
                     vueEtat.setLayoutY(yPos);
                 }
 
@@ -190,7 +211,9 @@ public class VueAutomate extends
 
         Stage primaryStage = getVuePrincipale().getApp().getPrimaryStage();
 
-        bufferedWriter.write("dimensions " + primaryStage.getWidth() + " " + primaryStage.getHeight());
+        bufferedWriter.write(
+                "DIM: " + primaryStage.getWidth() + " " + primaryStage.getHeight() + " " + getWidth() + " " +
+                        getHeight());
         bufferedWriter.newLine();
 
         List<EtatAtmt> listEtats = getAutomate().getEtats();
