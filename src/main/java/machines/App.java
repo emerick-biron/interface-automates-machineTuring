@@ -31,20 +31,17 @@ public class App extends Application {
 
             primaryStage.show();
 
-            Thread thread = new Thread(() -> {
-                String choix = vueDepart.getComboBoxChoixAutomate().getValue();
+            String choix = vueDepart.getComboBoxChoixAutomate().getValue();
 
-                Path path = Paths.get("./automates_atmt/default/" + choix + ".atmt");
-                File file = path.toFile();
-                if (!choix.equals("nouveau") && file.isFile()) {
-                    try {
-                        vuePrincipale.getVueMachine().chargerFichier(file.getAbsolutePath());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            Path path = Paths.get("./automates_atmt/default/" + choix + ".atmt");
+            File file = path.toFile();
+            if (!choix.equals("nouveau") && file.isFile()) {
+                try {
+                    vuePrincipale.getVueMachine().chargerFichier(file.getAbsolutePath());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            });
-            Platform.runLater(thread);
+            }
         }
     };
 

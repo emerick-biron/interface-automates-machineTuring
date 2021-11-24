@@ -1,5 +1,6 @@
 package machines.gui.automates;
 
+import javafx.stage.Stage;
 import machines.logique.automates.Automate;
 import machines.logique.automates.EtatAtmt;
 import machines.logique.automates.TransitionAtmt;
@@ -10,6 +11,7 @@ import javafx.scene.shape.StrokeType;
 import machines.gui.VueMachine;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 
 public class VueAutomate extends
@@ -132,7 +134,19 @@ public class VueAutomate extends
             ligne = bf.readLine();
         }
 
+        double largeur;
+        double hauteur;
+
         ligne = bf.readLine();
+        if (ligne.contains("dimensions")) {
+            String[] dimensions = ligne.split(" ");
+            largeur = Double.parseDouble(dimensions[1]);
+            hauteur = Double.parseDouble(dimensions[2]);
+            Stage primaryStage = getVuePrincipale().getApp().getPrimaryStage();
+            primaryStage.setWidth(largeur);
+            primaryStage.setHeight(hauteur);
+            ligne = bf.readLine();
+        }
 
         while (ligne != null) {
             String[] split = ligne.split(" ");
@@ -148,6 +162,7 @@ public class VueAutomate extends
 
                 //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
                 double taille = vueEtat.getCercle().getRadius() * 2 + 20;
+                System.out.println(getBoundsInLocal().getMaxX());
                 if (xPos >= 0 && xPos + taille <= getBoundsInLocal().getMaxX()) {
                     vueEtat.setLayoutX(xPos);
                 }
@@ -171,6 +186,11 @@ public class VueAutomate extends
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
         bufferedWriter.write("###");
+        bufferedWriter.newLine();
+
+        Stage primaryStage = getVuePrincipale().getApp().getPrimaryStage();
+
+        bufferedWriter.write("dimensions " + primaryStage.getWidth() + " " + primaryStage.getHeight());
         bufferedWriter.newLine();
 
         List<EtatAtmt> listEtats = getAutomate().getEtats();
