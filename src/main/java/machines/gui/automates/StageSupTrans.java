@@ -1,4 +1,4 @@
-package machines.automates.gui;
+package machines.gui.automates;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

@@ -3,8 +3,6 @@ package machines.logique;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import machines.automates.logique.EtatAtmt;
-import machines.automates.logique.TransitionAtmt;
 
 import java.io.IOException;
 import java.util.ArrayList;

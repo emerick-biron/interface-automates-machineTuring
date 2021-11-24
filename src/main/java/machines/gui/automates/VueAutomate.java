@@ -1,18 +1,15 @@
-package machines.automates.gui;
+package machines.gui.automates;
 
-import machines.automates.logique.Automate;
-import machines.automates.logique.EtatAtmt;
-import machines.automates.logique.TransitionAtmt;
-import javafx.collections.FXCollections;
+import machines.logique.automates.Automate;
+import machines.logique.automates.EtatAtmt;
+import machines.logique.automates.TransitionAtmt;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 import machines.gui.VueMachine;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class VueAutomate extends

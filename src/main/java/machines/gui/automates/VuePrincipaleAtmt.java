@@ -1,22 +1,18 @@
-package machines.automates.gui;
+package machines.gui.automates;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.scene.Node;
-import javafx.stage.Popup;
 import machines.App;
-import machines.automates.logique.Automate;
-import machines.automates.logique.EtatAtmt;
-import machines.automates.logique.TransitionAtmt;
+import machines.logique.automates.Automate;
+import machines.logique.automates.EtatAtmt;
+import machines.logique.automates.TransitionAtmt;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;

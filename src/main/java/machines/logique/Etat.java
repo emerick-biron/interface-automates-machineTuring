@@ -2,7 +2,6 @@ package machines.logique;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import machines.automates.logique.TransitionAtmt;
 
 import java.util.ArrayList;
 

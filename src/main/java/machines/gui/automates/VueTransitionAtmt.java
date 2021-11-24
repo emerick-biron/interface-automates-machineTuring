@@ -1,10 +1,9 @@
-package machines.automates.gui;
+package machines.gui.automates;
 
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import machines.automates.logique.Automate;
-import machines.automates.logique.EtatAtmt;
-import machines.automates.logique.TransitionAtmt;
+import machines.logique.automates.Automate;
+import machines.logique.automates.EtatAtmt;
+import machines.logique.automates.TransitionAtmt;
 import machines.gui.VueTransition;
 
 public class VueTransitionAtmt extends

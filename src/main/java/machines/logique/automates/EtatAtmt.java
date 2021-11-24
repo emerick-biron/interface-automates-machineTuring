@@ -1,7 +1,5 @@
-package machines.automates.logique;
+package machines.logique.automates;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import machines.logique.Etat;
 
 import java.util.ArrayList;

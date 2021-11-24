@@ -1,24 +1,15 @@
 package machines.gui;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import machines.App;
-import machines.automates.gui.VueAutomate;
-import machines.automates.logique.Automate;
-import machines.automates.logique.EtatAtmt;
 import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
-
-import java.util.function.UnaryOperator;
-import java.util.regex.Pattern;
 
 public abstract class VuePrincipale<VP extends VuePrincipale<VP, VM, VE, VT, M, E, T>, VM extends VueMachine<VP, VM,
         VE, VT, M, E, T>, VE extends VueEtat<VP, VM, VE, VT, M, E, T>, VT extends VueTransition<VP, VM, VE, VT, M, E,

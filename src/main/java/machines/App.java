@@ -1,7 +1,7 @@
 package machines;
 
 import machines.gui.VueDepart;
-import machines.automates.gui.VuePrincipaleAtmt;
+import machines.gui.automates.VuePrincipaleAtmt;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

@@ -1,10 +1,6 @@
-package machines.automates.logique;
+package machines.logique.automates;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import machines.logique.Machine;
 
 import java.io.*;
