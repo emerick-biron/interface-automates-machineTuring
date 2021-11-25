@@ -1,5 +1,6 @@
 package machines.gui;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -13,6 +14,7 @@ import machines.logique.Transition;
 
 public abstract class VuePrincipale extends BorderPane {
     private App app;
+    private VueMachine vueMachine;
 
     private boolean ctrlPresse;
     private Button boutonCreerEtat;
@@ -34,22 +36,47 @@ public abstract class VuePrincipale extends BorderPane {
             ctrlPresse = keyEvent.isControlDown();
         }
     };
+    private EventHandler<ActionEvent> eventClear = actionEvent -> {
+        vueMachine.clear();
+    };
+    private EventHandler<ActionEvent> eventAjouterEtat = actionEvent -> vueMachine.getMachine()
+            .ajouterEtat(new Etat(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
 
     public VuePrincipale(App app) {
         this.app = app;
+        initSetOnAction();
+
+        vueMachine = creerVueMachine();
 
         initComposants();
+        setCenter(vueMachine);
 
         ctrlPresse = false;
         setOnKeyPressed(eventToucheCtrlPresse);
         setOnKeyReleased(eventToucheCtrlPresse);
     }
 
+    private void initSetOnAction(){
+        getBoutonClear().setOnAction(eventClear);
+        getBoutonCreerEtat().setOnAction(eventAjouterEtat);
+    }
+
+    public abstract VueMachine creerVueMachine();
+
+    public VueMachine getVueMachine() {
+        return vueMachine;
+    }
+
     public App getApp() {
         return app;
     }
 
-    public abstract void unbindCheckBoxes();
+    public void unbindCheckBoxes() {
+        for (Etat e : vueMachine.getMachine().getEtats()) {
+            getCheckBoxEstInitial().selectedProperty().unbindBidirectional(e.estInitialProperty());
+            getCheckBoxEstTerminal().selectedProperty().unbindBidirectional(e.estTerminalProperty());
+        }
+    }
 
     public Button getBoutonSupprimer() {
         return boutonSupprimer;

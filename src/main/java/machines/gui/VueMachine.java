@@ -66,6 +66,8 @@ public abstract class VueMachine extends Pane {
         this.vuePrincipale = vuePrincipale;
         this.machine = machine;
 
+        initListeners();
+
         setOnMousePressed(mouseEvent -> {
             if (mouseEvent.getTarget() == this) {
                 deSelectionnerVues();
@@ -74,7 +76,7 @@ public abstract class VueMachine extends Pane {
         });
     }
 
-    public void initListeners(){
+    private void initListeners(){
         machine.etatsProperty().addListener(miseAJourEtats);
         getVuesEtatSelectionnes().addListener(miseAJourVuesEtatSelectionnes);
     }

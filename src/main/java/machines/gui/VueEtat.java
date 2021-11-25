@@ -65,7 +65,7 @@ public class VueEtat extends StackPane {
         return imageViewTerminal;
     }
 
-    public void initListeners() {
+    private void initListeners() {
         getEtat().estActifProperty().addListener(changementActivationEtat);
         getEtat().estInitialProperty().addListener(changementEstInitial);
         getEtat().estTerminalProperty().addListener(changementEstTerminal);
@@ -88,7 +88,7 @@ public class VueEtat extends StackPane {
         labelNumEtat.setText(String.valueOf(numEtat));
     }
 
-    public void initMouseEvents() {
+    private void initMouseEvents() {
         setOnMousePressed(mouseEvent -> {
             if (!vueMachine.getVuePrincipale().ctrlPresse()) {
                 vueMachine.deSelectionnerVues();
@@ -136,12 +136,12 @@ public class VueEtat extends StackPane {
         setOnMouseEntered(mouseEvent -> setCursor(Cursor.HAND));
     }
 
-    public void initLabelNumEtat() {
+    private void initLabelNumEtat() {
         labelNumEtat.setStyle(" -fx-font-size: " + cercle.getRadius() / 2 + ";-fx-font-weight: bold");
         getChildren().add(labelNumEtat);
     }
 
-    public void init() {
+    private void init() {
         initListeners();
         initMouseEvents();
         initLabelNumEtat();

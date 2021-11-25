@@ -45,6 +45,7 @@ public abstract class VueTransition extends Group {
     public VueTransition(Transition transition, VueMachine vueMachine) {
         this.transition = transition;
         this.vueMachine = vueMachine;
+        initListeners();
         estSelectionne = new SimpleBooleanProperty(false);
         ligne = new Line();
         ligneHautFleche = new Line();
@@ -59,7 +60,7 @@ public abstract class VueTransition extends Group {
         getChildren().add(labelEtiquette);
     }
 
-    public void initListeners() {
+    private void initListeners() {
         estSelectionneProperty().addListener(changementSelection);
     }
 
@@ -71,7 +72,7 @@ public abstract class VueTransition extends Group {
         return transition;
     }
 
-    public void init() {
+    private void init() {
         initStyleLignes();
         if (transition.getEtatDepart() != transition.getEtatArrivee()) initCoordonnesLignes();
         else initAutoTransition();
@@ -80,7 +81,7 @@ public abstract class VueTransition extends Group {
         this.toBack();
     }
 
-    public void initCoordonnesLignes() {
+    private void initCoordonnesLignes() {
         //coordonnees du centre du cercle de la vue etat de depart
         DoubleBinding xA = vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().getRadius());
         DoubleBinding yA = vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().getRadius());
@@ -129,7 +130,7 @@ public abstract class VueTransition extends Group {
         getChildren().add(ligne);
     }
 
-    public void initAutoTransition() {
+    private void initAutoTransition() {
         imgAutoTransition.setFitHeight(25);
         imgAutoTransition.setPreserveRatio(true);
         imgAutoTransition.layoutXProperty()
@@ -140,7 +141,7 @@ public abstract class VueTransition extends Group {
         getChildren().add(imgAutoTransition);
     }
 
-    public void initStyleLignes() {
+    private void initStyleLignes() {
         ligne.setStrokeWidth(3.8);
         ligne.setStroke(Color.GRAY);
         ligneHautFleche.setStrokeWidth(3.8);
@@ -149,7 +150,7 @@ public abstract class VueTransition extends Group {
         ligneBasFleche.setStroke(Color.GRAY);
     }
 
-    public void initLabel() {
+    private void initLabel() {
         positionnerLabelEtiquette(0);
 
         labelEtiquette.setStyle("-fx-font-weight: bold; -fx-font-size: 17;");
@@ -203,7 +204,7 @@ public abstract class VueTransition extends Group {
         }
     }
 
-    public void initMouseEvents() {
+    private void initMouseEvents() {
         setOnMousePressed(mouseEvent -> {
             if (!vueMachine.getVuePrincipale().ctrlPresse()) {
                 vueMachine.deSelectionnerVues();

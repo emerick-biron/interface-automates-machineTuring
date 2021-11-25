@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import machines.App;
 import machines.gui.VueEtat;
+import machines.gui.VueMachine;
 import machines.gui.VueTransition;
 import machines.logique.Etat;
 import machines.logique.Transition;
@@ -33,9 +34,6 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 public class VuePrincipaleAtmt extends VuePrincipale {
-
-    private VueAutomate vueAutomate;
-
     private HBox barreDeMenu;
     private HBox hBoxLancerAutomate;
     private HBox hBoxAjoutTransition;
@@ -53,12 +51,9 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         }
         return change;
     };
-    private EventHandler<ActionEvent> eventClear = actionEvent -> {
-        getVueAutomate().clear();
-    };
     private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> {
         //TODO Faire des tests pour voir si les entrees sont ok
-        Task<Boolean> taskLancer = vueAutomate.getAutomate().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
+        Task<Boolean> taskLancer = getVueAutomate().getAutomate().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
         taskLancer.progressProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
@@ -86,10 +81,8 @@ public class VuePrincipaleAtmt extends VuePrincipale {
             alert.showAndWait();
             hBoxLancerAutomate.getChildren().remove(hBoxLabelsLettres);
         });
-        vueAutomate.getAutomate().lancer(taskLancer);
+        getVueAutomate().getAutomate().lancer(taskLancer);
     };
-    private EventHandler<ActionEvent> eventAjouterEtat = actionEvent -> getVueAutomate().getAutomate()
-            .ajouterEtat(new Etat(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
     private EventHandler<ActionEvent> eventSauvegarder = actionEvent -> {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Sauvegarder automate");
@@ -213,8 +206,6 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         super(app);
         initSetOnAction();
 
-        vueAutomate = new VueAutomate(new Automate(), this);
-
 
         getTextFieldEtiquette().setTextFormatter(new TextFormatter<>(textFilterAjoutTransition));
         getTextFieldEtiquette().setPrefWidth(30);
@@ -229,31 +220,20 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         initStyle();
 
         setTop(barreDeMenu);
-        setCenter(vueAutomate);
         setBottom(hBoxLancerAutomate);
     }
 
-    public VueAutomate getVueMachine() {
-        return getVueAutomate();
+    @Override
+    public VueMachine creerVueMachine() {
+        return new VueAutomate(new Automate(), this);
     }
 
     public VueAutomate getVueAutomate() {
-        return vueAutomate;
+        return (VueAutomate) super.getVueMachine();
     }
 
-    @Override
-    public void unbindCheckBoxes() {
-        for (Etat e : getVueMachine().getMachine().getEtats()) {
-            getCheckBoxEstInitial().selectedProperty().unbindBidirectional(e.estInitialProperty());
-            getCheckBoxEstTerminal().selectedProperty().unbindBidirectional(e.estTerminalProperty());
-        }
-    }
-
-    public void initSetOnAction() {
-        Button b = getBoutonClear();
-        getBoutonClear().setOnAction(eventClear);
+    private void initSetOnAction() {
         getBoutonLancer().setOnAction(eventLancerAutomate);
-        getBoutonCreerEtat().setOnAction(eventAjouterEtat);
         getBoutonSupprimer().setOnAction(eventSupprimer);
         getBoutonAjouterTransition().setOnAction(eventAjouterTransition);
         getBoutonCharger().setOnAction(eventCharger);

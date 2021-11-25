@@ -105,7 +105,7 @@ public class StageSupTrans extends Stage {
         hBoxBouton.setAlignment(Pos.BOTTOM_RIGHT);
     }
 
-    public ScrollPane createScrollPane() {
+    private ScrollPane createScrollPane() {
         ScrollPane scrollPane = new ScrollPane();
 
         contenuScrollPane = new VBox();

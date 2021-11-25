@@ -71,8 +71,7 @@ public class VueAutomate extends VueMachine {
         initListeners();
     }
 
-    public void initListeners() {
-        super.initListeners();
+    private void initListeners() {
         getAutomate().transitionsProperty().addListener(miseAJourTransition);
         getVuesTransitionSelectionnes().addListener(miseAJourVuesTransitionSelectionnes);
     }
