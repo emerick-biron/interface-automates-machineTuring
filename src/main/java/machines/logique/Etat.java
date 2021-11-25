@@ -2,16 +2,18 @@ package machines.logique;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import machines.logique.automates.TransitionAtmt;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public abstract class Etat<E extends Etat<E, T>, T extends Transition<T, E>> {
+public class Etat {
     private BooleanProperty estInitial;
     private BooleanProperty estTerminal;
     /**
      * Liste des transitions SORTANTES de l'etat
      */
-    private ArrayList<T> listeTransitions;
+    private ArrayList<Transition> listeTransitions;
     private BooleanProperty estActif;
 
     public Etat() {
@@ -26,6 +28,33 @@ public abstract class Etat<E extends Etat<E, T>, T extends Transition<T, E>> {
         this.estTerminal = new SimpleBooleanProperty(estTerminal);
         listeTransitions = new ArrayList<>();
         estActif = new SimpleBooleanProperty(false);
+    }
+
+    /**
+     * Permet de savoir si il existe une transition sortante de cet etat portant une certaine lettre
+     *
+     * @param c lettre a tester
+     * @return true si la transition existe sinon false
+     */
+    public boolean existeTrans(char c) {
+        for (Transition transition : getListeTransitions()) {
+            if (transition.getEtiquette() == c) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Permet d'obtenir la liste des etat qui peuvent etre atteint a partir de l'etat qui courant avec la lettre c
+     *
+     * @param c lettre a tester
+     * @return liste des etat qui peuvent etre atteint, null si il n'y en a pas
+     */
+    public List<Etat> cibleND(char c) {
+        List<Etat> resultat = new ArrayList<>();
+        for (Transition t : getListeTransitions()) {
+            if (t.getEtiquette() == c) resultat.add(t.getEtatArrivee());
+        }
+        return resultat;
     }
 
     public BooleanProperty estActifProperty() {
@@ -72,7 +101,7 @@ public abstract class Etat<E extends Etat<E, T>, T extends Transition<T, E>> {
         return estActif.getValue();
     }
 
-    public ArrayList<T> getListeTransitions() {
+    public ArrayList<Transition> getListeTransitions() {
         return listeTransitions;
     }
 }

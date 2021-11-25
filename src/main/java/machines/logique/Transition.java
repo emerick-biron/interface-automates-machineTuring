@@ -1,21 +1,21 @@
 package machines.logique;
 
-public abstract class Transition<T extends Transition<T, E>, E extends Etat<E, T>> {
-    private E etatDepart;
-    private E etatArrivee;
+public abstract class Transition {
+    private Etat etatDepart;
+    private Etat etatArrivee;
     private char etiquette;
 
-    public Transition(E etatDepart, E etatArrivee, char etiquette) {
+    public Transition(Etat etatDepart, Etat etatArrivee, char etiquette) {
         this.etatDepart = etatDepart;
         this.etatArrivee = etatArrivee;
         this.etiquette = etiquette;
     }
 
-    public E getEtatDepart() {
+    public Etat getEtatDepart() {
         return etatDepart;
     }
 
-    public E getEtatArrivee() {
+    public Etat getEtatArrivee() {
         return etatArrivee;
     }
 

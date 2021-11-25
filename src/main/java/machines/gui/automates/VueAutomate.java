@@ -3,7 +3,6 @@ package machines.gui.automates;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import machines.logique.automates.Automate;
-import machines.logique.automates.EtatAtmt;
 import machines.logique.automates.TransitionAtmt;
 import javafx.collections.ListChangeListener;
 import javafx.scene.Node;
@@ -12,7 +11,6 @@ import javafx.scene.shape.StrokeType;
 import machines.gui.VueMachine;
 
 import java.io.*;
-import java.util.Arrays;
 import java.util.List;
 
 public class VueAutomate extends

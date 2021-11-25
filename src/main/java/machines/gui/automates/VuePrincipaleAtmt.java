@@ -5,7 +5,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import machines.App;
 import machines.logique.automates.Automate;
-import machines.logique.automates.EtatAtmt;
 import machines.logique.automates.TransitionAtmt;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

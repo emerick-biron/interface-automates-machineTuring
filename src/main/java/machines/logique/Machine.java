@@ -8,20 +8,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Machine<E extends Etat<E, T>, T extends Transition<T, E>> {
-    private ObservableList<E> etats;
-    private ObservableList<T> transitions;
-    private List<E> etatsActifs;
+public abstract class Machine{
+    private ObservableList<Etat> etats;
+    private ObservableList<Transition> transitions;
+    private List<Etat> etatsActifs;
 
 
-    public Machine(List<E> etats) {
+    public Machine(List<Etat> etats) {
         this.etats = FXCollections.observableArrayList(etats);
         transitions = FXCollections.observableArrayList();
         etatsActifs = new ArrayList<>();
     }
 
-    @SafeVarargs
-    public Machine(E... etats) {
+    public Machine(Etat... etats) {
         this.etats = FXCollections.observableArrayList(etats);
         transitions = FXCollections.observableArrayList();
         etatsActifs = new ArrayList<>();
@@ -41,40 +40,39 @@ public abstract class Machine<E extends Etat<E, T>, T extends Transition<T, E>> 
         new Thread(taskLancer).start();
     }
 
-    @SafeVarargs
-    public final void ajoutTransition(T... transitions) {
+    public final void ajoutTransition(Transition... transitions) {
         this.transitions.addAll(transitions);
-        for (T t : transitions) {
+        for (Transition t : transitions) {
             t.getEtatDepart().getListeTransitions().add(t);
         }
     }
 
-    public void ajoutTransition(ArrayList<T> transitions) {
+    public void ajoutTransition(ArrayList<? extends Transition> transitions) {
         this.transitions.addAll(transitions);
-        for (T t : transitions) {
+        for (Transition t : transitions) {
             t.getEtatDepart().getListeTransitions().add(t);
         }
     }
 
-    public void supprimerTransition(List<T> transitions) {
+    public void supprimerTransition(List<Transition> transitions) {
         this.transitions.removeAll(transitions);
-        for (T t : transitions) {
+        for (Transition t : transitions) {
             t.getEtatDepart().getListeTransitions().remove(t);
         }
     }
 
-    public void supprimerTransition(T t) {
+    public void supprimerTransition(Transition t) {
         this.transitions.remove(t);
         t.getEtatDepart().getListeTransitions().remove(t);
     }
 
-    public void ajouterEtat(E etat) {
+    public void ajouterEtat(Etat etat) {
         etats.add(etat);
     }
 
-    public void supprimerEtat(E etat) {
-        ArrayList<T> transitionsASupprimer = new ArrayList<>();
-        for (T t : transitions) {
+    public void supprimerEtat(Etat etat) {
+        ArrayList<Transition> transitionsASupprimer = new ArrayList<>();
+        for (Transition t : transitions) {
             if (t.getEtatDepart() == etat) transitionsASupprimer.add(t);
             else if (t.getEtatArrivee() == etat) transitionsASupprimer.add(t);
         }
@@ -82,32 +80,32 @@ public abstract class Machine<E extends Etat<E, T>, T extends Transition<T, E>> 
         etats.remove(etat);
     }
 
-    public ObservableList<T> getTransitions() {
+    public ObservableList<Transition> getTransitions() {
         return transitions;
     }
 
-    public ObservableList<T> transitionsProperty() {
+    public ObservableList<Transition> transitionsProperty() {
         return transitions;
     }
 
 
-    public ObservableList<E> etatsProperty() {
+    public ObservableList<Etat> etatsProperty() {
         return etats;
     }
 
-    public List<E> getEtatsInitiaux() {
-        List<E> res = new ArrayList<>();
-        for (E etat : etats) {
+    public List<Etat> getEtatsInitiaux() {
+        List<Etat> res = new ArrayList<>();
+        for (Etat etat : etats) {
             if (etat.estInitial()) res.add(etat);
         }
         return res;
     }
 
-    public List<E> getEtats() {
+    public List<Etat> getEtats() {
         return etats;
     }
 
-    public List<E> getEtatsActifs() {
+    public List<Etat> getEtatsActifs() {
         return etatsActifs;
     }
 }

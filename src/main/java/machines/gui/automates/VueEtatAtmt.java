@@ -3,7 +3,6 @@ package machines.gui.automates;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.paint.Color;
 import machines.logique.automates.Automate;
-import machines.logique.automates.EtatAtmt;
 import machines.logique.automates.TransitionAtmt;
 import machines.gui.VueEtat;
 
