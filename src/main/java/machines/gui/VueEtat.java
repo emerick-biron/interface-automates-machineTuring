@@ -142,6 +142,7 @@ public class VueEtat extends StackPane {
     }
 
     public void init() {
+        initListeners();
         initMouseEvents();
         initLabelNumEtat();
         initImages();

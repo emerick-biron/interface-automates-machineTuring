@@ -32,7 +32,6 @@ public abstract class VueMachine extends Pane {
 
 
     public Machine getMachine() {
-        Machine machine = this.machine;
         return machine;
     }
 
