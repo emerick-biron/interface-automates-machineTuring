@@ -12,16 +12,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class VueMachine<VP extends VuePrincipale<VP, VM, VE, VT, M, E, T>, VM extends VueMachine<VP, VM, VE,
-        VT, M, E, T>, VE extends VueEtat<VP, VM, VE, VT, M, E, T>, VT extends VueTransition<VP, VM, VE, VT, M, E, T>,
-        M extends Machine<E, T>, E extends Etat<E, T>, T extends Transition<T, E>>
-        extends Pane {
-    private M machine;
-    private VP vuePrincipale;
-    private ObservableList<VE> vuesEtatSelectionnes = FXCollections.observableArrayList();
-    private ObservableList<VT> vuesTransitionSelectionnes = FXCollections.observableArrayList();
+public abstract class VueMachine extends Pane {
+    private Machine machine;
+    private VuePrincipale vuePrincipale;
+    private ObservableList<VueEtat> vuesEtatSelectionnes = FXCollections.observableArrayList();
+    private ObservableList<VueTransition> vuesTransitionSelectionnes = FXCollections.observableArrayList();
 
-    public VueMachine(M machine, VP vuePrincipale) {
+    public VueMachine(Machine machine, VuePrincipale vuePrincipale) {
         this.vuePrincipale = vuePrincipale;
         this.machine = machine;
 
@@ -33,52 +30,52 @@ public abstract class VueMachine<VP extends VuePrincipale<VP, VM, VE, VT, M, E, 
         });
     }
 
-    public abstract void initListeners();
 
-    public M getMachine() {
+    public Machine getMachine() {
+        Machine machine = this.machine;
         return machine;
     }
 
-    public ObservableList<VT> getVuesTransitionSelectionnes() {
+    public ObservableList<VueTransition> getVuesTransitionSelectionnes() {
         return vuesTransitionSelectionnes;
     }
 
-    public ObservableList<VE> getVuesEtatSelectionnes() {
+    public ObservableList<VueEtat> getVuesEtatSelectionnes() {
         return vuesEtatSelectionnes;
     }
 
-    public VP getVuePrincipale() {
+    public VuePrincipale getVuePrincipale() {
         return vuePrincipale;
     }
 
-    public VE getVueEtat(E etat) {
+    public VueEtat getVueEtat(Etat etat) {
         for (Node n : getChildren()) {
             if (n instanceof VueEtat) {
-                VE vueEtat = (VE) n;
+                VueEtat vueEtat = (VueEtat) n;
                 if (vueEtat.getEtat().equals(etat)) return vueEtat;
             }
         }
         return null;
     }
 
-    public VT getVueTransition(T transition) {
+    public VueTransition getVueTransition(Transition transition) {
         for (Node n : getChildren()) {
             if (n instanceof VueTransition) {
-                VT vueTransition = (VT) n;
+                VueTransition vueTransition = (VueTransition) n;
                 if (vueTransition.getTransition().equals(transition)) return vueTransition;
             }
         }
         return null;
     }
 
-    public ArrayList<VT> getVuesTransition(VE vueEtat1, VE vueEtat2) {
-        ArrayList<VT> res = new ArrayList<>();
-        for (T t : vueEtat1.getEtat().getListeTransitions()) {
+    public ArrayList<VueTransition> getVuesTransition(VueEtat vueEtat1, VueEtat vueEtat2) {
+        ArrayList<VueTransition> res = new ArrayList<>();
+        for (Transition t : vueEtat1.getEtat().getListeTransitions()) {
             if (t.getEtatArrivee() == vueEtat2.getEtat()) {
                 if (!res.contains(getVueTransition(t))) res.add(getVueTransition(t));
             }
         }
-        for (T t : vueEtat2.getEtat().getListeTransitions()) {
+        for (Transition t : vueEtat2.getEtat().getListeTransitions()) {
             if (t.getEtatArrivee() == vueEtat1.getEtat()) {
                 if (!res.contains(getVueTransition(t))) res.add(getVueTransition(t));
             }
@@ -89,7 +86,7 @@ public abstract class VueMachine<VP extends VuePrincipale<VP, VM, VE, VT, M, E, 
     public void clear() {
         vuesEtatSelectionnes.clear();
         vuesTransitionSelectionnes.clear();
-        List<E> etats = machine.getEtats();
+        List<Etat> etats = machine.getEtats();
         if (!etats.isEmpty()) {
             int l = etats.size();
             for (int i = 0; i < l; i++) {
@@ -109,15 +106,15 @@ public abstract class VueMachine<VP extends VuePrincipale<VP, VM, VE, VT, M, E, 
     }
 
     public void deSelectionnerVuesEtat() {
-        for (E e : machine.getEtats()) {
-            VE vueEtat = getVueEtat(e);
+        for (Etat e : machine.getEtats()) {
+            VueEtat vueEtat = getVueEtat(e);
             vueEtat.deSelectionner();
         }
     }
 
     public void deSelectionnerVuesTransition() {
-        for (T t : machine.getTransitions()) {
-            VT vueTransition = getVueTransition(t);
+        for (Transition t : machine.getTransitions()) {
+            VueTransition vueTransition = getVueTransition(t);
             vueTransition.deSelectionner();
         }
     }

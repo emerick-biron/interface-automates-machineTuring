@@ -38,6 +38,7 @@ public class App extends Application {
             if (!choix.equals("nouveau") && file.isFile()) {
                 try {
                     vuePrincipale.getVueMachine().chargerFichier(file.getAbsolutePath());
+                    VuePrincipaleAtmt vuePrincipaleAtmt = vuePrincipale;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

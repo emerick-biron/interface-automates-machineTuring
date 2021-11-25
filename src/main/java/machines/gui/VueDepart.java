@@ -78,6 +78,8 @@ public class VueDepart extends Stage {
         }
         comboBoxChoixAutomate.setItems(choixPossible);
         comboBoxChoixAutomate.getSelectionModel().selectFirst();
+
+
     }
 
     private String getLabelInformation() {

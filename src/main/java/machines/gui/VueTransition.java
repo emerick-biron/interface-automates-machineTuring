@@ -4,32 +4,45 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import machines.gui.automates.VueTransitionAtmt;
 import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
 
-public abstract class VueTransition<VP extends VuePrincipale<VP, VM, VE, VT, M, E, T>, VM extends VueMachine<VP, VM, VE, VT, M, E, T>,
-        VE extends VueEtat<VP, VM, VE, VT, M, E, T>, VT extends VueTransition<VP, VM, VE, VT, M, E, T>,
-        M extends Machine<E, T>, E extends Etat<E, T>, T extends Transition<T, E>>
-        extends Group {
-    private T transition;
-    private VM vueMachine;
+public abstract class VueTransition extends Group {
+    private Transition transition;
+    private VueMachine vueMachine;
     private Line ligne;
     private Label labelEtiquette;
     private Line ligneHautFleche;
     private Line ligneBasFleche;
     private ImageView imgAutoTransition;
-    private VE vueEtatDep;
-    private VE vueEtatFin;
+    private VueEtat vueEtatDep;
+    private VueEtat vueEtatFin;
     private BooleanProperty estSelectionne;
+    private ChangeListener<Boolean> changementSelection = (observableValue, aBoolean, t1) -> {
+        if (aBoolean != t1) {
+            if (observableValue.getValue()) {
+                for (VueTransition vueTransition : vueMachine.getVuesTransition(getVueEtatDep(), getVueEtatFin())) {
+                    vueMachine.getVuesTransitionSelectionnes().add(vueTransition);
+                }
+            } else {
+                vueMachine.getVuesTransitionSelectionnes().remove(VueTransition.this);
+                for (VueTransition vueTransition : vueMachine.getVuesTransition(getVueEtatDep(), getVueEtatFin())) {
+                    vueMachine.getVuesTransitionSelectionnes().remove(vueTransition);
+                }
+            }
+        }
+    };
 
-    public VueTransition(T transition, VM vueMachine) {
+    public VueTransition(Transition transition, VueMachine vueMachine) {
         this.transition = transition;
         this.vueMachine = vueMachine;
         estSelectionne = new SimpleBooleanProperty(false);
@@ -46,13 +59,15 @@ public abstract class VueTransition<VP extends VuePrincipale<VP, VM, VE, VT, M, 
         getChildren().add(labelEtiquette);
     }
 
-    public abstract void initListeners();
+    public void initListeners() {
+        estSelectionneProperty().addListener(changementSelection);
+    }
 
-    public VM getVueMachine() {
+    public VueMachine getVueMachine() {
         return vueMachine;
     }
 
-    public T getTransition() {
+    public Transition getTransition() {
         return transition;
     }
 
@@ -217,11 +232,11 @@ public abstract class VueTransition<VP extends VuePrincipale<VP, VM, VE, VT, M, 
         this.estSelectionne.set(false);
     }
 
-    public VE getVueEtatDep() {
+    public VueEtat getVueEtatDep() {
         return vueEtatDep;
     }
 
-    public VE getVueEtatFin() {
+    public VueEtat getVueEtatFin() {
         return vueEtatFin;
     }
 }

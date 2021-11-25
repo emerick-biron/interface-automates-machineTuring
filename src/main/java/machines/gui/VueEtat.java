@@ -3,7 +3,6 @@ package machines.gui;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -12,24 +11,40 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import machines.logique.Etat;
-import machines.logique.Machine;
-import machines.logique.Transition;
 
-public abstract class VueEtat<VP extends VuePrincipale<VP, VM, VE, VT, M, E, T>, VM extends VueMachine<VP, VM, VE, VT, M, E, T>,
-        VE extends VueEtat<VP, VM, VE, VT, M, E, T>, VT extends VueTransition<VP, VM, VE, VT, M, E, T>,
-        M extends Machine<E, T>, E extends Etat<E, T>, T extends Transition<T, E>>
-        extends StackPane {
-    private E etat;
+public class VueEtat extends StackPane {
+    private Etat etat;
     private Circle cercle;
     private Label labelNumEtat;
-    private VM vueMachine;
+    private VueMachine vueMachine;
     private double mouseX;
     private double mouseY;
     private ImageView imageViewInitial;
     private ImageView imageViewTerminal;
     private BooleanProperty estSelectionne;
+    private ChangeListener<Boolean> changementActivationEtat = (observableValue, ancienneValeur, nouvelleValeur) -> {
+        if (observableValue.getValue()) getCercle().setFill(Color.GREEN);
+        else getCercle().setFill(Color.RED);
+    };
+    private ChangeListener<Boolean> changementEstInitial = (observableValue, aBoolean, t1) -> {
+        if (observableValue.getValue()) getChildren().add(getImageViewInitial());
+        else getChildren().remove(getImageViewInitial());
+    };
+    private ChangeListener<Boolean> changementEstTerminal = (observableValue, aBoolean, t1) -> {
+        if (observableValue.getValue()) getChildren().add(getImageViewTerminal());
+        else getChildren().remove(getImageViewTerminal());
+    };
+    private ChangeListener<Boolean> changementSelection = (observableValue, aBoolean, t1) -> {
+        if (aBoolean != t1) {
+            if (observableValue.getValue()) {
+                vueMachine.getVuesEtatSelectionnes().add(VueEtat.this);
+            } else {
+                vueMachine.getVuesEtatSelectionnes().remove(VueEtat.this);
+            }
+        }
+    };
 
-    public VueEtat(E etat, VM vueMachine) {
+    public VueEtat(Etat etat, VueMachine vueMachine) {
         this.vueMachine = vueMachine;
         this.etat = etat;
         estSelectionne = new SimpleBooleanProperty(false);
@@ -42,8 +57,6 @@ public abstract class VueEtat<VP extends VuePrincipale<VP, VM, VE, VT, M, E, T>,
         init();
     }
 
-    public abstract void initListeners();
-
     public ImageView getImageViewInitial() {
         return imageViewInitial;
     }
@@ -52,11 +65,18 @@ public abstract class VueEtat<VP extends VuePrincipale<VP, VM, VE, VT, M, E, T>,
         return imageViewTerminal;
     }
 
-    public VM getVueMachine() {
+    public void initListeners() {
+        getEtat().estActifProperty().addListener(changementActivationEtat);
+        getEtat().estInitialProperty().addListener(changementEstInitial);
+        getEtat().estTerminalProperty().addListener(changementEstTerminal);
+        estSelectionneProperty().addListener(changementSelection);
+    }
+
+    public VueMachine getVueMachine() {
         return vueMachine;
     }
 
-    public E getEtat() {
+    public Etat getEtat() {
         return etat;
     }
 
