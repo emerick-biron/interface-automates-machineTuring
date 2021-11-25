@@ -1,5 +1,11 @@
 package machines;
 
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import machines.gui.VueDepart;
 import machines.gui.automates.VuePrincipaleAtmt;
 import javafx.application.Application;
@@ -13,38 +19,20 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 public class App extends Application {
     private Stage primaryStage;
     private VueDepart vueDepart;
-    private EventHandler<ActionEvent> eventLancerAutomate = new EventHandler<ActionEvent>() {
+    private VuePrincipaleAtmt vuePrincipale;
+    private EventHandler<ActionEvent> eventLancerAutomate = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
             vueDepart.hide();
-
-            VuePrincipaleAtmt vuePrincipale = new VuePrincipaleAtmt(App.this);
-
-            primaryStage.setScene(new Scene(vuePrincipale));
-            primaryStage.setWidth(1200);
-            primaryStage.setHeight(750);
-            primaryStage.setTitle("Automates");
-
-            primaryStage.show();
-
-            String choix = vueDepart.getComboBoxChoixAutomate().getValue();
-
-            Path path = Paths.get("./automates_atmt/default/" + choix + ".atmt");
-            File file = path.toFile();
-            if (!choix.equals("nouveau") && file.isFile()) {
-                try {
-                    vuePrincipale.getVueMachine().chargerFichier(file.getAbsolutePath());
-                    VuePrincipaleAtmt vuePrincipaleAtmt = vuePrincipale;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            startAutomate();
         }
     };
+
 
     public static void main(String[] args) {
         launch(args);
@@ -65,4 +53,100 @@ public class App extends Application {
         vueDepart.setTitle("Interface pour automates et machine de Turing");
         vueDepart.getBoutonAutomate().setOnAction(eventLancerAutomate);
     }
+
+    public void startAutomate() {
+        vuePrincipale = new VuePrincipaleAtmt(App.this);
+
+        primaryStage.setScene(new Scene(vuePrincipale));
+        primaryStage.setWidth(1200);
+        primaryStage.setHeight(750);
+        primaryStage.setTitle("Automates");
+
+        primaryStage.setOnCloseRequest(windowEvent -> {
+            arretMachine();
+            windowEvent.consume();
+        });
+        vuePrincipale.getBoutonRetourMenu().setOnAction(actionEvent -> retourMenu());
+
+        primaryStage.show();
+
+        String choix = vueDepart.getComboBoxChoixAutomate().getValue();
+
+        Path path = Paths.get("./automates_atmt/default/" + choix + ".atmt");
+        File file = path.toFile();
+        if (!choix.equals("nouveau") && file.isFile()) {
+            try {
+                vuePrincipale.getVueMachine().chargerFichier(file.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void arretMachine() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Sauvegarder avant de quitter ?");
+        alert.setHeaderText("Voulez vous sauvegarder avant la fermeture ?");
+        alert.setContentText("Vos modifications seront perdues si vous ne les enregistrez pas.");
+        alert.getButtonTypes().clear();
+
+        ButtonType boutonQuitter = new ButtonType("Quitter");
+        ButtonType boutonAnnuler = new ButtonType("Annuler");
+        ButtonType boutonSauvegarder = new ButtonType("Sauvegarder");
+
+        alert.getButtonTypes().addAll(boutonQuitter, boutonAnnuler, boutonSauvegarder);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == boutonQuitter) {
+            Platform.exit();
+        } else if (result.isPresent() && result.get() == boutonSauvegarder){
+            vuePrincipale.sauvegarder();
+            Platform.exit();
+        }
+    }
+
+    public void retourMenu() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Sauvegarder avant retour menu ?");
+        alert.setHeaderText("Voulez vous sauvegarder avant de retourner au menu ?");
+        alert.setContentText("Vos modifications seront perdues si vous ne les enregistrez pas.");
+        alert.getButtonTypes().clear();
+
+        ButtonType boutonMenu = new ButtonType("Menu");
+        ButtonType boutonAnnuler = new ButtonType("Annuler");
+        ButtonType boutonSauvegarder = new ButtonType("Sauvegarder");
+
+        alert.getButtonTypes().addAll(boutonMenu, boutonAnnuler, boutonSauvegarder);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == boutonMenu) {
+            primaryStage.close();
+            vueDepart.show();
+        } else if (result.isPresent() && result.get() == boutonSauvegarder){
+            vuePrincipale.sauvegarder();
+            primaryStage.close();
+            vueDepart.show();
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

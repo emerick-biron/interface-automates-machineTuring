@@ -24,6 +24,7 @@ public abstract class VuePrincipale extends BorderPane {
     private Button boutonCharger;
     private Button boutonClear;
     private Button boutonLancer;
+    private Button boutonRetourMenu;
 
     private CheckBox checkBoxEstInitial;
     private CheckBox checkBoxEstTerminal;
@@ -44,11 +45,10 @@ public abstract class VuePrincipale extends BorderPane {
 
     public VuePrincipale(App app) {
         this.app = app;
+        initComposants();
         initSetOnAction();
 
         vueMachine = creerVueMachine();
-
-        initComposants();
         setCenter(vueMachine);
 
         ctrlPresse = false;
@@ -78,6 +78,8 @@ public abstract class VuePrincipale extends BorderPane {
         }
     }
 
+    public abstract void sauvegarder();
+
     public Button getBoutonSupprimer() {
         return boutonSupprimer;
     }
@@ -98,10 +100,15 @@ public abstract class VuePrincipale extends BorderPane {
         boutonSauvegarder = new Button("Sauvegarder");
         boutonCharger = new Button("Charger");
         boutonAjouterTransition = new Button("Ajouter transition");
+        boutonRetourMenu = new Button("Retour menu");
         checkBoxEstInitial = new CheckBox("Initial");
         checkBoxEstTerminal = new CheckBox("Terminal");
         textFieldEtiquette = new TextField();
         textFieldMotAutomate = new TextField();
+    }
+
+    public Button getBoutonRetourMenu() {
+        return boutonRetourMenu;
     }
 
     public Button getBoutonCreerEtat() {

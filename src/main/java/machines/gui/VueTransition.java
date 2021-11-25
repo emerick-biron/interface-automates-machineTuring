@@ -45,7 +45,6 @@ public abstract class VueTransition extends Group {
     public VueTransition(Transition transition, VueMachine vueMachine) {
         this.transition = transition;
         this.vueMachine = vueMachine;
-        initListeners();
         estSelectionne = new SimpleBooleanProperty(false);
         ligne = new Line();
         ligneHautFleche = new Line();
@@ -73,6 +72,7 @@ public abstract class VueTransition extends Group {
     }
 
     private void init() {
+        initListeners();
         initStyleLignes();
         if (transition.getEtatDepart() != transition.getEtatArrivee()) initCoordonnesLignes();
         else initAutoTransition();

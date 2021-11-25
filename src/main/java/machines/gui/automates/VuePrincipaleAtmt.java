@@ -53,7 +53,8 @@ public class VuePrincipaleAtmt extends VuePrincipale {
     };
     private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> {
         //TODO Faire des tests pour voir si les entrees sont ok
-        Task<Boolean> taskLancer = getVueAutomate().getAutomate().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
+        Task<Boolean> taskLancer =
+                getVueAutomate().getAutomate().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
         taskLancer.progressProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
@@ -83,30 +84,7 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         });
         getVueAutomate().getAutomate().lancer(taskLancer);
     };
-    private EventHandler<ActionEvent> eventSauvegarder = actionEvent -> {
-        fileChooser = new FileChooser();
-        fileChooser.setTitle("Sauvegarder automate");
-
-        Path path = Paths.get("./automates_atmt");
-        if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
-        else fileChooser.setInitialDirectory(new File("./"));
-
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("ATMT", "*.atmt"));
-        File selectedFile = fileChooser.showSaveDialog(new Stage());
-        if (selectedFile != null) {
-            try {
-                String fileName = selectedFile.getAbsolutePath();
-                int index = selectedFile.getName().lastIndexOf('.');
-                if (index < 0 || !selectedFile.getName().substring(index).equals(".atmt")) {
-                    fileName = fileName.concat(".atmt");
-                }
-
-                getVueAutomate().sauvegarder(fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    };
+    private EventHandler<ActionEvent> eventSauvegarder = actionEvent -> sauvegarder();
     private EventHandler<ActionEvent> eventCharger = actionEvent -> {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Charger automate");
@@ -213,14 +191,40 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         hBoxAjoutTransition = new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette());
         hBoxLancerAutomate = new HBox(getBoutonLancer(), getTextFieldMotAutomate());
 
-        barreDeMenu =
-                new HBox(getBoutonCharger(), getBoutonSauvegarder(), getBoutonCreerEtat(), getCheckBoxEstInitial(),
-                        getCheckBoxEstTerminal(), getBoutonClear(), getBoutonSupprimer(), hBoxAjoutTransition);
+        barreDeMenu = new HBox(getBoutonRetourMenu(), getBoutonCharger(), getBoutonSauvegarder(), getBoutonCreerEtat(),
+                getCheckBoxEstInitial(), getCheckBoxEstTerminal(), getBoutonClear(), getBoutonSupprimer(),
+                hBoxAjoutTransition);
 
         initStyle();
 
         setTop(barreDeMenu);
         setBottom(hBoxLancerAutomate);
+    }
+
+    @Override
+    public void sauvegarder(){
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Sauvegarder automate");
+
+        Path path = Paths.get("./automates_atmt");
+        if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
+        else fileChooser.setInitialDirectory(new File("./"));
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("ATMT", "*.atmt"));
+        File selectedFile = fileChooser.showSaveDialog(new Stage());
+        if (selectedFile != null) {
+            try {
+                String fileName = selectedFile.getAbsolutePath();
+                int index = selectedFile.getName().lastIndexOf('.');
+                if (index < 0 || !selectedFile.getName().substring(index).equals(".atmt")) {
+                    fileName = fileName.concat(".atmt");
+                }
+
+                getVueAutomate().sauvegarder(fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
