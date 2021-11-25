@@ -123,6 +123,7 @@ public class Automate extends Machine {
         fileWriter.close();
     }
 
+    @Override
     public Task<Boolean> getTaskLancer(String mot, long dellayMillis) {
         return new Task<>() {
             @Override

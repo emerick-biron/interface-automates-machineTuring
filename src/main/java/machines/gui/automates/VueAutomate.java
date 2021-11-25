@@ -18,26 +18,6 @@ import java.io.*;
 import java.util.List;
 
 public class VueAutomate extends VueMachine {
-    private ListChangeListener<Etat> miseAJourEtats = change -> {
-        while (change.next()) {
-            if (change.wasAdded()) {
-                for (Etat e : change.getAddedSubList()) {
-                    getChildren().add(new VueEtat(e, VueAutomate.this));
-                }
-            } else if (change.wasRemoved()) {
-                for (Etat e : change.getRemoved()) {
-                    getChildren().remove(getVueEtat(e));
-                }
-            }
-
-        }
-        for (Node n : getChildren()) {
-            if (n instanceof VueEtat) {
-                VueEtat vueEtat = (VueEtat) n;
-                vueEtat.setLabelNumEtat(getAutomate().etatsProperty().indexOf(vueEtat.getEtat()));
-            }
-        }
-    };
     private ListChangeListener<Transition> miseAJourTransition = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
@@ -71,26 +51,6 @@ public class VueAutomate extends VueMachine {
             vueTransition.positionnerLabelEtiquette(n);
         }
     };
-    private ListChangeListener<VueEtat> miseAJourVuesEtatSelectionnes = change -> {
-        while (change.next()) {
-            if (change.wasAdded()) {
-                for (VueEtat vueEtat : change.getAddedSubList()) {
-                    vueEtat.getCercle().setStroke(Color.valueOf("#003576"));
-                    vueEtat.getCercle().setStrokeType(StrokeType.INSIDE);
-                    vueEtat.getCercle().setStrokeWidth(3);
-                }
-            }
-            if (change.wasRemoved()) {
-                for (VueEtat vueEtat : change.getRemoved()) {
-                    vueEtat.getCercle().setStroke(null);
-                }
-            }
-        }
-        getVuePrincipale().getBoutonAjouterTransition()
-                .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
-        getVuePrincipale().getTextFieldEtiquette()
-                .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
-    };
     private ListChangeListener<VueTransition> miseAJourVuesTransitionSelectionnes = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
@@ -112,9 +72,8 @@ public class VueAutomate extends VueMachine {
     }
 
     public void initListeners() {
-        getAutomate().etatsProperty().addListener(miseAJourEtats);
+        super.initListeners();
         getAutomate().transitionsProperty().addListener(miseAJourTransition);
-        getVuesEtatSelectionnes().addListener(miseAJourVuesEtatSelectionnes);
         getVuesTransitionSelectionnes().addListener(miseAJourVuesTransitionSelectionnes);
     }
 

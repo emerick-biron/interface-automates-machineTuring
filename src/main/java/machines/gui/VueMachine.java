@@ -1,9 +1,13 @@
 package machines.gui;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeType;
+import machines.gui.automates.VueAutomate;
 import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
@@ -17,6 +21,46 @@ public abstract class VueMachine extends Pane {
     private VuePrincipale vuePrincipale;
     private ObservableList<VueEtat> vuesEtatSelectionnes = FXCollections.observableArrayList();
     private ObservableList<VueTransition> vuesTransitionSelectionnes = FXCollections.observableArrayList();
+    private ListChangeListener<Etat> miseAJourEtats = change -> {
+        while (change.next()) {
+            if (change.wasAdded()) {
+                for (Etat e : change.getAddedSubList()) {
+                    getChildren().add(new VueEtat(e, VueMachine.this));
+                }
+            } else if (change.wasRemoved()) {
+                for (Etat e : change.getRemoved()) {
+                    getChildren().remove(getVueEtat(e));
+                }
+            }
+
+        }
+        for (Node n : getChildren()) {
+            if (n instanceof VueEtat) {
+                VueEtat vueEtat = (VueEtat) n;
+                vueEtat.setLabelNumEtat(machine.etatsProperty().indexOf(vueEtat.getEtat()));
+            }
+        }
+    };
+    private ListChangeListener<VueEtat> miseAJourVuesEtatSelectionnes = change -> {
+        while (change.next()) {
+            if (change.wasAdded()) {
+                for (VueEtat vueEtat : change.getAddedSubList()) {
+                    vueEtat.getCercle().setStroke(Color.valueOf("#003576"));
+                    vueEtat.getCercle().setStrokeType(StrokeType.INSIDE);
+                    vueEtat.getCercle().setStrokeWidth(3);
+                }
+            }
+            if (change.wasRemoved()) {
+                for (VueEtat vueEtat : change.getRemoved()) {
+                    vueEtat.getCercle().setStroke(null);
+                }
+            }
+        }
+        getVuePrincipale().getBoutonAjouterTransition()
+                .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
+        getVuePrincipale().getTextFieldEtiquette()
+                .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
+    };
 
     public VueMachine(Machine machine, VuePrincipale vuePrincipale) {
         this.vuePrincipale = vuePrincipale;
@@ -28,6 +72,11 @@ public abstract class VueMachine extends Pane {
                 vuePrincipale.unbindCheckBoxes();
             }
         });
+    }
+
+    public void initListeners(){
+        machine.etatsProperty().addListener(miseAJourEtats);
+        getVuesEtatSelectionnes().addListener(miseAJourVuesEtatSelectionnes);
     }
 
 

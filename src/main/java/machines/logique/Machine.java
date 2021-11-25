@@ -40,6 +40,8 @@ public abstract class Machine{
         new Thread(taskLancer).start();
     }
 
+    public abstract Task<Boolean> getTaskLancer(String mot, long dellayMillis);
+
     public final void ajoutTransition(Transition... transitions) {
         this.transitions.addAll(transitions);
         for (Transition t : transitions) {
