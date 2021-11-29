@@ -2,34 +2,25 @@ package machines.logique;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.concurrent.Task;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public abstract class Machine{
-    private ObservableList<Etat> etats;
-    private ObservableList<Transition> transitions;
-    private List<Etat> etatsActifs;
+    private ObservableSet<Etat> etats;
+    private Set<Etat> etatsActifs;
 
 
-    public Machine(List<Etat> etats) {
-        this.etats = FXCollections.observableArrayList(etats);
-        transitions = FXCollections.observableArrayList();
-        etatsActifs = new ArrayList<>();
-    }
-
-    public Machine(Etat... etats) {
-        this.etats = FXCollections.observableArrayList(etats);
-        transitions = FXCollections.observableArrayList();
-        etatsActifs = new ArrayList<>();
+    public Machine(Set<Etat> etats) {
+        this.etats = FXCollections.observableSet(etats);
+        etatsActifs = new HashSet<>();
     }
 
     public Machine() {
-        etats = FXCollections.observableArrayList();
-        transitions = FXCollections.observableArrayList();
-        etatsActifs = new ArrayList<>();
+        etats = FXCollections.observableSet(new HashSet<>());
+        etatsActifs = new HashSet<>();
     }
 
     public abstract void chargerFichier(String nomFichier) throws IOException;
@@ -42,72 +33,46 @@ public abstract class Machine{
 
     public abstract Task<Boolean> getTaskLancer(String mot, long dellayMillis);
 
-    public final void ajoutTransition(Transition... transitions) {
-        this.transitions.addAll(transitions);
-        for (Transition t : transitions) {
-            t.getEtatDepart().getListeTransitions().add(t);
-        }
-    }
-
-    public void ajoutTransition(ArrayList<? extends Transition> transitions) {
-        this.transitions.addAll(transitions);
-        for (Transition t : transitions) {
-            t.getEtatDepart().getListeTransitions().add(t);
-        }
-    }
-
-    public void supprimerTransition(List<Transition> transitions) {
-        this.transitions.removeAll(transitions);
-        for (Transition t : transitions) {
-            t.getEtatDepart().getListeTransitions().remove(t);
-        }
-    }
-
-    public void supprimerTransition(Transition t) {
-        this.transitions.remove(t);
-        t.getEtatDepart().getListeTransitions().remove(t);
-    }
-
     public void ajouterEtat(Etat etat) {
         etats.add(etat);
     }
 
     public void supprimerEtat(Etat etat) {
-        ArrayList<Transition> transitionsASupprimer = new ArrayList<>();
-        for (Transition t : transitions) {
-            if (t.getEtatDepart() == etat) transitionsASupprimer.add(t);
-            else if (t.getEtatArrivee() == etat) transitionsASupprimer.add(t);
-        }
-        supprimerTransition(transitionsASupprimer);
         etats.remove(etat);
     }
 
-    public ObservableList<Transition> getTransitions() {
+    public Set<Transition> getTransitions(){
+        Set<Transition> transitions = new HashSet<>();
+        for (Etat e : etats) {
+            for (Transition t : e.getListeTransitions()) {
+                transitions.add(t);
+            }
+        }
         return transitions;
     }
 
-    public ObservableList<Transition> transitionsProperty() {
-        return transitions;
+    private void clear(){
+        etats.clear();
+        etatsActifs.clear();
     }
 
-
-    public ObservableList<Etat> etatsProperty() {
+    public ObservableSet<Etat> etatsProperty() {
         return etats;
     }
 
-    public List<Etat> getEtatsInitiaux() {
-        List<Etat> res = new ArrayList<>();
+    public Set<Etat> getEtatsInitiaux() {
+        Set<Etat> res = new HashSet<>();
         for (Etat etat : etats) {
             if (etat.estInitial()) res.add(etat);
         }
         return res;
     }
 
-    public List<Etat> getEtats() {
+    public Set<Etat> getEtats() {
         return etats;
     }
 
-    public List<Etat> getEtatsActifs() {
+    public Set<Etat> getEtatsActifs() {
         return etatsActifs;
     }
 }

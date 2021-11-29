@@ -6,17 +6,11 @@ import machines.logique.Machine;
 import machines.logique.Transition;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Automate extends Machine {
 
-    public Automate(List<Etat> etats) {
-        super(etats);
-    }
-
-    public Automate(Etat... etats) {
+    public Automate(Set<Etat> etats) {
         super(etats);
     }
 
@@ -43,8 +37,6 @@ public class Automate extends Machine {
             etats[i] = new Etat();
         }
 
-        ArrayList<TransitionAtmt> transitionArrayList = new ArrayList<>();
-
         String ligne = bf.readLine();
 
         while (!(ligne == null || ligne.contains("###"))) {
@@ -66,7 +58,7 @@ public class Automate extends Machine {
                     int numE2 = Integer.parseInt(split[2]);
                     char lettre = split[1].charAt(0);
 
-                    transitionArrayList.add(new TransitionAtmt(etats[numE1], etats[numE2], lettre));
+                    etats[numE1].ajoutTransition(new TransitionAtmt(etats[numE1], etats[numE2], lettre));
                 }
             }
             ligne = bf.readLine();
@@ -76,7 +68,6 @@ public class Automate extends Machine {
         fr.close();
 
         getEtats().addAll(Arrays.asList(etats));
-        ajoutTransition(transitionArrayList);
     }
 
     /**
@@ -93,28 +84,30 @@ public class Automate extends Machine {
         bufferedWriter.write(String.valueOf(getEtats().size()));
         bufferedWriter.newLine();
 
+        ArrayList<Etat> etats = new ArrayList<>(getEtats());
+
         //ecriture etats initiaux
-        for (Etat etat : getEtats()) {
+        for (Etat etat : etats) {
             if (etat.estInitial()) {
-                bufferedWriter.write("initial " + getEtats().indexOf(etat));
+                bufferedWriter.write("initial " + etats.indexOf(etat));
                 bufferedWriter.newLine();
             }
         }
 
         //ecriture etats terminaux
-        for (Etat etat : getEtats()) {
+        for (Etat etat : etats) {
             if (etat.estTerminal()) {
-                bufferedWriter.write("terminal " + getEtats().indexOf(etat));
+                bufferedWriter.write("terminal " +etats.indexOf(etat));
                 bufferedWriter.newLine();
             }
         }
 
         //ecriture transitions
-        for (Etat etat : getEtats()) {
-            ArrayList<Transition> transitions = etat.getListeTransitions();
+        for (Etat etat : etats) {
+            HashSet<Transition> transitions = etat.getListeTransitions();
             for (Transition t : transitions) {
-                bufferedWriter.write(getEtats().indexOf(t.getEtatDepart()) + " " + t.getEtiquette() + " " +
-                        getEtats().indexOf(t.getEtatArrivee()));
+                bufferedWriter.write(etats.indexOf(t.getEtatDepart()) + " " + t.getEtiquette() + " " +
+                        etats.indexOf(t.getEtatArrivee()));
                 bufferedWriter.newLine();
             }
         }
@@ -155,7 +148,7 @@ public class Automate extends Machine {
     private void step(char lettre) {
         List<Etat> nouveauxActifs = new ArrayList<>();
         for (Etat e : getEtatsActifs()) {
-            for (Etat etatCible : e.cibleND(lettre)) {
+            for (Etat etatCible : e.cible(lettre)) {
                 if (!nouveauxActifs.contains(etatCible)) {
                     nouveauxActifs.add(etatCible);
                 }

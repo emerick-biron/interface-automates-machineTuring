@@ -4,8 +4,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import machines.logique.automates.TransitionAtmt;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Etat {
     private BooleanProperty estInitial;
@@ -13,20 +12,20 @@ public class Etat {
     /**
      * Liste des transitions SORTANTES de l'etat
      */
-    private ArrayList<Transition> listeTransitions;
+    private HashSet<Transition> listeTransitions;
     private BooleanProperty estActif;
 
     public Etat() {
         estInitial = new SimpleBooleanProperty(false);
         estTerminal = new SimpleBooleanProperty(false);
-        listeTransitions = new ArrayList<>();
+        listeTransitions = new HashSet<>();
         estActif = new SimpleBooleanProperty(false);
     }
 
     public Etat(boolean estInitial, boolean estTerminal) {
         this.estInitial = new SimpleBooleanProperty(estInitial);
         this.estTerminal = new SimpleBooleanProperty(estTerminal);
-        listeTransitions = new ArrayList<>();
+        listeTransitions = new HashSet<>();
         estActif = new SimpleBooleanProperty(false);
     }
 
@@ -49,12 +48,28 @@ public class Etat {
      * @param c lettre a tester
      * @return liste des etat qui peuvent etre atteint, null si il n'y en a pas
      */
-    public List<Etat> cibleND(char c) {
-        List<Etat> resultat = new ArrayList<>();
+    public Set<Etat> cible(char c) {
+        Set<Etat> resultat = new HashSet<>();
         for (Transition t : getListeTransitions()) {
             if (t.getEtiquette() == c) resultat.add(t.getEtatArrivee());
         }
         return resultat;
+    }
+
+    public void ajoutTransition(Transition transition){
+        listeTransitions.add(transition);
+    }
+
+    public void ajoutTransition(Collection<Transition> transitions){
+        listeTransitions.addAll(transitions);
+    }
+
+    public void supprimerTransition(Transition transition){
+        listeTransitions.remove(transition);
+    }
+
+    public void supprimerTransition(Collection<Transition> transitions){
+        listeTransitions.removeAll(transitions);
     }
 
     public BooleanProperty estActifProperty() {
@@ -101,7 +116,7 @@ public class Etat {
         return estActif.getValue();
     }
 
-    public ArrayList<Transition> getListeTransitions() {
+    public HashSet<Transition> getListeTransitions() {
         return listeTransitions;
     }
 }
