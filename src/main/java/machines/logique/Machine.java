@@ -12,7 +12,6 @@ public abstract class Machine{
     private ObservableSet<Etat> etats;
     private Set<Etat> etatsActifs;
 
-
     public Machine(Set<Etat> etats) {
         this.etats = FXCollections.observableSet(etats);
         etatsActifs = new HashSet<>();
@@ -51,7 +50,7 @@ public abstract class Machine{
         return transitions;
     }
 
-    private void clear(){
+    public void clear(){
         etats.clear();
         etatsActifs.clear();
     }
