@@ -3,6 +3,7 @@ package machines.gui;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.SetChangeListener;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -21,24 +22,24 @@ public abstract class VueMachine extends Pane {
     private VuePrincipale vuePrincipale;
     private ObservableList<VueEtat> vuesEtatSelectionnes = FXCollections.observableArrayList();
     private ObservableList<VueTransition> vuesTransitionSelectionnes = FXCollections.observableArrayList();
-    private ListChangeListener<Etat> miseAJourEtats = change -> {
-        while (change.next()) {
-            if (change.wasAdded()) {
-                for (Etat e : change.getAddedSubList()) {
-                    getChildren().add(new VueEtat(e, VueMachine.this));
-                }
-            } else if (change.wasRemoved()) {
-                for (Etat e : change.getRemoved()) {
-                    getChildren().remove(getVueEtat(e));
+    private SetChangeListener<Etat> miseAJourEtats = change -> {
+        if (change.wasAdded()) {
+            VueEtat vueEtat = new VueEtat(change.getElementAdded(), VueMachine.this);
+            vueEtat.setLabelNumEtat(machine.getEtats().size() - 1);
+            getChildren().add(vueEtat);
+            //TODO ajouter listner sur le nouvel etat
+        } else if (change.wasRemoved()) {
+            VueEtat vueEtatRemoved = getVueEtat(change.getElementRemoved());
+            getChildren().remove(vueEtatRemoved);
+            for (Node n : getChildren()) {
+                if (n instanceof VueEtat) {
+                    VueEtat vueEtat = (VueEtat) n;
+                    if (vueEtat.getNumEtat() > vueEtatRemoved.getNumEtat()) {
+                        vueEtat.setLabelNumEtat((vueEtat.getNumEtat() - 1));
+                    }
                 }
             }
 
-        }
-        for (Node n : getChildren()) {
-            if (n instanceof VueEtat) {
-                VueEtat vueEtat = (VueEtat) n;
-                vueEtat.setLabelNumEtat(machine.etatsProperty().indexOf(vueEtat.getEtat()));
-            }
         }
     };
     private ListChangeListener<VueEtat> miseAJourVuesEtatSelectionnes = change -> {
@@ -76,7 +77,7 @@ public abstract class VueMachine extends Pane {
         });
     }
 
-    private void initListeners(){
+    private void initListeners() {
         machine.etatsProperty().addListener(miseAJourEtats);
         getVuesEtatSelectionnes().addListener(miseAJourVuesEtatSelectionnes);
     }
@@ -136,13 +137,7 @@ public abstract class VueMachine extends Pane {
     public void clear() {
         vuesEtatSelectionnes.clear();
         vuesTransitionSelectionnes.clear();
-        List<Etat> etats = machine.getEtats();
-        if (!etats.isEmpty()) {
-            int l = etats.size();
-            for (int i = 0; i < l; i++) {
-                machine.supprimerEtat(etats.get(0));
-            }
-        }
+        machine.clear();
     }
 
     public abstract void chargerFichier(String nomFichier) throws IOException;

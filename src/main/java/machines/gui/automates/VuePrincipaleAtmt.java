@@ -118,7 +118,7 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         for (VueEtat vueEtat : vuesEtatADeSelectionner) {
             vueEtat.deSelectionner();
         }
-
+/*
         HashSet<VueTransitionAtmt> vuesTransitionADeDelectionner = new HashSet<>();
         for (VueTransition vueTransition : getVueAutomate().getVuesTransitionSelectionnes()) {
             if (getVueAutomate().getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
@@ -147,6 +147,8 @@ public class VuePrincipaleAtmt extends VuePrincipale {
                 vueTransition.deSelectionner();
             }
         }
+
+ */
     };
     private EventHandler<ActionEvent> eventAjouterTransition = actionEvent -> {
         ObservableList<VueEtat> vuesEtatSelectionnes = getVueAutomate().getVuesEtatSelectionnes();
@@ -163,18 +165,8 @@ public class VuePrincipaleAtmt extends VuePrincipale {
             if (vuesEtatSelectionnes.size() == 1) vueEtatArrivee = vueEtatDep;
             else vueEtatArrivee = vuesEtatSelectionnes.get(1);
             if (etiquette.length() >= 1) {
-                boolean nouvelleTrans = true;
-                for (Transition t : getVueAutomate().getAutomate().getTransitions()) {
-                    if (t.getEtatDepart() == vueEtatDep.getEtat() && t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
-                            t.getEtiquette() == etiquette.charAt(0)) {
-                        nouvelleTrans = false;
-                        break;
-                    }
-                }
-                if (nouvelleTrans) {
-                    getVueAutomate().getAutomate().ajoutTransition(
-                            new TransitionAtmt(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0)));
-                }
+                vueEtatDep.getEtat().ajoutTransition(
+                        new TransitionAtmt(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0)));
             }
             getTextFieldEtiquette().setText("");
         }
@@ -202,7 +194,7 @@ public class VuePrincipaleAtmt extends VuePrincipale {
     }
 
     @Override
-    public void sauvegarder(){
+    public void sauvegarder() {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Sauvegarder automate");
 

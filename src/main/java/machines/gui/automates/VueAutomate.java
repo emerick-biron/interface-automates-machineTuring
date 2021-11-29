@@ -1,5 +1,6 @@
 package machines.gui.automates;
 
+import javafx.collections.SetChangeListener;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import machines.gui.VueEtat;
@@ -15,24 +16,24 @@ import javafx.scene.shape.StrokeType;
 import machines.gui.VueMachine;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VueAutomate extends VueMachine {
-    private ListChangeListener<Transition> miseAJourTransition = change -> {
-        while (change.next()) {
-            if (change.wasAdded()) {
-                for (Transition t : change.getAddedSubList()) {
-                    VueTransitionAtmt vueTransition = new VueTransitionAtmt((TransitionAtmt) t, VueAutomate.this);
-                    getChildren().add(vueTransition);
-                    vueTransition.toBack();
-                }
-            } else if (change.wasRemoved()) {
-                for (Transition t : change.getRemoved()) {
-                    getChildren().remove(getVueTransition(t));
-                }
-            }
+    private SetChangeListener<Transition> miseAJourTransition = change -> {
+        if (change.wasAdded()) {
+            Transition t = change.getElementAdded();
+            VueTransitionAtmt vueTransition = new VueTransitionAtmt((TransitionAtmt) t, VueAutomate.this);
+            getChildren().add(vueTransition);
+            vueTransition.toBack();
+        } else if (change.wasRemoved()) {
+            Transition t = change.getElementRemoved();
+            getChildren().remove(getVueTransition(t));
         }
-        for (Transition t : getAutomate().getTransitions()) {
+        /*
+        Transition t = change;
+
+        for (Transition t : change) {
             int n = 0;
             for (int i = 0; i < getAutomate().getTransitions().indexOf(t); i++) {
                 Transition t2 = getAutomate().getTransitions().get(i);
@@ -50,6 +51,8 @@ public class VueAutomate extends VueMachine {
             }
             vueTransition.positionnerLabelEtiquette(n);
         }
+
+         */
     };
     private ListChangeListener<VueTransition> miseAJourVuesTransitionSelectionnes = change -> {
         while (change.next()) {
@@ -72,7 +75,9 @@ public class VueAutomate extends VueMachine {
     }
 
     private void initListeners() {
-        getAutomate().transitionsProperty().addListener(miseAJourTransition);
+        for (Etat etat : getAutomate().getEtats()) {
+            etat.transitionsProperty().addListener(miseAJourTransition);
+        }
         getVuesTransitionSelectionnes().addListener(miseAJourVuesTransitionSelectionnes);
     }
 
@@ -128,6 +133,8 @@ public class VueAutomate extends VueMachine {
             hauteurVA = getHeight();
         }
 
+        List<Etat> etats = new ArrayList<>(getAutomate().getEtats());
+
         while (ligne != null) {
             String[] split = ligne.split(" ");
 
@@ -137,7 +144,7 @@ public class VueAutomate extends VueMachine {
                 double xPos = Double.parseDouble(split[1]);
                 double yPos = Double.parseDouble(split[2]);
 
-                Etat etat = getAutomate().getEtats().get(numEtat);
+                Etat etat = etats.get(numEtat);
                 VueEtat vueEtat = getVueEtat(etat);
 
                 //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
@@ -169,12 +176,12 @@ public class VueAutomate extends VueMachine {
 
         Stage primaryStage = getVuePrincipale().getApp().getPrimaryStage();
 
-        bufferedWriter.write(
-                "DIM: " + primaryStage.getWidth() + " " + primaryStage.getHeight() + " " + getWidth() + " " +
+        bufferedWriter
+                .write("DIM: " + primaryStage.getWidth() + " " + primaryStage.getHeight() + " " + getWidth() + " " +
                         getHeight());
         bufferedWriter.newLine();
 
-        List<Etat> listEtats = getAutomate().getEtats();
+        List<Etat> listEtats = new ArrayList<>(getAutomate().getEtats());
 
         for (Etat e : listEtats) {
             VueEtat vueEtat = getVueEtat(e);

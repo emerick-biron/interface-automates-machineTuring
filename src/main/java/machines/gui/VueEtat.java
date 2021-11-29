@@ -84,6 +84,10 @@ public class VueEtat extends StackPane {
         return labelNumEtat;
     }
 
+    public int getNumEtat(){
+        return Integer.parseInt(labelNumEtat.toString());
+    }
+
     public void setLabelNumEtat(int numEtat) {
         labelNumEtat.setText(String.valueOf(numEtat));
     }
