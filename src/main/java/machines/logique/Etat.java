@@ -2,6 +2,8 @@ package machines.logique;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
 import machines.logique.automates.TransitionAtmt;
 
 import java.util.*;
@@ -12,20 +14,20 @@ public class Etat {
     /**
      * Liste des transitions SORTANTES de l'etat
      */
-    private HashSet<Transition> listeTransitions;
+    private ObservableSet<Transition> listeTransitions;
     private BooleanProperty estActif;
 
     public Etat() {
         estInitial = new SimpleBooleanProperty(false);
         estTerminal = new SimpleBooleanProperty(false);
-        listeTransitions = new HashSet<>();
+        listeTransitions = FXCollections.observableSet();
         estActif = new SimpleBooleanProperty(false);
     }
 
     public Etat(boolean estInitial, boolean estTerminal) {
         this.estInitial = new SimpleBooleanProperty(estInitial);
         this.estTerminal = new SimpleBooleanProperty(estTerminal);
-        listeTransitions = new HashSet<>();
+        listeTransitions = FXCollections.observableSet();
         estActif = new SimpleBooleanProperty(false);
     }
 
@@ -116,7 +118,10 @@ public class Etat {
         return estActif.getValue();
     }
 
-    public HashSet<Transition> getListeTransitions() {
+    public Set<Transition> getListeTransitions() {
+        return listeTransitions;
+    }
+    public ObservableSet<Transition> transitionsProperty() {
         return listeTransitions;
     }
 }

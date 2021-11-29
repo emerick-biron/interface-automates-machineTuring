@@ -104,7 +104,7 @@ public class Automate extends Machine {
 
         //ecriture transitions
         for (Etat etat : etats) {
-            HashSet<Transition> transitions = etat.getListeTransitions();
+            Set<Transition> transitions = etat.getListeTransitions();
             for (Transition t : transitions) {
                 bufferedWriter.write(etats.indexOf(t.getEtatDepart()) + " " + t.getEtiquette() + " " +
                         etats.indexOf(t.getEtatArrivee()));
