@@ -43,9 +43,7 @@ public abstract class Machine{
     public Set<Transition> getTransitions(){
         Set<Transition> transitions = new HashSet<>();
         for (Etat e : etats) {
-            for (Transition t : e.getListeTransitions()) {
-                transitions.add(t);
-            }
+            transitions.addAll(e.getListeTransitions());
         }
         return transitions;
     }
