@@ -58,6 +58,10 @@ public class Etat {
         return resultat;
     }
 
+    public void clearTransitions(){
+        listeTransitions.clear();
+    }
+
     public void ajoutTransition(Transition transition){
         listeTransitions.add(transition);
     }

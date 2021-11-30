@@ -8,7 +8,7 @@ import javafx.concurrent.Task;
 import java.io.IOException;
 import java.util.*;
 
-public abstract class Machine{
+public abstract class Machine {
     private ObservableSet<Etat> etats;
     private Set<Etat> etatsActifs;
 
@@ -26,7 +26,7 @@ public abstract class Machine{
 
     public abstract void sauvegarder(String nomFichier) throws IOException;
 
-    public void lancer(Task<Boolean> taskLancer){
+    public void lancer(Task<Boolean> taskLancer) {
         new Thread(taskLancer).start();
     }
 
@@ -40,7 +40,7 @@ public abstract class Machine{
         etats.remove(etat);
     }
 
-    public Set<Transition> getTransitions(){
+    public Set<Transition> getTransitions() {
         Set<Transition> transitions = new HashSet<>();
         for (Etat e : etats) {
             transitions.addAll(e.getListeTransitions());
@@ -48,7 +48,10 @@ public abstract class Machine{
         return transitions;
     }
 
-    public void clear(){
+    public void clear() {
+        for (Etat etat : etats) {
+            etat.clearTransitions();
+        }
         etats.clear();
         etatsActifs.clear();
     }
