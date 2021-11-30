@@ -29,20 +29,6 @@ public abstract class VueMachine extends Pane {
             VueEtat vueEtat = new VueEtat(change.getElementAdded(), VueMachine.this);
             vueEtat.setLabelNumEtat(machine.getEtats().size() - 1);
             getChildren().add(vueEtat);
-            change.getElementAdded().transitionsProperty().addListener(new SetChangeListener<Transition>() {
-                @Override
-                public void onChanged(Change<? extends Transition> change) {
-                    if (change.wasAdded()) {
-                        Transition t = change.getElementAdded();
-                        VueTransitionAtmt vueTransition = new VueTransitionAtmt((TransitionAtmt) t, (VueAutomate) VueMachine.this);
-                        getChildren().add(vueTransition);
-                        vueTransition.toBack();
-                    } else if (change.wasRemoved()) {
-                        Transition t = change.getElementRemoved();
-                        getChildren().remove(getVueTransition(t));
-                    }
-                }
-            });
         } else if (change.wasRemoved()) {
             VueEtat vueEtatRemoved = getVueEtat(change.getElementRemoved());
             getChildren().remove(vueEtatRemoved);
@@ -77,6 +63,20 @@ public abstract class VueMachine extends Pane {
         getVuePrincipale().getTextFieldEtiquette()
                 .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
     };
+    private ListChangeListener<VueTransition> miseAJourVuesTransitionSelectionnes = change -> {
+        while (change.next()) {
+            if (change.wasAdded()) {
+                for (VueTransition vueTransition : change.getAddedSubList()) {
+                    vueTransition.setCouleurSelection(true);
+                }
+            }
+            if (change.wasRemoved()) {
+                for (VueTransition vueTransition : change.getRemoved()) {
+                    vueTransition.setCouleurSelection(false);
+                }
+            }
+        }
+    };
 
     public VueMachine(Machine machine, VuePrincipale vuePrincipale) {
         this.vuePrincipale = vuePrincipale;
@@ -94,7 +94,8 @@ public abstract class VueMachine extends Pane {
 
     private void initListeners() {
         machine.etatsProperty().addListener(miseAJourEtats);
-        getVuesEtatSelectionnes().addListener(miseAJourVuesEtatSelectionnes);
+        vuesEtatSelectionnes.addListener(miseAJourVuesEtatSelectionnes);
+        vuesTransitionSelectionnes.addListener(miseAJourVuesTransitionSelectionnes);
     }
 
 

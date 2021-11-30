@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VueAutomate extends VueMachine {
-    private SetChangeListener<Transition> miseAJourTransition = change -> {
+    private SetChangeListener<Transition> miseAJourTransitions = change -> {
         if (change.wasAdded()) {
             Transition t = change.getElementAdded();
             VueTransitionAtmt vueTransition = new VueTransitionAtmt((TransitionAtmt) t, VueAutomate.this);
@@ -54,31 +54,13 @@ public class VueAutomate extends VueMachine {
 
          */
     };
-    private ListChangeListener<VueTransition> miseAJourVuesTransitionSelectionnes = change -> {
-        while (change.next()) {
-            if (change.wasAdded()) {
-                for (VueTransition vueTransition : change.getAddedSubList()) {
-                    vueTransition.setCouleurSelection(true);
-                }
-            }
-            if (change.wasRemoved()) {
-                for (VueTransition vueTransition : change.getRemoved()) {
-                    vueTransition.setCouleurSelection(false);
-                }
-            }
-        }
+    private SetChangeListener<Etat> miseAJourEtats = change -> {
+        if (change.wasAdded()) change.getElementAdded().transitionsProperty().addListener(miseAJourTransitions);
     };
 
     public VueAutomate(Automate automate, VuePrincipaleAtmt vuePrincipale) {
         super(automate, vuePrincipale);
-        initListeners();
-    }
-
-    private void initListeners() {
-        for (Etat etat : getAutomate().getEtats()) {
-            etat.transitionsProperty().addListener(miseAJourTransition);
-        }
-        getVuesTransitionSelectionnes().addListener(miseAJourVuesTransitionSelectionnes);
+        automate.etatsProperty().addListener(miseAJourEtats);
     }
 
     public Automate getAutomate() {

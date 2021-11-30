@@ -108,8 +108,9 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         for (VueEtat vueEtat : getVueAutomate().getVuesEtatSelectionnes()) {
             for (Transition t : getVueAutomate().getAutomate().getTransitions()) {
                 if (t.getEtatDepart() == vueEtat.getEtat() || t.getEtatArrivee() == vueEtat.getEtat()) {
-                    VueTransitionAtmt vueTransition = (VueTransitionAtmt) getVueAutomate().getVueTransition(t);
+                    VueTransition vueTransition = getVueAutomate().getVueTransition(t);
                     vueTransition.deSelectionner();
+                    t.getEtatDepart().supprimerTransition(t);
                 }
             }
             vuesEtatADeSelectionner.add(vueEtat);
@@ -118,6 +119,8 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         for (VueEtat vueEtat : vuesEtatADeSelectionner) {
             vueEtat.deSelectionner();
         }
+
+        //TODO supprimer les transitions selectionnées
 /*
         HashSet<VueTransitionAtmt> vuesTransitionADeDelectionner = new HashSet<>();
         for (VueTransition vueTransition : getVueAutomate().getVuesTransitionSelectionnes()) {

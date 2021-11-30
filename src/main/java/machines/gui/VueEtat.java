@@ -3,6 +3,7 @@ package machines.gui;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.SetChangeListener;
 import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -10,7 +11,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import machines.gui.automates.VueAutomate;
+import machines.gui.automates.VueTransitionAtmt;
 import machines.logique.Etat;
+import machines.logique.Transition;
+import machines.logique.automates.TransitionAtmt;
 
 public class VueEtat extends StackPane {
     private Etat etat;
