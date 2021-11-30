@@ -26,33 +26,17 @@ public class VueAutomate extends VueMachine {
             VueTransitionAtmt vueTransition = new VueTransitionAtmt((TransitionAtmt) t, VueAutomate.this);
             getChildren().add(vueTransition);
             vueTransition.toBack();
+            vueTransition.positionnerLabelEtiquette(
+                    getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin()).size() - 1);
         } else if (change.wasRemoved()) {
             Transition t = change.getElementRemoved();
-            getChildren().remove(getVueTransition(t));
-        }
-        /*
-        Transition t = change;
-
-        for (Transition t : change) {
-            int n = 0;
-            for (int i = 0; i < getAutomate().getTransitions().indexOf(t); i++) {
-                Transition t2 = getAutomate().getTransitions().get(i);
-                if (t.getEtatDepart() == t2.getEtatDepart() && t.getEtatArrivee() == t2.getEtatArrivee()) {
-                    n++;
-                }
-            }
             VueTransition vueTransition = getVueTransition(t);
-            if (n > 0) {
-                vueTransition.setFlechesVisible(false);
-                vueTransition.toFront();
-            } else {
-                vueTransition.setFlechesVisible(true);
-                vueTransition.toBack();
+            getChildren().remove(vueTransition);
+            ArrayList<VueTransition> vueTransitions = getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin());
+            for (int i = 0; i < vueTransitions.size(); i++) {
+                vueTransitions.get(i).positionnerLabelEtiquette(i);
             }
-            vueTransition.positionnerLabelEtiquette(n);
         }
-
-         */
     };
     private SetChangeListener<Etat> miseAJourEtats = change -> {
         if (change.wasAdded()) change.getElementAdded().transitionsProperty().addListener(miseAJourTransitions);
