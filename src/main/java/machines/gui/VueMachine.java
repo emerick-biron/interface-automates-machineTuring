@@ -229,16 +229,19 @@ public abstract class VueMachine extends Pane {
             hauteurVA = getHeight();
         }
 
+        ArrayList<Etat> etats = new ArrayList<>(machine.getEtats());
+
         while (ligne != null) {
             String[] split = ligne.split(" ");
 
             if (split.length >= 3) {
 
-                String labelNumEtat = split[0];
+                int numEtat = Integer.parseInt(split[0]);
                 double xPos = Double.parseDouble(split[1]);
                 double yPos = Double.parseDouble(split[2]);
 
-                VueEtat vueEtat = getVueEtat(labelNumEtat);
+                Etat etat = etats.get(numEtat);
+                VueEtat vueEtat = getVueEtat(etat);
 
                 if (vueEtat != null) {
                     //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
@@ -275,10 +278,12 @@ public abstract class VueMachine extends Pane {
                         getHeight());
         bufferedWriter.newLine();
 
-        for (Etat e : machine.getEtats()) {
+        ArrayList<Etat> etats = new ArrayList<>(machine.getEtats());
+
+        for (Etat e : etats) {
             VueEtat vueEtat = getVueEtat(e);
             if (vueEtat != null) {
-                bufferedWriter.write(vueEtat.getLabelNumEtat().getText() + " " + vueEtat.getLayoutX() + " " +
+                bufferedWriter.write(etats.indexOf(e) + " " + vueEtat.getLayoutX() + " " +
                         vueEtat.getLayoutY());
                 bufferedWriter.newLine();
             }

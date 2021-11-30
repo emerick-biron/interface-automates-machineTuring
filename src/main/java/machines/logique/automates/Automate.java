@@ -31,13 +31,11 @@ public class Automate extends Machine {
         BufferedReader bf = new BufferedReader(fr);
 
         int nbEtat = Integer.parseInt(bf.readLine());
-        Etat[] etats = new Etat[nbEtat];
 
         for (int i = 0; i < nbEtat; i++) {
-            etats[i] = new Etat();
-            getEtats().add(etats[i]);
+            getEtats().add(new Etat());
         }
-
+        ArrayList<Etat> etats = new ArrayList<>(getEtats());
         String ligne = bf.readLine();
 
         while (!(ligne == null || ligne.contains("###"))) {
@@ -48,18 +46,18 @@ public class Automate extends Machine {
 
                 if (split[0].equals("initial")) for (int i = 1; i < m; i++) {
                     int numEtatInit = Integer.parseInt(split[i]);
-                    etats[numEtatInit].setEstInitial(true);
+                    etats.get(numEtatInit).setEstInitial(true);
                 }
                 else if (split[0].equals("terminal")) for (int i = 1; i < m; i++) {
                     int numEtatTerm = Integer.parseInt(split[i]);
-                    etats[numEtatTerm].setEstTerminal(true);
+                    etats.get(numEtatTerm).setEstTerminal(true);
                 }
                 else {
                     int numE1 = Integer.parseInt(split[0]);
                     int numE2 = Integer.parseInt(split[2]);
                     char lettre = split[1].charAt(0);
 
-                    etats[numE1].ajoutTransition(new TransitionAtmt(etats[numE1], etats[numE2], lettre));
+                    etats.get(numE1).ajoutTransition(new TransitionAtmt(etats.get(numE1), etats.get(numE2), lettre));
                 }
             }
             ligne = bf.readLine();
