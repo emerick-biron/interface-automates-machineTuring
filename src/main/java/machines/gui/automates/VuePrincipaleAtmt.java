@@ -120,18 +120,16 @@ public class VuePrincipaleAtmt extends VuePrincipale {
             vueEtat.deSelectionner();
         }
 
-        //TODO supprimer les transitions selectionnées
-/*
-        HashSet<VueTransitionAtmt> vuesTransitionADeDelectionner = new HashSet<>();
+        HashSet<VueTransition> vuesTransitionADeDelectionner = new HashSet<>();
         for (VueTransition vueTransition : getVueAutomate().getVuesTransitionSelectionnes()) {
             if (getVueAutomate().getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
                     .size() == 1) {
-                getVueAutomate().getAutomate().supprimerTransition(vueTransition.getTransition());
-                vuesTransitionADeDelectionner.add((VueTransitionAtmt) vueTransition);
+                vueTransition.getVueEtatDep().getEtat().supprimerTransition(vueTransition.getTransition());
+                vuesTransitionADeDelectionner.add(vueTransition);
             }
         }
-        getVueAutomate().getVuesTransitionSelectionnes().removeAll(vuesTransitionADeDelectionner);
-        for (VueTransitionAtmt vueTransition : vuesTransitionADeDelectionner) {
+
+        for (VueTransition vueTransition : vuesTransitionADeDelectionner) {
             vueTransition.deSelectionner();
         }
 
@@ -146,12 +144,10 @@ public class VuePrincipaleAtmt extends VuePrincipale {
 
             ArrayList<VueTransitionAtmt> transitionsASupprimer = stageSupTrans.showOpenDialog();
             for (VueTransitionAtmt vueTransition : transitionsASupprimer) {
-                getVueAutomate().getAutomate().supprimerTransition(vueTransition.getTransition());
+                vueTransition.getVueEtatDep().getEtat().supprimerTransition(vueTransition.getTransition());
                 vueTransition.deSelectionner();
             }
         }
-
- */
     };
     private EventHandler<ActionEvent> eventAjouterTransition = actionEvent -> {
         ObservableList<VueEtat> vuesEtatSelectionnes = getVueAutomate().getVuesEtatSelectionnes();
