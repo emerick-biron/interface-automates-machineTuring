@@ -50,7 +50,8 @@ public class VueAutomate extends VueMachine {
         int nbrTrans = 0;
         for (Transition t : transition.getEtatDepart().getListeTransitions()) {
             if (t.getEtatArrivee() == transition.getEtatArrivee()) nbrTrans++;
-        } vueTransition.positionnerLabelEtiquette(nbrTrans - 1);
+        }
+        vueTransition.positionnerLabelEtiquette(nbrTrans - 1);
     }
 
     public void chargerFichier(String nomFichier) throws IOException {
@@ -101,29 +102,27 @@ public class VueAutomate extends VueMachine {
             hauteurVA = getHeight();
         }
 
-        List<Etat> etats = new ArrayList<>(getAutomate().getEtats());
-
         while (ligne != null) {
             String[] split = ligne.split(" ");
 
             if (split.length >= 3) {
 
-                int numEtat = Integer.parseInt(split[0]);
+                String labelNumEtat = split[0];
                 double xPos = Double.parseDouble(split[1]);
                 double yPos = Double.parseDouble(split[2]);
 
-                Etat etat = etats.get(numEtat);
-                VueEtat vueEtat = getVueEtat(etat);
+                VueEtat vueEtat = getVueEtat(labelNumEtat);
 
-                //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-                double taille = vueEtat.getCercle().getRadius() * 2 + 20;
-                if (xPos >= 0 && xPos + taille <= largeurVA) {
-                    vueEtat.setLayoutX(xPos);
+                if (vueEtat != null) {
+                    //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
+                    double taille = vueEtat.getCercle().getRadius() * 2 + 20;
+                    if (xPos >= 0 && xPos + taille <= largeurVA) {
+                        vueEtat.setLayoutX(xPos);
+                    }
+                    if (yPos >= 0 && yPos + taille <= hauteurVA - 50) {
+                        vueEtat.setLayoutY(yPos);
+                    }
                 }
-                if (yPos >= 0 && yPos + taille <= hauteurVA - 50) {
-                    vueEtat.setLayoutY(yPos);
-                }
-
             }
             ligne = bf.readLine();
         }
@@ -149,12 +148,13 @@ public class VueAutomate extends VueMachine {
                         getHeight());
         bufferedWriter.newLine();
 
-        List<Etat> listEtats = new ArrayList<>(getAutomate().getEtats());
-
-        for (Etat e : listEtats) {
+        for (Etat e : getAutomate().getEtats()) {
             VueEtat vueEtat = getVueEtat(e);
-            bufferedWriter.write(listEtats.indexOf(e) + " " + vueEtat.getLayoutX() + " " + vueEtat.getLayoutY());
-            bufferedWriter.newLine();
+            if (vueEtat != null) {
+                bufferedWriter.write(vueEtat.getLabelNumEtat().getText() + " " + vueEtat.getLayoutX() + " " +
+                        vueEtat.getLayoutY());
+                bufferedWriter.newLine();
+            }
         }
 
         bufferedWriter.close();
