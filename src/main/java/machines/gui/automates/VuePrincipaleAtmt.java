@@ -84,25 +84,6 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         });
         getVueAutomate().getAutomate().lancer(taskLancer);
     };
-    private EventHandler<ActionEvent> eventSauvegarder = actionEvent -> sauvegarder();
-    private EventHandler<ActionEvent> eventCharger = actionEvent -> {
-        fileChooser = new FileChooser();
-        fileChooser.setTitle("Charger automate");
-
-        Path path = Paths.get("./automates_atmt");
-        if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
-        else fileChooser.setInitialDirectory(new File("./"));
-
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("ATMT", "*.atmt"));
-        File selectedFile = fileChooser.showOpenDialog(new Stage());
-        if (selectedFile != null) {
-            try {
-                getVueAutomate().chargerFichier(selectedFile.getAbsolutePath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    };
     private EventHandler<ActionEvent> eventSupprimer = actionEvent -> {
         ArrayList<VueEtat> vuesEtatADeSelectionner = new ArrayList<>();
         for (VueEtat vueEtat : getVueAutomate().getVuesEtatSelectionnes()) {
@@ -164,8 +145,18 @@ public class VuePrincipaleAtmt extends VuePrincipale {
             if (vuesEtatSelectionnes.size() == 1) vueEtatArrivee = vueEtatDep;
             else vueEtatArrivee = vuesEtatSelectionnes.get(1);
             if (etiquette.length() >= 1) {
-                vueEtatDep.getEtat().ajoutTransition(
-                        new TransitionAtmt(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0)));
+                boolean nouvelleTrans = true;
+                for (Transition t : getVueAutomate().getAutomate().getTransitions()) {
+                    if (t.getEtatDepart() == vueEtatDep.getEtat() && t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
+                            t.getEtiquette() == etiquette.charAt(0)) {
+                        nouvelleTrans = false;
+                        break;
+                    }
+                }
+                if (nouvelleTrans) {
+                    vueEtatDep.getEtat().ajoutTransition(
+                            new TransitionAtmt(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0)));
+                }
             }
             getTextFieldEtiquette().setText("");
         }
@@ -219,6 +210,26 @@ public class VuePrincipaleAtmt extends VuePrincipale {
     }
 
     @Override
+    public void charger() {
+        fileChooser = new FileChooser();
+        fileChooser.setTitle("Charger automate");
+
+        Path path = Paths.get("./automates_atmt");
+        if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
+        else fileChooser.setInitialDirectory(new File("./"));
+
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("ATMT", "*.atmt"));
+        File selectedFile = fileChooser.showOpenDialog(new Stage());
+        if (selectedFile != null) {
+            try {
+                getVueAutomate().chargerFichier(selectedFile.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
     public VueMachine creerVueMachine() {
         return new VueAutomate(new Automate(), this);
     }
@@ -231,8 +242,6 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         getBoutonLancer().setOnAction(eventLancerAutomate);
         getBoutonSupprimer().setOnAction(eventSupprimer);
         getBoutonAjouterTransition().setOnAction(eventAjouterTransition);
-        getBoutonCharger().setOnAction(eventCharger);
-        getBoutonSauvegarder().setOnAction(eventSauvegarder);
     }
 
     private void initStyle() {

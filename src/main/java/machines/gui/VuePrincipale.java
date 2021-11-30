@@ -37,11 +37,11 @@ public abstract class VuePrincipale extends BorderPane {
             ctrlPresse = keyEvent.isControlDown();
         }
     };
-    private EventHandler<ActionEvent> eventClear = actionEvent -> {
-        vueMachine.clear();
-    };
+    private EventHandler<ActionEvent> eventClear = actionEvent -> vueMachine.clear();
     private EventHandler<ActionEvent> eventAjouterEtat = actionEvent -> vueMachine.getMachine()
             .ajouterEtat(new Etat(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
+    private EventHandler<ActionEvent> eventSauvegarder = actionEvent -> sauvegarder();
+    private EventHandler<ActionEvent> eventCharger = actionEvent -> charger();
 
     public VuePrincipale(App app) {
         this.app = app;
@@ -56,9 +56,11 @@ public abstract class VuePrincipale extends BorderPane {
         setOnKeyReleased(eventToucheCtrlPresse);
     }
 
-    private void initSetOnAction(){
+    private void initSetOnAction() {
         getBoutonClear().setOnAction(eventClear);
         getBoutonCreerEtat().setOnAction(eventAjouterEtat);
+        getBoutonCharger().setOnAction(eventCharger);
+        getBoutonSauvegarder().setOnAction(eventSauvegarder);
     }
 
     public abstract VueMachine creerVueMachine();
@@ -79,6 +81,8 @@ public abstract class VuePrincipale extends BorderPane {
     }
 
     public abstract void sauvegarder();
+
+    public abstract void charger();
 
     public Button getBoutonSupprimer() {
         return boutonSupprimer;
