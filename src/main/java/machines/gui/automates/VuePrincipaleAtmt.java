@@ -51,56 +51,28 @@ public class VuePrincipaleAtmt extends VuePrincipale {
         }
         return change;
     };
-    private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> {
-        //TODO Faire des tests pour voir si les entrees sont ok
-        Task<Boolean> taskLancer =
-                getVueAutomate().getAutomate().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
-        taskLancer.progressProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                String text = getTextFieldMotAutomate().getText();
-                int indice = (int) (t1.doubleValue() * text.length());
-                if (indice == 0) {
-                    hBoxLabelsLettres = new HBox();
-                    hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
-                    hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
-                    for (int i = 0; i < text.length(); i++) {
-                        Label labelLettre = new Label(String.valueOf(text.charAt(i)));
-                        hBoxLabelsLettres.getChildren().add(labelLettre);
-                    }
-                    hBoxLancerAutomate.getChildren().add(0, hBoxLabelsLettres);
-                }
-                hBoxLabelsLettres.getChildren().get(indice).setStyle("-fx-text-fill: #037fdb");
-            }
-        });
-        taskLancer.setOnSucceeded(workerStateEvent -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Résultat");
-            alert.setHeaderText(null);
-            if (taskLancer.getValue()) alert.setContentText("Mot reconnu");
-            else alert.setContentText("Mot non reconnu");
-            alert.showAndWait();
-            hBoxLancerAutomate.getChildren().remove(hBoxLabelsLettres);
-        });
-        getVueAutomate().getAutomate().lancer(taskLancer);
-    };
-    private EventHandler<ActionEvent> eventSupprimer = actionEvent -> {
-        ArrayList<VueEtat> vuesEtatADeSelectionner = new ArrayList<>();
-        for (VueEtat vueEtat : getVueAutomate().getVuesEtatSelectionnes()) {
-            for (Transition t : getVueAutomate().getAutomate().getTransitions()) {
-                if (t.getEtatDepart() == vueEtat.getEtat() || t.getEtatArrivee() == vueEtat.getEtat()) {
-                    VueTransition vueTransition = getVueAutomate().getVueTransition(t);
-                    vueTransition.deSelectionner();
-                    t.getEtatDepart().supprimerTransition(t);
-                }
-            }
-            vuesEtatADeSelectionner.add(vueEtat);
-            getVueAutomate().getAutomate().supprimerEtat(vueEtat.getEtat());
-        }
-        for (VueEtat vueEtat : vuesEtatADeSelectionner) {
-            vueEtat.deSelectionner();
-        }
 
+    public VuePrincipaleAtmt(App app) {
+        super(app);
+
+        getTextFieldEtiquette().setTextFormatter(new TextFormatter<>(textFilterAjoutTransition));
+        getTextFieldEtiquette().setPrefWidth(30);
+
+        hBoxAjoutTransition = new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette());
+        hBoxLancerAutomate = new HBox(getBoutonLancer(), getTextFieldMotAutomate());
+
+        barreDeMenu = new HBox(getBoutonRetourMenu(), getBoutonCharger(), getBoutonSauvegarder(), getBoutonCreerEtat(),
+                getCheckBoxEstInitial(), getCheckBoxEstTerminal(), getBoutonClear(), getBoutonSupprimer(),
+                hBoxAjoutTransition);
+
+        initStyle();
+
+        setTop(barreDeMenu);
+        setBottom(hBoxLancerAutomate);
+    }
+
+    @Override
+    public void supprimerTransitionsSelectionnees() {
         HashSet<VueTransition> vuesTransitionADeDelectionner = new HashSet<>();
         for (VueTransition vueTransition : getVueAutomate().getVuesTransitionSelectionnes()) {
             if (getVueAutomate().getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
@@ -129,8 +101,10 @@ public class VuePrincipaleAtmt extends VuePrincipale {
                 vueTransition.deSelectionner();
             }
         }
-    };
-    private EventHandler<ActionEvent> eventAjouterTransition = actionEvent -> {
+    }
+
+    @Override
+    public void ajouterTransition() {
         ObservableList<VueEtat> vuesEtatSelectionnes = getVueAutomate().getVuesEtatSelectionnes();
         if (vuesEtatSelectionnes.size() > 2 || vuesEtatSelectionnes.size() < 1) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -160,27 +134,41 @@ public class VuePrincipaleAtmt extends VuePrincipale {
             }
             getTextFieldEtiquette().setText("");
         }
-    };
+    }
 
-    public VuePrincipaleAtmt(App app) {
-        super(app);
-        initSetOnAction();
-
-
-        getTextFieldEtiquette().setTextFormatter(new TextFormatter<>(textFilterAjoutTransition));
-        getTextFieldEtiquette().setPrefWidth(30);
-
-        hBoxAjoutTransition = new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette());
-        hBoxLancerAutomate = new HBox(getBoutonLancer(), getTextFieldMotAutomate());
-
-        barreDeMenu = new HBox(getBoutonRetourMenu(), getBoutonCharger(), getBoutonSauvegarder(), getBoutonCreerEtat(),
-                getCheckBoxEstInitial(), getCheckBoxEstTerminal(), getBoutonClear(), getBoutonSupprimer(),
-                hBoxAjoutTransition);
-
-        initStyle();
-
-        setTop(barreDeMenu);
-        setBottom(hBoxLancerAutomate);
+    @Override
+    public void lancer() {
+        //TODO Faire des tests pour voir si les entrees sont ok
+        Task<Boolean> taskLancer =
+                getVueAutomate().getAutomate().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
+        taskLancer.progressProperty().addListener(new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                String text = getTextFieldMotAutomate().getText();
+                int indice = (int) (t1.doubleValue() * text.length());
+                if (indice == 0) {
+                    hBoxLabelsLettres = new HBox();
+                    hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
+                    hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
+                    for (int i = 0; i < text.length(); i++) {
+                        Label labelLettre = new Label(String.valueOf(text.charAt(i)));
+                        hBoxLabelsLettres.getChildren().add(labelLettre);
+                    }
+                    hBoxLancerAutomate.getChildren().add(0, hBoxLabelsLettres);
+                }
+                hBoxLabelsLettres.getChildren().get(indice).setStyle("-fx-text-fill: #037fdb");
+            }
+        });
+        taskLancer.setOnSucceeded(workerStateEvent -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Résultat");
+            alert.setHeaderText(null);
+            if (taskLancer.getValue()) alert.setContentText("Mot reconnu");
+            else alert.setContentText("Mot non reconnu");
+            alert.showAndWait();
+            hBoxLancerAutomate.getChildren().remove(hBoxLabelsLettres);
+        });
+        getVueAutomate().getAutomate().lancer(taskLancer);
     }
 
     @Override
@@ -236,12 +224,6 @@ public class VuePrincipaleAtmt extends VuePrincipale {
 
     public VueAutomate getVueAutomate() {
         return (VueAutomate) super.getVueMachine();
-    }
-
-    private void initSetOnAction() {
-        getBoutonLancer().setOnAction(eventLancerAutomate);
-        getBoutonSupprimer().setOnAction(eventSupprimer);
-        getBoutonAjouterTransition().setOnAction(eventAjouterTransition);
     }
 
     private void initStyle() {

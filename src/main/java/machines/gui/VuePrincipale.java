@@ -12,6 +12,9 @@ import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+
 public abstract class VuePrincipale extends BorderPane {
     private App app;
     private VueMachine vueMachine;
@@ -42,6 +45,12 @@ public abstract class VuePrincipale extends BorderPane {
             .ajouterEtat(new Etat(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
     private EventHandler<ActionEvent> eventSauvegarder = actionEvent -> sauvegarder();
     private EventHandler<ActionEvent> eventCharger = actionEvent -> charger();
+    private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> lancer();
+    private EventHandler<ActionEvent> eventSupprimer = actionEvent -> {
+        supprimerEtatsSelectionnes();
+        supprimerTransitionsSelectionnees();
+    };
+    private EventHandler<ActionEvent> eventAjouterTransition = actionEvent -> ajouterTransition();
 
     public VuePrincipale(App app) {
         this.app = app;
@@ -61,6 +70,9 @@ public abstract class VuePrincipale extends BorderPane {
         getBoutonCreerEtat().setOnAction(eventAjouterEtat);
         getBoutonCharger().setOnAction(eventCharger);
         getBoutonSauvegarder().setOnAction(eventSauvegarder);
+        getBoutonLancer().setOnAction(eventLancerAutomate);
+        getBoutonSupprimer().setOnAction(eventSupprimer);
+        getBoutonAjouterTransition().setOnAction(eventAjouterTransition);
     }
 
     public abstract VueMachine creerVueMachine();
@@ -80,9 +92,44 @@ public abstract class VuePrincipale extends BorderPane {
         }
     }
 
+    public void supprimerEtatsSelectionnes() {
+        ArrayList<VueEtat> vuesEtatADeSelectionner = new ArrayList<>();
+        for (VueEtat vueEtat : vueMachine.getVuesEtatSelectionnes()) {
+            for (Transition t : vueMachine.getMachine().getTransitions()) {
+                if (t.getEtatDepart() == vueEtat.getEtat() || t.getEtatArrivee() == vueEtat.getEtat()) {
+                    VueTransition vueTransition = vueMachine.getVueTransition(t);
+                    vueTransition.deSelectionner();
+                    t.getEtatDepart().supprimerTransition(t);
+                }
+            }
+            vuesEtatADeSelectionner.add(vueEtat);
+            vueMachine.getMachine().supprimerEtat(vueEtat.getEtat());
+        }
+        for (VueEtat vueEtat : vuesEtatADeSelectionner) {
+            vueEtat.deSelectionner();
+        }
+    }
+
+    public void supprimerTransitionsSelectionnees() {
+        HashSet<VueTransition> vuesTransitionADeDelectionner = new HashSet<>();
+        for (VueTransition vueTransition : vueMachine.getVuesTransitionSelectionnes()) {
+            vueTransition.getVueEtatDep().getEtat().supprimerTransition(vueTransition.getTransition());
+            vuesTransitionADeDelectionner.add(vueTransition);
+
+        }
+
+        for (VueTransition vueTransition : vuesTransitionADeDelectionner) {
+            vueTransition.deSelectionner();
+        }
+    }
+
     public abstract void sauvegarder();
 
     public abstract void charger();
+
+    public abstract void lancer();
+
+    public abstract void ajouterTransition();
 
     public Button getBoutonSupprimer() {
         return boutonSupprimer;
