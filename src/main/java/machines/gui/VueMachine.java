@@ -98,6 +98,19 @@ public abstract class VueMachine extends Pane {
         vuesTransitionSelectionnes.addListener(miseAJourVuesTransitionSelectionnes);
     }
 
+    public abstract void ajoutVueTransition(Transition transition);
+
+    public void supprimerVueTransition(Transition transition) {
+        VueTransition vueTransition = getVueTransition(transition);
+        if (vueTransition != null) {
+            getChildren().remove(vueTransition);
+            ArrayList<VueTransition> vueTransitions =
+                    getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin());
+            for (int i = 0; i < vueTransitions.size(); i++) {
+                vueTransitions.get(i).positionnerLabelEtiquette(i);
+            }
+        }
+    }
 
     public Machine getMachine() {
         return machine;

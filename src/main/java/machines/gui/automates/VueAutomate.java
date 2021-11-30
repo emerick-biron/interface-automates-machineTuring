@@ -23,19 +23,10 @@ public class VueAutomate extends VueMachine {
     private SetChangeListener<Transition> miseAJourTransitions = change -> {
         if (change.wasAdded()) {
             Transition t = change.getElementAdded();
-            VueTransitionAtmt vueTransition = new VueTransitionAtmt((TransitionAtmt) t, VueAutomate.this);
-            getChildren().add(vueTransition);
-            vueTransition.toBack();
-            vueTransition.positionnerLabelEtiquette(
-                    getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin()).size() - 1);
+            ajoutVueTransition(t);
         } else if (change.wasRemoved()) {
             Transition t = change.getElementRemoved();
-            VueTransition vueTransition = getVueTransition(t);
-            getChildren().remove(vueTransition);
-            ArrayList<VueTransition> vueTransitions = getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin());
-            for (int i = 0; i < vueTransitions.size(); i++) {
-                vueTransitions.get(i).positionnerLabelEtiquette(i);
-            }
+            supprimerVueTransition(t);
         }
     };
     private SetChangeListener<Etat> miseAJourEtats = change -> {
@@ -49,6 +40,17 @@ public class VueAutomate extends VueMachine {
 
     public Automate getAutomate() {
         return (Automate) super.getMachine();
+    }
+
+    @Override
+    public void ajoutVueTransition(Transition transition) {
+        VueTransitionAtmt vueTransition = new VueTransitionAtmt((TransitionAtmt) transition, VueAutomate.this);
+        getChildren().add(vueTransition);
+        vueTransition.toBack();
+        int nbrTrans = 0;
+        for (Transition t : transition.getEtatDepart().getListeTransitions()) {
+            if (t.getEtatArrivee() == transition.getEtatArrivee()) nbrTrans++;
+        } vueTransition.positionnerLabelEtiquette(nbrTrans - 1);
     }
 
     public void chargerFichier(String nomFichier) throws IOException {

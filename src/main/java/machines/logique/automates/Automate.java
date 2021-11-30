@@ -35,6 +35,7 @@ public class Automate extends Machine {
 
         for (int i = 0; i < nbEtat; i++) {
             etats[i] = new Etat();
+            getEtats().add(etats[i]);
         }
 
         String ligne = bf.readLine();
@@ -66,8 +67,6 @@ public class Automate extends Machine {
 
         bf.close();
         fr.close();
-
-        getEtats().addAll(Arrays.asList(etats));
     }
 
     /**
