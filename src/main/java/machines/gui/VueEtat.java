@@ -48,6 +48,15 @@ public class VueEtat extends StackPane {
             }
         }
     };
+    private SetChangeListener<Transition> miseAJourTransitions = change -> {
+        if (change.wasAdded()) {
+            Transition t = change.getElementAdded();
+            vueMachine.ajoutVueTransition(t);
+        } else if (change.wasRemoved()) {
+            Transition t = change.getElementRemoved();
+            vueMachine.supprimerVueTransition(t);
+        }
+    };
 
     public VueEtat(Etat etat, VueMachine vueMachine) {
         this.vueMachine = vueMachine;
@@ -75,6 +84,7 @@ public class VueEtat extends StackPane {
         getEtat().estInitialProperty().addListener(changementEstInitial);
         getEtat().estTerminalProperty().addListener(changementEstTerminal);
         estSelectionneProperty().addListener(changementSelection);
+        getEtat().transitionsProperty().addListener(miseAJourTransitions);
     }
 
     public VueMachine getVueMachine() {
