@@ -9,9 +9,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
 import machines.gui.automates.VueAutomate;
+import machines.gui.automates.VueTransitionAtmt;
 import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
+import machines.logique.automates.TransitionAtmt;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +29,20 @@ public abstract class VueMachine extends Pane {
             VueEtat vueEtat = new VueEtat(change.getElementAdded(), VueMachine.this);
             vueEtat.setLabelNumEtat(machine.getEtats().size() - 1);
             getChildren().add(vueEtat);
-            //TODO ajouter listner sur le nouvel etat
+            change.getElementAdded().transitionsProperty().addListener(new SetChangeListener<Transition>() {
+                @Override
+                public void onChanged(Change<? extends Transition> change) {
+                    if (change.wasAdded()) {
+                        Transition t = change.getElementAdded();
+                        VueTransitionAtmt vueTransition = new VueTransitionAtmt((TransitionAtmt) t, (VueAutomate) VueMachine.this);
+                        getChildren().add(vueTransition);
+                        vueTransition.toBack();
+                    } else if (change.wasRemoved()) {
+                        Transition t = change.getElementRemoved();
+                        getChildren().remove(getVueTransition(t));
+                    }
+                }
+            });
         } else if (change.wasRemoved()) {
             VueEtat vueEtatRemoved = getVueEtat(change.getElementRemoved());
             getChildren().remove(vueEtatRemoved);
