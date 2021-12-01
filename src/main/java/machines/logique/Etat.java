@@ -58,23 +58,23 @@ public class Etat {
         return resultat;
     }
 
-    public void clearTransitions(){
+    public void clearTransitions() {
         listeTransitions.clear();
     }
 
-    public void ajoutTransition(Transition transition){
+    public void ajoutTransition(Transition transition) {
         listeTransitions.add(transition);
     }
 
-    public void ajoutTransition(Collection<Transition> transitions){
+    public void ajoutTransition(Collection<Transition> transitions) {
         listeTransitions.addAll(transitions);
     }
 
-    public void supprimerTransition(Transition transition){
+    public void supprimerTransition(Transition transition) {
         listeTransitions.remove(transition);
     }
 
-    public void supprimerTransition(Collection<Transition> transitions){
+    public void supprimerTransition(Collection<Transition> transitions) {
         listeTransitions.removeAll(transitions);
     }
 
@@ -125,6 +125,7 @@ public class Etat {
     public Set<Transition> getListeTransitions() {
         return listeTransitions;
     }
+
     public ObservableSet<Transition> transitionsProperty() {
         return listeTransitions;
     }

@@ -16,6 +16,7 @@ import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
 import machines.logique.automates.TransitionAtmt;
+import machines.utils.FichiersMachine;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -273,9 +274,13 @@ public abstract class VueMachine extends Pane {
 
         Stage primaryStage = getVuePrincipale().getApp().getPrimaryStage();
 
-        bufferedWriter
-                .write("DIM: " + primaryStage.getWidth() + " " + primaryStage.getHeight() + " " + getWidth() + " " +
-                        getHeight());
+        String dimensions = FichiersMachine.ajoutBalises("dimensions", FichiersMachine.ajoutBalises("fenetre",
+                FichiersMachine.ajoutBalises("largeur", primaryStage.getWidth()) +
+                        FichiersMachine.ajoutBalises("hauteur", primaryStage.getHeight())) + FichiersMachine
+                .ajoutBalises("vueMachine", FichiersMachine.ajoutBalises("largeur", getWidth()) +
+                        FichiersMachine.ajoutBalises("hauteur", getHeight())));
+
+        bufferedWriter.write(dimensions);
         bufferedWriter.newLine();
 
         ArrayList<Etat> etats = new ArrayList<>(machine.getEtats());
@@ -283,8 +288,10 @@ public abstract class VueMachine extends Pane {
         for (Etat e : etats) {
             VueEtat vueEtat = getVueEtat(e);
             if (vueEtat != null) {
-                bufferedWriter.write(etats.indexOf(e) + " " + vueEtat.getLayoutX() + " " +
-                        vueEtat.getLayoutY());
+                String infosVueEtat =
+                        etats.indexOf(e) + " labelNumEtat[" + vueEtat.getLabelNumEtat().getText() + "]" + " x[" +
+                                vueEtat.getLayoutX() + "] y[" + vueEtat.getLayoutY() + "]";
+                bufferedWriter.write(infosVueEtat);
                 bufferedWriter.newLine();
             }
         }
