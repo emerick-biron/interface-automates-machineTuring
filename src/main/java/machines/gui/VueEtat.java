@@ -17,11 +17,11 @@ import machines.logique.Etat;
 import machines.logique.Transition;
 import machines.logique.automates.TransitionAtmt;
 
-public class VueEtat extends StackPane {
-    private Etat etat;
+public class VueEtat<T extends Transition<T>> extends StackPane {
+    private Etat<T> etat;
     private Circle cercle;
     private Label labelNumEtat;
-    private VueMachine vueMachine;
+    private VueMachine<T> vueMachine;
     private double mouseX;
     private double mouseY;
     private ImageView imageViewInitial;
@@ -48,17 +48,17 @@ public class VueEtat extends StackPane {
             }
         }
     };
-    private SetChangeListener<Transition> miseAJourTransitions = change -> {
+    private SetChangeListener<T> miseAJourTransitions = change -> {
         if (change.wasAdded()) {
-            Transition t = change.getElementAdded();
+            T t = change.getElementAdded();
             vueMachine.ajoutVueTransition(t);
         } else if (change.wasRemoved()) {
-            Transition t = change.getElementRemoved();
+            T t = change.getElementRemoved();
             vueMachine.supprimerVueTransition(t);
         }
     };
 
-    public VueEtat(Etat etat, VueMachine vueMachine) {
+    public VueEtat(Etat<T> etat, VueMachine<T> vueMachine) {
         this.vueMachine = vueMachine;
         this.etat = etat;
         estSelectionne = new SimpleBooleanProperty(false);
@@ -87,11 +87,11 @@ public class VueEtat extends StackPane {
         getEtat().transitionsProperty().addListener(miseAJourTransitions);
     }
 
-    public VueMachine getVueMachine() {
+    public VueMachine<T> getVueMachine() {
         return vueMachine;
     }
 
-    public Etat getEtat() {
+    public Etat<T> getEtat() {
         return etat;
     }
 

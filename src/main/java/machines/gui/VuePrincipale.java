@@ -15,9 +15,9 @@ import machines.logique.Transition;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public abstract class VuePrincipale extends BorderPane {
+public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane {
     private App app;
-    private VueMachine vueMachine;
+    private VueMachine<T> vueMachine;
 
     private boolean ctrlPresse;
     private Button boutonCreerEtat;
@@ -42,7 +42,7 @@ public abstract class VuePrincipale extends BorderPane {
     };
     private EventHandler<ActionEvent> eventClear = actionEvent -> vueMachine.clear();
     private EventHandler<ActionEvent> eventAjouterEtat = actionEvent -> vueMachine.getMachine()
-            .ajouterEtat(new Etat(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
+            .ajouterEtat(new Etat<T>(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
     private EventHandler<ActionEvent> eventSauvegarder = actionEvent -> sauvegarder();
     private EventHandler<ActionEvent> eventCharger = actionEvent -> charger();
     private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> lancer();
@@ -75,9 +75,9 @@ public abstract class VuePrincipale extends BorderPane {
         getBoutonAjouterTransition().setOnAction(eventAjouterTransition);
     }
 
-    public abstract VueMachine creerVueMachine();
+    public abstract VueMachine<T> creerVueMachine();
 
-    public VueMachine getVueMachine() {
+    public VueMachine<T> getVueMachine() {
         return vueMachine;
     }
 
@@ -86,18 +86,18 @@ public abstract class VuePrincipale extends BorderPane {
     }
 
     public void unbindCheckBoxes() {
-        for (Etat e : vueMachine.getMachine().getEtats()) {
+        for (Etat<T> e : vueMachine.getMachine().getEtats()) {
             getCheckBoxEstInitial().selectedProperty().unbindBidirectional(e.estInitialProperty());
             getCheckBoxEstTerminal().selectedProperty().unbindBidirectional(e.estTerminalProperty());
         }
     }
 
     public void supprimerEtatsSelectionnes() {
-        ArrayList<VueEtat> vuesEtatADeSelectionner = new ArrayList<>();
-        for (VueEtat vueEtat : vueMachine.getVuesEtatSelectionnes()) {
-            for (Transition t : vueMachine.getMachine().getTransitions()) {
+        ArrayList<VueEtat<T>> vuesEtatADeSelectionner = new ArrayList<>();
+        for (VueEtat<T> vueEtat : vueMachine.getVuesEtatSelectionnes()) {
+            for (T t : vueMachine.getMachine().getTransitions()) {
                 if (t.getEtatDepart() == vueEtat.getEtat() || t.getEtatArrivee() == vueEtat.getEtat()) {
-                    VueTransition vueTransition = vueMachine.getVueTransition(t);
+                    VueTransition<T> vueTransition = vueMachine.getVueTransition(t);
                     vueTransition.deSelectionner();
                     t.getEtatDepart().supprimerTransition(t);
                 }
@@ -105,20 +105,20 @@ public abstract class VuePrincipale extends BorderPane {
             vuesEtatADeSelectionner.add(vueEtat);
             vueMachine.getMachine().supprimerEtat(vueEtat.getEtat());
         }
-        for (VueEtat vueEtat : vuesEtatADeSelectionner) {
+        for (VueEtat<T> vueEtat : vuesEtatADeSelectionner) {
             vueEtat.deSelectionner();
         }
     }
 
     public void supprimerTransitionsSelectionnees() {
-        HashSet<VueTransition> vuesTransitionADeDelectionner = new HashSet<>();
-        for (VueTransition vueTransition : vueMachine.getVuesTransitionSelectionnes()) {
+        HashSet<VueTransition<T>> vuesTransitionADeDelectionner = new HashSet<>();
+        for (VueTransition<T> vueTransition : vueMachine.getVuesTransitionSelectionnes()) {
             vueTransition.getVueEtatDep().getEtat().supprimerTransition(vueTransition.getTransition());
             vuesTransitionADeDelectionner.add(vueTransition);
 
         }
 
-        for (VueTransition vueTransition : vuesTransitionADeDelectionner) {
+        for (VueTransition<T> vueTransition : vuesTransitionADeDelectionner) {
             vueTransition.deSelectionner();
         }
     }

@@ -8,11 +8,11 @@ import javafx.concurrent.Task;
 import java.io.IOException;
 import java.util.*;
 
-public abstract class Machine {
-    private ObservableSet<Etat> etats;
-    private Set<Etat> etatsActifs;
+public abstract class Machine<T extends Transition<T>> {
+    private ObservableSet<Etat<T>> etats;
+    private Set<Etat<T>> etatsActifs;
 
-    public Machine(Set<Etat> etats) {
+    public Machine(Set<Etat<T>> etats) {
         this.etats = FXCollections.observableSet(etats);
         etatsActifs = new HashSet<>();
     }
@@ -32,47 +32,47 @@ public abstract class Machine {
 
     public abstract Task<Boolean> getTaskLancer(String mot, long dellayMillis);
 
-    public void ajouterEtat(Etat etat) {
+    public void ajouterEtat(Etat<T> etat) {
         etats.add(etat);
     }
 
-    public void supprimerEtat(Etat etat) {
+    public void supprimerEtat(Etat<T> etat) {
         etats.remove(etat);
     }
 
-    public Set<Transition> getTransitions() {
-        Set<Transition> transitions = new HashSet<>();
-        for (Etat e : etats) {
+    public Set<T> getTransitions() {
+        Set<T> transitions = new HashSet<>();
+        for (Etat<T> e : etats) {
             transitions.addAll(e.getListeTransitions());
         }
         return transitions;
     }
 
     public void clear() {
-        for (Etat etat : etats) {
+        for (Etat<T> etat : etats) {
             etat.clearTransitions();
         }
         etats.clear();
         etatsActifs.clear();
     }
 
-    public ObservableSet<Etat> etatsProperty() {
+    public ObservableSet<Etat<T>> etatsProperty() {
         return etats;
     }
 
-    public Set<Etat> getEtatsInitiaux() {
-        Set<Etat> res = new HashSet<>();
-        for (Etat etat : etats) {
+    public Set<Etat<T>> getEtatsInitiaux() {
+        Set<Etat<T>> res = new HashSet<>();
+        for (Etat<T> etat : etats) {
             if (etat.estInitial()) res.add(etat);
         }
         return res;
     }
 
-    public Set<Etat> getEtats() {
+    public Set<Etat<T>> getEtats() {
         return etats;
     }
 
-    public Set<Etat> getEtatsActifs() {
+    public Set<Etat<T>> getEtatsActifs() {
         return etatsActifs;
     }
 }

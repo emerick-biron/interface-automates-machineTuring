@@ -8,9 +8,9 @@ import machines.logique.Transition;
 import java.io.*;
 import java.util.*;
 
-public class Automate extends Machine {
+public class Automate extends Machine<TransitionAtmt> {
 
-    public Automate(Set<Etat> etats) {
+    public Automate(Set<Etat<TransitionAtmt>> etats) {
         super(etats);
     }
 
@@ -33,9 +33,9 @@ public class Automate extends Machine {
         int nbEtat = Integer.parseInt(bf.readLine());
 
         for (int i = 0; i < nbEtat; i++) {
-            getEtats().add(new Etat());
+            getEtats().add(new Etat<>());
         }
-        ArrayList<Etat> etats = new ArrayList<>(getEtats());
+        ArrayList<Etat<TransitionAtmt>> etats = new ArrayList<>(getEtats());
         String ligne = bf.readLine();
 
         while (!(ligne == null || ligne.contains("###"))) {
@@ -81,10 +81,10 @@ public class Automate extends Machine {
         bufferedWriter.write(String.valueOf(getEtats().size()));
         bufferedWriter.newLine();
 
-        ArrayList<Etat> etats = new ArrayList<>(getEtats());
+        ArrayList<Etat<TransitionAtmt>> etats = new ArrayList<>(getEtats());
 
         //ecriture etats initiaux
-        for (Etat etat : etats) {
+        for (Etat<TransitionAtmt> etat : etats) {
             if (etat.estInitial()) {
                 bufferedWriter.write("initial " + etats.indexOf(etat));
                 bufferedWriter.newLine();
@@ -92,7 +92,7 @@ public class Automate extends Machine {
         }
 
         //ecriture etats terminaux
-        for (Etat etat : etats) {
+        for (Etat<TransitionAtmt> etat : etats) {
             if (etat.estTerminal()) {
                 bufferedWriter.write("terminal " +etats.indexOf(etat));
                 bufferedWriter.newLine();
@@ -100,9 +100,9 @@ public class Automate extends Machine {
         }
 
         //ecriture transitions
-        for (Etat etat : etats) {
-            Set<Transition> transitions = etat.getListeTransitions();
-            for (Transition t : transitions) {
+        for (Etat<TransitionAtmt> etat : etats) {
+            Set<TransitionAtmt> transitions = etat.getListeTransitions();
+            for (TransitionAtmt t : transitions) {
                 bufferedWriter.write(etats.indexOf(t.getEtatDepart()) + " " + t.getEtiquette() + " " +
                         etats.indexOf(t.getEtatArrivee()));
                 bufferedWriter.newLine();
@@ -118,12 +118,12 @@ public class Automate extends Machine {
         return new Task<>() {
             @Override
             protected Boolean call() throws Exception {
-                for (Etat e : getEtatsActifs()) {
+                for (Etat<TransitionAtmt> e : getEtatsActifs()) {
                     e.desactive();
                 }
                 getEtatsActifs().clear();
                 getEtatsActifs().addAll(getEtatsInitiaux());
-                for (Etat e : getEtatsActifs()) {
+                for (Etat<TransitionAtmt> e : getEtatsActifs()) {
                     e.active();
                 }
                 for (int i = 0; i < mot.length(); i++) {
@@ -132,7 +132,7 @@ public class Automate extends Machine {
                     char lettre = mot.charAt(i);
                     step(lettre);
                     if (i == mot.length() - 1) {
-                        for (Etat etat : getEtats()) {
+                        for (Etat<TransitionAtmt> etat : getEtats()) {
                             if (etat.estTerminal() && etat.estActif()) return true;
                         }
                     }
@@ -143,23 +143,23 @@ public class Automate extends Machine {
     }
 
     private void step(char lettre) {
-        List<Etat> nouveauxActifs = new ArrayList<>();
-        for (Etat e : getEtatsActifs()) {
-            for (Etat etatCible : e.cible(lettre)) {
+        List<Etat<TransitionAtmt>> nouveauxActifs = new ArrayList<>();
+        for (Etat<TransitionAtmt> e : getEtatsActifs()) {
+            for (Etat<TransitionAtmt> etatCible : e.cible(lettre)) {
                 if (!nouveauxActifs.contains(etatCible)) {
                     nouveauxActifs.add(etatCible);
                 }
             }
         }
 
-        for (Etat e : getEtatsActifs()) {
+        for (Etat<TransitionAtmt> e : getEtatsActifs()) {
             e.desactive();
         }
 
         getEtatsActifs().clear();
         getEtatsActifs().addAll(nouveauxActifs);
 
-        for (Etat e : getEtatsActifs()) {
+        for (Etat<TransitionAtmt> e : getEtatsActifs()) {
             e.active();
         }
     }

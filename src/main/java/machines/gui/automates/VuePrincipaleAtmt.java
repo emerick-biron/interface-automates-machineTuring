@@ -33,7 +33,7 @@ import java.util.HashSet;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
-public class VuePrincipaleAtmt extends VuePrincipale {
+public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     private HBox barreDeMenu;
     private HBox hBoxLancerAutomate;
     private HBox hBoxAjoutTransition;
@@ -73,8 +73,8 @@ public class VuePrincipaleAtmt extends VuePrincipale {
 
     @Override
     public void supprimerTransitionsSelectionnees() {
-        HashSet<VueTransition> vuesTransitionADeDelectionner = new HashSet<>();
-        for (VueTransition vueTransition : getVueAutomate().getVuesTransitionSelectionnes()) {
+        HashSet<VueTransitionAtmt> vuesTransitionADeDelectionner = new HashSet<>();
+        for (VueTransitionAtmt vueTransition : getVueAutomate().getVuesTransitionSelectionnes()) {
             if (getVueAutomate().getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
                     .size() == 1) {
                 vueTransition.getVueEtatDep().getEtat().supprimerTransition(vueTransition.getTransition());
@@ -82,13 +82,13 @@ public class VuePrincipaleAtmt extends VuePrincipale {
             }
         }
 
-        for (VueTransition vueTransition : vuesTransitionADeDelectionner) {
+        for (VueTransitionAtmt vueTransition : vuesTransitionADeDelectionner) {
             vueTransition.deSelectionner();
         }
 
         if (getVueAutomate().getVuesTransitionSelectionnes().size() > 0) {
             ObservableList<VueTransitionAtmt> vueTransitionAtmts = FXCollections.observableArrayList();
-            for (VueTransition vueTransition : getVueAutomate().getVuesTransitionSelectionnes()) {
+            for (VueTransitionAtmt vueTransition : getVueAutomate().getVuesTransitionSelectionnes()) {
                 if (vueTransition instanceof VueTransitionAtmt)
                     vueTransitionAtmts.add((VueTransitionAtmt) vueTransition);
             }

@@ -5,7 +5,7 @@ import machines.logique.automates.Automate;
 import machines.logique.automates.TransitionAtmt;
 import machines.gui.VueTransition;
 
-public class VueTransitionAtmt extends VueTransition {
+public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
 
     public VueTransitionAtmt(TransitionAtmt transition, VueAutomate vueAutomate) {
         super(transition, vueAutomate);

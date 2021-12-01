@@ -21,22 +21,22 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class VueMachine extends Pane {
-    private Machine machine;
-    private VuePrincipale vuePrincipale;
-    private ObservableList<VueEtat> vuesEtatSelectionnes = FXCollections.observableArrayList();
-    private ObservableList<VueTransition> vuesTransitionSelectionnes = FXCollections.observableArrayList();
-    private SetChangeListener<Etat> miseAJourEtats = change -> {
+public abstract class VueMachine<T extends Transition<T>> extends Pane {
+    private Machine<T> machine;
+    private VuePrincipale<T> vuePrincipale;
+    private ObservableList<VueEtat<T>> vuesEtatSelectionnes = FXCollections.observableArrayList();
+    private ObservableList<VueTransition<T>> vuesTransitionSelectionnes = FXCollections.observableArrayList();
+    private SetChangeListener<Etat<T>> miseAJourEtats = change -> {
         if (change.wasAdded()) {
-            VueEtat vueEtat = new VueEtat(change.getElementAdded(), VueMachine.this);
+            VueEtat<T> vueEtat = new VueEtat<>(change.getElementAdded(), VueMachine.this);
             vueEtat.setLabelNumEtat(machine.getEtats().size() - 1);
             getChildren().add(vueEtat);
         } else if (change.wasRemoved()) {
-            VueEtat vueEtatRemoved = getVueEtat(change.getElementRemoved());
+            VueEtat<T> vueEtatRemoved = getVueEtat(change.getElementRemoved());
             getChildren().remove(vueEtatRemoved);
             for (Node n : getChildren()) {
                 if (n instanceof VueEtat) {
-                    VueEtat vueEtat = (VueEtat) n;
+                    VueEtat<T> vueEtat = (VueEtat<T>) n;
                     if (vueEtat.getNumEtat() > vueEtatRemoved.getNumEtat()) {
                         vueEtat.setLabelNumEtat((vueEtat.getNumEtat() - 1));
                     }
@@ -45,17 +45,17 @@ public abstract class VueMachine extends Pane {
 
         }
     };
-    private ListChangeListener<VueEtat> miseAJourVuesEtatSelectionnes = change -> {
+    private ListChangeListener<VueEtat<T>> miseAJourVuesEtatSelectionnes = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
-                for (VueEtat vueEtat : change.getAddedSubList()) {
+                for (VueEtat<T> vueEtat : change.getAddedSubList()) {
                     vueEtat.getCercle().setStroke(Color.valueOf("#003576"));
                     vueEtat.getCercle().setStrokeType(StrokeType.INSIDE);
                     vueEtat.getCercle().setStrokeWidth(3);
                 }
             }
             if (change.wasRemoved()) {
-                for (VueEtat vueEtat : change.getRemoved()) {
+                for (VueEtat<T> vueEtat : change.getRemoved()) {
                     vueEtat.getCercle().setStroke(null);
                 }
             }
@@ -65,22 +65,22 @@ public abstract class VueMachine extends Pane {
         getVuePrincipale().getTextFieldEtiquette()
                 .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
     };
-    private ListChangeListener<VueTransition> miseAJourVuesTransitionSelectionnes = change -> {
+    private ListChangeListener<VueTransition<T>> miseAJourVuesTransitionSelectionnes = change -> {
         while (change.next()) {
             if (change.wasAdded()) {
-                for (VueTransition vueTransition : change.getAddedSubList()) {
+                for (VueTransition<T> vueTransition : change.getAddedSubList()) {
                     vueTransition.setCouleurSelection(true);
                 }
             }
             if (change.wasRemoved()) {
-                for (VueTransition vueTransition : change.getRemoved()) {
+                for (VueTransition<T> vueTransition : change.getRemoved()) {
                     vueTransition.setCouleurSelection(false);
                 }
             }
         }
     };
 
-    public VueMachine(Machine machine, VuePrincipale vuePrincipale) {
+    public VueMachine(Machine<T> machine, VuePrincipale<T> vuePrincipale) {
         this.vuePrincipale = vuePrincipale;
         this.machine = machine;
 
@@ -100,13 +100,13 @@ public abstract class VueMachine extends Pane {
         vuesTransitionSelectionnes.addListener(miseAJourVuesTransitionSelectionnes);
     }
 
-    public abstract void ajoutVueTransition(Transition transition);
+    public abstract void ajoutVueTransition(T transition);
 
-    public void supprimerVueTransition(Transition transition) {
-        VueTransition vueTransition = getVueTransition(transition);
+    public void supprimerVueTransition(T transition) {
+        VueTransition<T> vueTransition = getVueTransition(transition);
         if (vueTransition != null) {
             getChildren().remove(vueTransition);
-            ArrayList<VueTransition> vueTransitions =
+            ArrayList<VueTransition<T>> vueTransitions =
                     getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin());
             for (int i = 0; i < vueTransitions.size(); i++) {
                 vueTransitions.get(i).positionnerLabelEtiquette(i);
@@ -114,60 +114,60 @@ public abstract class VueMachine extends Pane {
         }
     }
 
-    public Machine getMachine() {
+    public Machine<T> getMachine() {
         return machine;
     }
 
-    public ObservableList<VueTransition> getVuesTransitionSelectionnes() {
+    public ObservableList<VueTransition<T>> getVuesTransitionSelectionnes() {
         return vuesTransitionSelectionnes;
     }
 
-    public ObservableList<VueEtat> getVuesEtatSelectionnes() {
+    public ObservableList<VueEtat<T>> getVuesEtatSelectionnes() {
         return vuesEtatSelectionnes;
     }
 
-    public VuePrincipale getVuePrincipale() {
+    public VuePrincipale<T> getVuePrincipale() {
         return vuePrincipale;
     }
 
-    public VueEtat getVueEtat(Etat etat) {
+    public VueEtat<T> getVueEtat(Etat<T> etat) {
         for (Node n : getChildren()) {
             if (n instanceof VueEtat) {
-                VueEtat vueEtat = (VueEtat) n;
+                VueEtat<T> vueEtat = (VueEtat<T>) n;
                 if (vueEtat.getEtat().equals(etat)) return vueEtat;
             }
         }
         return null;
     }
 
-    public VueEtat getVueEtat(String labelNumEtat) {
+    public VueEtat<T> getVueEtat(String labelNumEtat) {
         for (Node n : getChildren()) {
             if (n instanceof VueEtat) {
-                VueEtat vueEtat = (VueEtat) n;
+                VueEtat<T> vueEtat = (VueEtat<T>) n;
                 if (vueEtat.getLabelNumEtat().getText().equals(labelNumEtat)) return vueEtat;
             }
         }
         return null;
     }
 
-    public VueTransition getVueTransition(Transition transition) {
+    public VueTransition<T> getVueTransition(T transition) {
         for (Node n : getChildren()) {
             if (n instanceof VueTransition) {
-                VueTransition vueTransition = (VueTransition) n;
+                VueTransition<T> vueTransition = (VueTransition<T>) n;
                 if (vueTransition.getTransition().equals(transition)) return vueTransition;
             }
         }
         return null;
     }
 
-    public ArrayList<VueTransition> getVuesTransition(VueEtat vueEtat1, VueEtat vueEtat2) {
-        ArrayList<VueTransition> res = new ArrayList<>();
-        for (Transition t : vueEtat1.getEtat().getListeTransitions()) {
+    public ArrayList<VueTransition<T>> getVuesTransition(VueEtat<T> vueEtat1, VueEtat<T> vueEtat2) {
+        ArrayList<VueTransition<T>> res = new ArrayList<>();
+        for (T t : vueEtat1.getEtat().getListeTransitions()) {
             if (t.getEtatArrivee() == vueEtat2.getEtat()) {
                 if (!res.contains(getVueTransition(t))) res.add(getVueTransition(t));
             }
         }
-        for (Transition t : vueEtat2.getEtat().getListeTransitions()) {
+        for (T t : vueEtat2.getEtat().getListeTransitions()) {
             if (t.getEtatArrivee() == vueEtat1.getEtat()) {
                 if (!res.contains(getVueTransition(t))) res.add(getVueTransition(t));
             }
@@ -229,7 +229,7 @@ public abstract class VueMachine extends Pane {
             hauteurVA = getHeight();
         }
 
-        ArrayList<Etat> etats = new ArrayList<>(machine.getEtats());
+        ArrayList<Etat<T>> etats = new ArrayList<>(machine.getEtats());
 
         while (ligne != null) {
             String[] split = ligne.split(" ");
@@ -240,8 +240,8 @@ public abstract class VueMachine extends Pane {
                 double xPos = Double.parseDouble(split[1]);
                 double yPos = Double.parseDouble(split[2]);
 
-                Etat etat = etats.get(numEtat);
-                VueEtat vueEtat = getVueEtat(etat);
+                Etat<T> etat = etats.get(numEtat);
+                VueEtat<T> vueEtat = getVueEtat(etat);
 
                 if (vueEtat != null) {
                     //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
@@ -278,10 +278,10 @@ public abstract class VueMachine extends Pane {
                         getHeight());
         bufferedWriter.newLine();
 
-        ArrayList<Etat> etats = new ArrayList<>(machine.getEtats());
+        ArrayList<Etat<T>> etats = new ArrayList<>(machine.getEtats());
 
-        for (Etat e : etats) {
-            VueEtat vueEtat = getVueEtat(e);
+        for (Etat<T> e : etats) {
+            VueEtat<T> vueEtat = getVueEtat(e);
             if (vueEtat != null) {
                 bufferedWriter.write(etats.indexOf(e) + " " + vueEtat.getLayoutX() + " " +
                         vueEtat.getLayoutY());
@@ -300,15 +300,15 @@ public abstract class VueMachine extends Pane {
     }
 
     public void deSelectionnerVuesEtat() {
-        for (Etat e : machine.getEtats()) {
-            VueEtat vueEtat = getVueEtat(e);
+        for (Etat<T> e : machine.getEtats()) {
+            VueEtat<T> vueEtat = getVueEtat(e);
             vueEtat.deSelectionner();
         }
     }
 
     public void deSelectionnerVuesTransition() {
-        for (Transition t : machine.getTransitions()) {
-            VueTransition vueTransition = getVueTransition(t);
+        for (T t : machine.getTransitions()) {
+            VueTransition<T> vueTransition = getVueTransition(t);
             vueTransition.deSelectionner();
         }
     }

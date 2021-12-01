@@ -8,26 +8,26 @@ import machines.logique.automates.TransitionAtmt;
 
 import java.util.*;
 
-public class Etat {
+public class Etat<T extends Transition<T>> {
     private BooleanProperty estInitial;
     private BooleanProperty estTerminal;
     /**
      * Liste des transitions SORTANTES de l'etat
      */
-    private ObservableSet<Transition> listeTransitions;
+    private ObservableSet<T> listeTransitions;
     private BooleanProperty estActif;
 
     public Etat() {
         estInitial = new SimpleBooleanProperty(false);
         estTerminal = new SimpleBooleanProperty(false);
-        listeTransitions = FXCollections.observableSet();
+        listeTransitions = FXCollections.observableSet(new HashSet<>());
         estActif = new SimpleBooleanProperty(false);
     }
 
     public Etat(boolean estInitial, boolean estTerminal) {
         this.estInitial = new SimpleBooleanProperty(estInitial);
         this.estTerminal = new SimpleBooleanProperty(estTerminal);
-        listeTransitions = FXCollections.observableSet();
+        listeTransitions = FXCollections.observableSet(new HashSet<>());
         estActif = new SimpleBooleanProperty(false);
     }
 
@@ -38,7 +38,7 @@ public class Etat {
      * @return true si la transition existe sinon false
      */
     public boolean existeTrans(char c) {
-        for (Transition transition : getListeTransitions()) {
+        for (T transition : getListeTransitions()) {
             if (transition.getEtiquette() == c) return true;
         }
         return false;
@@ -50,9 +50,9 @@ public class Etat {
      * @param c lettre a tester
      * @return liste des etat qui peuvent etre atteint, null si il n'y en a pas
      */
-    public Set<Etat> cible(char c) {
-        Set<Etat> resultat = new HashSet<>();
-        for (Transition t : getListeTransitions()) {
+    public Set<Etat<T>> cible(char c) {
+        Set<Etat<T>> resultat = new HashSet<>();
+        for (T t : getListeTransitions()) {
             if (t.getEtiquette() == c) resultat.add(t.getEtatArrivee());
         }
         return resultat;
@@ -62,19 +62,19 @@ public class Etat {
         listeTransitions.clear();
     }
 
-    public void ajoutTransition(Transition transition){
+    public void ajoutTransition(T transition){
         listeTransitions.add(transition);
     }
 
-    public void ajoutTransition(Collection<Transition> transitions){
+    public void ajoutTransition(Collection<T> transitions){
         listeTransitions.addAll(transitions);
     }
 
-    public void supprimerTransition(Transition transition){
+    public void supprimerTransition(T transition){
         listeTransitions.remove(transition);
     }
 
-    public void supprimerTransition(Collection<Transition> transitions){
+    public void supprimerTransition(Collection<T> transitions){
         listeTransitions.removeAll(transitions);
     }
 
@@ -122,10 +122,10 @@ public class Etat {
         return estActif.getValue();
     }
 
-    public Set<Transition> getListeTransitions() {
+    public Set<T> getListeTransitions() {
         return listeTransitions;
     }
-    public ObservableSet<Transition> transitionsProperty() {
+    public ObservableSet<T> transitionsProperty() {
         return listeTransitions;
     }
 }

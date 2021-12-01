@@ -16,33 +16,33 @@ import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
 
-public abstract class VueTransition extends Group {
-    private Transition transition;
-    private VueMachine vueMachine;
+public abstract class VueTransition<T extends Transition<T>> extends Group {
+    private T transition;
+    private VueMachine<T> vueMachine;
     private Line ligne;
     private Label labelEtiquette;
     private Line ligneHautFleche;
     private Line ligneBasFleche;
     private ImageView imgAutoTransition;
-    private VueEtat vueEtatDep;
-    private VueEtat vueEtatFin;
+    private VueEtat<T> vueEtatDep;
+    private VueEtat<T> vueEtatFin;
     private BooleanProperty estSelectionne;
     private ChangeListener<Boolean> changementSelection = (observableValue, aBoolean, t1) -> {
         if (aBoolean != t1) {
             if (observableValue.getValue()) {
-                for (VueTransition vueTransition : vueMachine.getVuesTransition(getVueEtatDep(), getVueEtatFin())) {
+                for (VueTransition<T> vueTransition : vueMachine.getVuesTransition(getVueEtatDep(), getVueEtatFin())) {
                     vueMachine.getVuesTransitionSelectionnes().add(vueTransition);
                 }
             } else {
                 vueMachine.getVuesTransitionSelectionnes().remove(VueTransition.this);
-                for (VueTransition vueTransition : vueMachine.getVuesTransition(getVueEtatDep(), getVueEtatFin())) {
+                for (VueTransition<T> vueTransition : vueMachine.getVuesTransition(getVueEtatDep(), getVueEtatFin())) {
                     vueMachine.getVuesTransitionSelectionnes().remove(vueTransition);
                 }
             }
         }
     };
 
-    public VueTransition(Transition transition, VueMachine vueMachine) {
+    public VueTransition(T transition, VueMachine<T> vueMachine) {
         this.transition = transition;
         this.vueMachine = vueMachine;
         estSelectionne = new SimpleBooleanProperty(false);
@@ -63,11 +63,11 @@ public abstract class VueTransition extends Group {
         estSelectionneProperty().addListener(changementSelection);
     }
 
-    public VueMachine getVueMachine() {
+    public VueMachine<T> getVueMachine() {
         return vueMachine;
     }
 
-    public Transition getTransition() {
+    public T getTransition() {
         return transition;
     }
 
@@ -233,11 +233,11 @@ public abstract class VueTransition extends Group {
         this.estSelectionne.set(false);
     }
 
-    public VueEtat getVueEtatDep() {
+    public VueEtat<T> getVueEtatDep() {
         return vueEtatDep;
     }
 
-    public VueEtat getVueEtatFin() {
+    public VueEtat<T> getVueEtatFin() {
         return vueEtatFin;
     }
 }
