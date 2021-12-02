@@ -16,7 +16,6 @@ import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
 import machines.logique.automates.TransitionAtmt;
-import machines.utils.FichiersMachine;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -240,6 +239,7 @@ public abstract class VueMachine extends Pane {
                 int numEtat = Integer.parseInt(split[0]);
                 double xPos = Double.parseDouble(split[1]);
                 double yPos = Double.parseDouble(split[2]);
+                int labelNumEtat = Integer.parseInt(split[3]);
 
                 Etat etat = etats.get(numEtat);
                 VueEtat vueEtat = getVueEtat(etat);
@@ -253,6 +253,8 @@ public abstract class VueMachine extends Pane {
                     if (yPos >= 0 && yPos + taille <= hauteurVA - 50) {
                         vueEtat.setLayoutY(yPos);
                     }
+
+                    vueEtat.setLabelNumEtat(labelNumEtat);
                 }
             }
             ligne = bf.readLine();
@@ -274,13 +276,9 @@ public abstract class VueMachine extends Pane {
 
         Stage primaryStage = getVuePrincipale().getApp().getPrimaryStage();
 
-        String dimensions = FichiersMachine.ajoutBalises("dimensions", FichiersMachine.ajoutBalises("fenetre",
-                FichiersMachine.ajoutBalises("largeur", primaryStage.getWidth()) +
-                        FichiersMachine.ajoutBalises("hauteur", primaryStage.getHeight())) + FichiersMachine
-                .ajoutBalises("vueMachine", FichiersMachine.ajoutBalises("largeur", getWidth()) +
-                        FichiersMachine.ajoutBalises("hauteur", getHeight())));
-
-        bufferedWriter.write(dimensions);
+        bufferedWriter
+                .write("DIM: " + primaryStage.getWidth() + " " + primaryStage.getHeight() + " " + getWidth() + " " +
+                        getHeight());
         bufferedWriter.newLine();
 
         ArrayList<Etat> etats = new ArrayList<>(machine.getEtats());
@@ -288,10 +286,8 @@ public abstract class VueMachine extends Pane {
         for (Etat e : etats) {
             VueEtat vueEtat = getVueEtat(e);
             if (vueEtat != null) {
-                String infosVueEtat =
-                        etats.indexOf(e) + " labelNumEtat[" + vueEtat.getLabelNumEtat().getText() + "]" + " x[" +
-                                vueEtat.getLayoutX() + "] y[" + vueEtat.getLayoutY() + "]";
-                bufferedWriter.write(infosVueEtat);
+                bufferedWriter.write(etats.indexOf(e) + " " + vueEtat.getLayoutX() + " " +
+                        vueEtat.getLayoutY() + " " + vueEtat.getLabelNumEtat().getText());
                 bufferedWriter.newLine();
             }
         }
