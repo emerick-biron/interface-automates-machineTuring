@@ -136,17 +136,13 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     public void lancer() {
         //TODO Faire des tests pour voir si les entrees sont ok
         Automate automate = getVueAutomate().getAutomate();
-
-
-/*
-        Task<Boolean> taskLancer =
+        Task<Integer> taskLancer =
                 getVueAutomate().getAutomate().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
-        taskLancer.progressProperty().addListener(new ChangeListener<>() {
+        taskLancer.valueProperty().addListener(new ChangeListener<Integer>() {
             @Override
-            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+            public void changed(ObservableValue<? extends Integer> observableValue, Integer integer, Integer t1) {
                 String text = getTextFieldMotAutomate().getText();
-                int indice = (int) (t1.doubleValue() * text.length());
-                if (indice == 0) {
+                if (t1 == 0) {
                     hBoxLabelsLettres = new HBox();
                     hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
                     hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
@@ -156,21 +152,19 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
                     }
                     hBoxLancerAutomate.getChildren().add(0, hBoxLabelsLettres);
                 }
-                hBoxLabelsLettres.getChildren().get(indice).setStyle("-fx-text-fill: #037fdb");
+                hBoxLabelsLettres.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
             }
         });
         taskLancer.setOnSucceeded(workerStateEvent -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Résultat");
             alert.setHeaderText(null);
-            if (taskLancer.getValue()) alert.setContentText("Mot reconnu");
+            if (automate.motReconnu()) alert.setContentText("Mot reconnu");
             else alert.setContentText("Mot non reconnu");
             alert.showAndWait();
             hBoxLancerAutomate.getChildren().remove(hBoxLabelsLettres);
         });
-        getVueAutomate().getAutomate().run(taskLancer);
-
- */
+        getVueAutomate().getAutomate().lancer(taskLancer);
     }
 
     @Override

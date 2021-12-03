@@ -8,13 +8,15 @@ import machines.logique.automates.Automate;
 import machines.logique.automates.TransitionAtmt;
 
 public class VueAutomate extends VueMachine<TransitionAtmt> {
+    Automate automate;
 
     public VueAutomate(Automate automate, VuePrincipaleAtmt vuePrincipale) {
         super(automate, vuePrincipale);
+        this.automate = automate;
     }
 
     public Automate getAutomate() {
-        return (Automate) super.getMachine();
+        return automate;
     }
 
     @Override

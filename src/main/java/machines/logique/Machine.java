@@ -8,39 +8,30 @@ import javafx.concurrent.Task;
 import java.io.IOException;
 import java.util.*;
 
-public abstract class Machine<T extends Transition<T>> implements Runnable {
+public abstract class Machine<T extends Transition<T>> {
     private ObservableSet<Etat<T>> etats;
-    private StatusExecution statusExecution;
 
     public Machine(Set<Etat<T>> etats) {
         this.etats = FXCollections.observableSet(etats);
-        statusExecution = StatusExecution.PRETE;
     }
 
     public Machine() {
         etats = FXCollections.observableSet(new HashSet<>());
-        statusExecution = StatusExecution.PRETE;
     }
 
     public abstract void chargerFichier(String nomFichier) throws IOException;
 
     public abstract void sauvegarder(String nomFichier) throws IOException;
 
-    public abstract void run(String mot) throws InterruptedException;
-
-    @Override
-    public void run() {
-        statusExecution = StatusExecution.EN_COURS;
-        try {
-            run("");
-            statusExecution = StatusExecution.TERMINEE;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            statusExecution = StatusExecution.INTERROMPUE;
-        }
+    public void lancer(Task<?> taskLancer) {
+        new Thread(taskLancer).start();
     }
 
+    public abstract Task<?> getTaskLancer(String mot, long dellayMillis);
+
     public abstract void step(char lettre);
+
+    public abstract boolean motReconnu();
 
     public void ajouterEtat(Etat<T> etat) {
         etats.add(etat);
@@ -79,10 +70,6 @@ public abstract class Machine<T extends Transition<T>> implements Runnable {
 
     public Set<Etat<T>> getEtats() {
         return etats;
-    }
-
-    public enum StatusExecution {
-        PRETE, EN_COURS, INTERROMPUE, TERMINEE
     }
 }
 

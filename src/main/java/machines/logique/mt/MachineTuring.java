@@ -32,10 +32,10 @@ public class MachineTuring extends Machine<TransitionMT> {
     }
 
     @Override
-    public Task<Boolean> getTaskLancer(String mot, long dellayMillis) {
-        return new Task<Boolean>() {
+    public Task<Integer> getTaskLancer(String mot, long dellayMillis) {
+        return new Task<>() {
             @Override
-            protected Boolean call() throws Exception {
+            protected Integer call() throws Exception {
                 getEtats().forEach(Etat::desactive);
                 getEtatInitial().active();
                 for (int i = 0; i < mot.length(); i++) {
@@ -43,9 +43,9 @@ public class MachineTuring extends Machine<TransitionMT> {
                 }
                 while (getEtatActif() != null) {
                     step(ruban[teteDeLecture]);
-                    if (getEtatActif() != null && getEtatActif().estTerminal()) return true;
+                    if (getEtatActif() != null && getEtatActif().estTerminal()) updateValue(teteDeLecture);
                 }
-                return false;
+                return teteDeLecture;
             }
         };
     }
@@ -75,10 +75,16 @@ public class MachineTuring extends Machine<TransitionMT> {
                         teteDeLecture--;
                         break;
                 }
+                transitionEtape.getEtatDepart().desactive();
                 transitionEtape.getEtatArrivee().active();
             }
             etatActif.desactive();
         }
+    }
+
+    @Override
+    public boolean motReconnu() {
+        return getEtatActif().estTerminal();
     }
 
     public Etat<TransitionMT> getEtatInitial() {
