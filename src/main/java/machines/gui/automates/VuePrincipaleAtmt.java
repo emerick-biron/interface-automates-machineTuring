@@ -8,13 +8,9 @@ import machines.App;
 import machines.gui.VueEtat;
 import machines.gui.VueMachine;
 import machines.gui.VueTransition;
-import machines.logique.Etat;
-import machines.logique.Transition;
 import machines.logique.automates.Automate;
 import machines.logique.automates.TransitionAtmt;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -139,6 +135,10 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     @Override
     public void lancer() {
         //TODO Faire des tests pour voir si les entrees sont ok
+        Automate automate = getVueAutomate().getAutomate();
+
+
+/*
         Task<Boolean> taskLancer =
                 getVueAutomate().getAutomate().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
         taskLancer.progressProperty().addListener(new ChangeListener<>() {
@@ -168,7 +168,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             alert.showAndWait();
             hBoxLancerAutomate.getChildren().remove(hBoxLabelsLettres);
         });
-        getVueAutomate().getAutomate().lancer(taskLancer);
+        getVueAutomate().getAutomate().run(taskLancer);
+
+ */
     }
 
     @Override
