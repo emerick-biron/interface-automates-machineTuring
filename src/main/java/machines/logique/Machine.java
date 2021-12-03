@@ -29,6 +29,10 @@ public abstract class Machine<T extends Transition<T>> {
 
     public abstract Task<?> getTaskLancer(String mot, long dellayMillis);
 
+    public Task<?> getTaskLancer(String mot) {
+        return getTaskLancer(mot, 0);
+    }
+
     public abstract void step(char lettre);
 
     public abstract boolean motReconnu();

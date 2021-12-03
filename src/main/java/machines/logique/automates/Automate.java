@@ -97,11 +97,9 @@ public class Automate extends Machine<TransitionAtmt> {
         ArrayList<Etat<TransitionAtmt>> etats = new ArrayList<>(getEtats());
 
         //ecriture etats initiaux
-        for (Etat<TransitionAtmt> etat : etats) {
-            if (etat.estInitial()) {
-                bufferedWriter.write("initial " + etats.indexOf(etat));
-                bufferedWriter.newLine();
-            }
+        for (Etat<TransitionAtmt> etat : getEtatsInitiaux()) {
+            bufferedWriter.write("initial " + etats.indexOf(etat));
+            bufferedWriter.newLine();
         }
 
         //ecriture etats terminaux
