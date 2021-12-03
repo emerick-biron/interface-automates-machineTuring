@@ -23,11 +23,11 @@ public abstract class Machine<T extends Transition<T>> {
 
     public abstract void sauvegarder(String nomFichier) throws IOException;
 
-    public void lancer(Task<?> taskLancer) {
+    public void lancer(Task<Integer> taskLancer) {
         new Thread(taskLancer).start();
     }
 
-    public abstract Task<?> getTaskLancer(String mot, long dellayMillis);
+    public abstract Task<Integer> getTaskLancer(String mot, long dellayMillis);
 
     public Task<?> getTaskLancer(String mot) {
         return getTaskLancer(mot, 0);

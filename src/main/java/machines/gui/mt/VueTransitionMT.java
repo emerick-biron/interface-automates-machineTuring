@@ -6,7 +6,7 @@ import machines.gui.VueTransition;
 import machines.logique.mt.TransitionMT;
 
 public class VueTransitionMT extends VueTransition<TransitionMT> {
-    public VueTransitionMT(TransitionMT transition, VueMachine<TransitionMT> vueMachine) {
+    public VueTransitionMT(TransitionMT transition, VueMT vueMachine) {
         super(transition, vueMachine);
     }
 
@@ -20,16 +20,16 @@ public class VueTransitionMT extends VueTransition<TransitionMT> {
             DoubleBinding xB = getVueEtatFin().layoutXProperty().add(getVueEtatFin().getCercle().getRadius());
             DoubleBinding yB = getVueEtatFin().layoutYProperty().add(getVueEtatFin().getCercle().getRadius());
 
-            DoubleBinding xPos = xA.add(xB.subtract(xA).multiply(6.5).divide(10)).subtract(5);
+            DoubleBinding xPos = xA.add(xB.subtract(xA).multiply(6.5).divide(10));
             DoubleBinding yPos = yA.add(yB.subtract(yA).multiply(6.5).divide(10)).add(index * 10);
 
             getLabelEtiquette().layoutXProperty().bind(xPos);
             getLabelEtiquette().layoutYProperty().bind(yPos);
         } else {
             getLabelEtiquette().layoutXProperty()
-                    .bind(getVueEtatDep().layoutXProperty().add(getVueEtatDep().getCercle().radiusProperty()).add(index * 10));
-            getLabelEtiquette().layoutYProperty()
-                    .bind(getVueEtatDep().layoutYProperty().add(getVueEtatDep().getCercle().radiusProperty().multiply(2)));
+                    .bind(getVueEtatDep().layoutXProperty().add(getVueEtatDep().getCercle().radiusProperty()));
+            getLabelEtiquette().layoutYProperty().bind(getVueEtatDep().layoutYProperty()
+                    .add(getVueEtatDep().getCercle().radiusProperty().multiply(2)).add(index * 10));
         }
     }
 }

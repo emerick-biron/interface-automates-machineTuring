@@ -8,7 +8,7 @@ import machines.logique.automates.Automate;
 import machines.logique.automates.TransitionAtmt;
 
 public class VueAutomate extends VueMachine<TransitionAtmt> {
-    Automate automate;
+    private Automate automate;
 
     public VueAutomate(Automate automate, VuePrincipaleAtmt vuePrincipale) {
         super(automate, vuePrincipale);
