@@ -152,7 +152,6 @@ public abstract class VueTransition<T extends Transition<T>> extends Group {
 
     private void initLabel() {
         positionnerLabelEtiquette(0);
-
         labelEtiquette.setStyle("-fx-font-weight: bold; -fx-font-size: 17;");
     }
 
@@ -181,28 +180,7 @@ public abstract class VueTransition<T extends Transition<T>> extends Group {
         }
     }
 
-    public void positionnerLabelEtiquette(int index) {
-        if (transition.getEtatDepart() != transition.getEtatArrivee()) {
-            //coordonnees du centre du cercle de la vue etat de depart
-            DoubleBinding xA = vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().getRadius());
-            DoubleBinding yA = vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().getRadius());
-
-            //coordonnees du centre du cercle de la vue etat d'arrivee
-            DoubleBinding xB = vueEtatFin.layoutXProperty().add(vueEtatFin.getCercle().getRadius());
-            DoubleBinding yB = vueEtatFin.layoutYProperty().add(vueEtatFin.getCercle().getRadius());
-
-            DoubleBinding xPos = xA.add(xB.subtract(xA).multiply(6.5).divide(10)).subtract(5).add(index * 10);
-            DoubleBinding yPos = yA.add(yB.subtract(yA).multiply(6.5).divide(10));
-
-            labelEtiquette.layoutXProperty().bind(xPos);
-            labelEtiquette.layoutYProperty().bind(yPos);
-        } else {
-            labelEtiquette.layoutXProperty()
-                    .bind(vueEtatDep.layoutXProperty().add(vueEtatDep.getCercle().radiusProperty()).add(index * 10));
-            labelEtiquette.layoutYProperty()
-                    .bind(vueEtatDep.layoutYProperty().add(vueEtatDep.getCercle().radiusProperty().multiply(2)));
-        }
-    }
+    public abstract void positionnerLabelEtiquette(int index);
 
     private void initMouseEvents() {
         setOnMousePressed(mouseEvent -> {

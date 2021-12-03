@@ -1,17 +1,14 @@
-package machines.gui.automates;
+package machines.gui.mt;
 
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.value.ChangeListener;
-import machines.logique.automates.Automate;
-import machines.logique.automates.TransitionAtmt;
+import machines.gui.VueMachine;
 import machines.gui.VueTransition;
+import machines.logique.mt.TransitionMT;
 
-public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
-
-    public VueTransitionAtmt(TransitionAtmt transition, VueAutomate vueAutomate) {
-        super(transition, vueAutomate);
+public class VueTransitionMT extends VueTransition<TransitionMT> {
+    public VueTransitionMT(TransitionMT transition, VueMachine<TransitionMT> vueMachine) {
+        super(transition, vueMachine);
     }
-
 
     public void positionnerLabelEtiquette(int index) {
         if (getTransition().getEtatDepart() != getTransition().getEtatArrivee()) {
@@ -23,8 +20,8 @@ public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
             DoubleBinding xB = getVueEtatFin().layoutXProperty().add(getVueEtatFin().getCercle().getRadius());
             DoubleBinding yB = getVueEtatFin().layoutYProperty().add(getVueEtatFin().getCercle().getRadius());
 
-            DoubleBinding xPos = xA.add(xB.subtract(xA).multiply(6.5).divide(10)).add(index * 10);
-            DoubleBinding yPos = yA.add(yB.subtract(yA).multiply(6.5).divide(10));
+            DoubleBinding xPos = xA.add(xB.subtract(xA).multiply(6.5).divide(10)).subtract(5);
+            DoubleBinding yPos = yA.add(yB.subtract(yA).multiply(6.5).divide(10)).add(index * 10);
 
             getLabelEtiquette().layoutXProperty().bind(xPos);
             getLabelEtiquette().layoutYProperty().bind(yPos);
@@ -35,38 +32,4 @@ public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
                     .bind(getVueEtatDep().layoutYProperty().add(getVueEtatDep().getCercle().radiusProperty().multiply(2)));
         }
     }
-
-    public VueAutomate getVueAutomate() {
-        return (VueAutomate) super.getVueMachine();
-    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
