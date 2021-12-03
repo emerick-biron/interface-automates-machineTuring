@@ -10,16 +10,13 @@ import java.util.*;
 
 public abstract class Machine<T extends Transition<T>> {
     private ObservableSet<Etat<T>> etats;
-    private Set<Etat<T>> etatsActifs;
 
     public Machine(Set<Etat<T>> etats) {
         this.etats = FXCollections.observableSet(etats);
-        etatsActifs = new HashSet<>();
     }
 
     public Machine() {
         etats = FXCollections.observableSet(new HashSet<>());
-        etatsActifs = new HashSet<>();
     }
 
     public abstract void chargerFichier(String nomFichier) throws IOException;
@@ -31,6 +28,8 @@ public abstract class Machine<T extends Transition<T>> {
     }
 
     public abstract Task<Boolean> getTaskLancer(String mot, long dellayMillis);
+
+    public abstract void step(char lettre);
 
     public void ajouterEtat(Etat<T> etat) {
         etats.add(etat);
@@ -53,7 +52,6 @@ public abstract class Machine<T extends Transition<T>> {
             etat.clearTransitions();
         }
         etats.clear();
-        etatsActifs.clear();
     }
 
     public ObservableSet<Etat<T>> etatsProperty() {
@@ -70,10 +68,6 @@ public abstract class Machine<T extends Transition<T>> {
 
     public Set<Etat<T>> getEtats() {
         return etats;
-    }
-
-    public Set<Etat<T>> getEtatsActifs() {
-        return etatsActifs;
     }
 }
 

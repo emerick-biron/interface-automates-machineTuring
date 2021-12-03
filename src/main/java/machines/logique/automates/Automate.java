@@ -9,13 +9,26 @@ import java.io.*;
 import java.util.*;
 
 public class Automate extends Machine<TransitionAtmt> {
+    private Set<Etat<TransitionAtmt>> etatsActifs;
 
     public Automate(Set<Etat<TransitionAtmt>> etats) {
         super(etats);
+        etatsActifs = new HashSet<>();
     }
 
     public Automate() {
         super();
+        etatsActifs = new HashSet<>();
+    }
+
+    public Set<Etat<TransitionAtmt>> getEtatsActifs() {
+        return etatsActifs;
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        etatsActifs.clear();
     }
 
     /**
@@ -94,7 +107,7 @@ public class Automate extends Machine<TransitionAtmt> {
         //ecriture etats terminaux
         for (Etat<TransitionAtmt> etat : etats) {
             if (etat.estTerminal()) {
-                bufferedWriter.write("terminal " +etats.indexOf(etat));
+                bufferedWriter.write("terminal " + etats.indexOf(etat));
                 bufferedWriter.newLine();
             }
         }
@@ -142,7 +155,8 @@ public class Automate extends Machine<TransitionAtmt> {
         };
     }
 
-    private void step(char lettre) {
+    @Override
+    public void step(char lettre) {
         List<Etat<TransitionAtmt>> nouveauxActifs = new ArrayList<>();
         for (Etat<TransitionAtmt> e : getEtatsActifs()) {
             for (Etat<TransitionAtmt> etatCible : e.cible(lettre)) {

@@ -10,6 +10,7 @@ import java.util.Set;
 public class MachineTuring extends Machine<TransitionMT> {
     private char[] ruban;
     private int teteDeLecture;
+    private Etat<TransitionMT> etatActif;
 
     public MachineTuring(Set<Etat<TransitionMT>> etats) {
         super(etats);
@@ -32,6 +33,11 @@ public class MachineTuring extends Machine<TransitionMT> {
     @Override
     public Task<Boolean> getTaskLancer(String mot, long dellayMillis) {
         return null;
+    }
+
+    @Override
+    public void step(char lettre) {
+
     }
 
     private void initRuban(){
