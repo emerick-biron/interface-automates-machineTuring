@@ -48,7 +48,7 @@ public class Etat<T extends Transition<T>> {
      * Permet d'obtenir la liste des etat qui peuvent etre atteint a partir de l'etat qui courant avec la lettre c
      *
      * @param c lettre a tester
-     * @return liste des etat qui peuvent etre atteint, null si il n'y en a pas
+     * @return liste des etat qui peuvent etre atteint
      */
     public Set<Etat<T>> cible(char c) {
         Set<Etat<T>> resultat = new HashSet<>();

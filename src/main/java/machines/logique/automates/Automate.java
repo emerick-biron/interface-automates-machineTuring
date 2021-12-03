@@ -9,26 +9,26 @@ import java.io.*;
 import java.util.*;
 
 public class Automate extends Machine<TransitionAtmt> {
-    private Set<Etat<TransitionAtmt>> etatsActifs;
 
     public Automate(Set<Etat<TransitionAtmt>> etats) {
         super(etats);
-        etatsActifs = new HashSet<>();
     }
 
     public Automate() {
         super();
-        etatsActifs = new HashSet<>();
     }
 
     public Set<Etat<TransitionAtmt>> getEtatsActifs() {
+        Set<Etat<TransitionAtmt>> etatsActifs = new HashSet<>();
+        for (Etat<TransitionAtmt> etat : getEtats()) {
+            if (etat.estActif()) etatsActifs.add(etat);
+        }
         return etatsActifs;
     }
 
     @Override
     public void clear() {
         super.clear();
-        etatsActifs.clear();
     }
 
     /**
@@ -153,6 +153,14 @@ public class Automate extends Machine<TransitionAtmt> {
                 return false;
             }
         };
+    }
+
+    public Set<Etat<TransitionAtmt>> getEtatsInitiaux() {
+        Set<Etat<TransitionAtmt>> res = new HashSet<>();
+        for (Etat<TransitionAtmt> etat : getEtats()) {
+            if (etat.estInitial()) res.add(etat);
+        }
+        return res;
     }
 
     @Override

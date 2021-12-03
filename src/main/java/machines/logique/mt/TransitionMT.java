@@ -13,4 +13,11 @@ public class TransitionMT extends Transition<TransitionMT> {
         this.mouvement = mouvement;
     }
 
+    public char getNouvelleLettre() {
+        return nouvelleLettre;
+    }
+
+    public Mouvement getMouvement() {
+        return mouvement;
+    }
 }
