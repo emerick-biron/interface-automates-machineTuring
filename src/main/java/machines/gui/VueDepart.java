@@ -24,18 +24,21 @@ public class VueDepart extends Stage {
     private VBox vuePrincipale;
     private Scene scene;
     private ComboBox<String> comboBoxChoixAutomate;
+    private ComboBox<String> comboBoxChoixMT;
     private VBox vBoxLancementAutomate;
+    private VBox vBoxLancementMT;
 
     public VueDepart() {
         boutonAutomate = new Button("Automate");
         boutonTuring = new Button("Machine de Turing");
         labelInformations = new Label(getLabelInformation());
 
-        initComboBox();
+        initComboBoxAutomate();
 
         vBoxLancementAutomate = new VBox(boutonAutomate, comboBoxChoixAutomate);
+        vBoxLancementMT = new VBox(boutonTuring, comboBoxChoixMT);
 
-        hBoxAutomateMT = new HBox(vBoxLancementAutomate, boutonTuring);
+        hBoxAutomateMT = new HBox(vBoxLancementAutomate, vBoxLancementMT);
 
         vuePrincipale = new VBox(labelInformations, hBoxAutomateMT);
 
@@ -51,8 +54,16 @@ public class VueDepart extends Stage {
         return boutonAutomate;
     }
 
+    public Button getBoutonTuring(){
+        return boutonTuring;
+    }
+
     public ComboBox<String> getComboBoxChoixAutomate() {
         return comboBoxChoixAutomate;
+    }
+
+    public ComboBox<String> getComboBoxChoixMT() {
+        return comboBoxChoixMT;
     }
 
     private void initStyle() {
@@ -63,9 +74,28 @@ public class VueDepart extends Stage {
         labelInformations.setStyle("-fx-font-size: 15");
         vBoxLancementAutomate.setSpacing(10);
         vBoxLancementAutomate.setAlignment(Pos.CENTER);
+        vBoxLancementMT.setSpacing(10);
+        vBoxLancementMT.setAlignment(Pos.CENTER);
     }
 
-    private void initComboBox() {
+    private void initComboBoxAutomate() {
+        comboBoxChoixAutomate = new ComboBox<>();
+        ObservableList<String> choixPossible = FXCollections.observableArrayList();
+        choixPossible.add("nouveau");
+        Path path = Paths.get("./fichiers_machine/default");
+        if (Files.isDirectory(path)) {
+            File dossierParDefaut = path.toFile();
+            for (File file : dossierParDefaut.listFiles()) {
+                if (file.isFile()) choixPossible.add(file.getName().split("\\.")[0]);
+            }
+        }
+        comboBoxChoixAutomate.setItems(choixPossible);
+        comboBoxChoixAutomate.getSelectionModel().selectFirst();
+
+
+    }
+
+    private void initComboBoxMT() {
         comboBoxChoixAutomate = new ComboBox<>();
         ObservableList<String> choixPossible = FXCollections.observableArrayList();
         choixPossible.add("nouveau");
