@@ -1,14 +1,15 @@
 package machines.gui.automates;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import machines.App;
 import machines.gui.VueEtat;
 import machines.gui.VueMachine;
 import machines.gui.VueTransition;
-import machines.logique.Machine;
 import machines.logique.automates.Automate;
 import machines.logique.automates.TransitionAtmt;
 import javafx.collections.ObservableList;
@@ -34,7 +35,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     private HBox barreDeMenu;
     private HBox hBoxLancerAutomate;
     private HBox hBoxAjoutTransition;
-    private HBox hBoxLabelsLettres;
+    private TextFlow textFlowMot;
 
     private VueAutomate vueAutomate;
 
@@ -138,23 +139,25 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     public void lancer() {
         //TODO Faire des tests pour voir si les entrees sont ok
         Automate automate = vueAutomate.getAutomate();
-        Task<Integer> taskLancer = automate.getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
+        String mot = getTextFieldMotAutomate().getText();
+        Task<Integer> taskLancer = automate.getTaskLancer(mot, 1000);
+
+        textFlowMot = new TextFlow();
+        Text[] lettresMot = new Text[mot.length()];
 
         taskLancer.setOnRunning(workerStateEvent -> {
-            String text = getTextFieldMotAutomate().getText();
-            hBoxLabelsLettres = new HBox();
-            hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
-            hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
-            for (int i = 0; i < text.length(); i++) {
-                Label labelLettre = new Label(String.valueOf(text.charAt(i)));
-                hBoxLabelsLettres.getChildren().add(labelLettre);
+            textFlowMot.setPadding(new Insets(0, 20, 0, 0));
+            for (int i = 0; i < mot.length(); i++) {
+                lettresMot[i] = new Text(String.valueOf(mot.charAt(i)));
+                lettresMot[i].setFont(Font.font("", FontWeight.BOLD, 19));
             }
-            hBoxLancerAutomate.getChildren().add(0, hBoxLabelsLettres);
+            textFlowMot.getChildren().addAll(lettresMot);
+            hBoxLancerAutomate.getChildren().add(0, textFlowMot);
         });
 
 
         taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
-            hBoxLabelsLettres.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
+            textFlowMot.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
         });
 
         taskLancer.setOnSucceeded(workerStateEvent -> {
@@ -164,7 +167,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             if (automate.motReconnu()) alert.setContentText("Mot reconnu");
             else alert.setContentText("Mot non reconnu");
             alert.showAndWait();
-            hBoxLancerAutomate.getChildren().remove(hBoxLabelsLettres);
+            hBoxLancerAutomate.getChildren().remove(textFlowMot);
         });
         getVueMachine().getMachine().lancer(taskLancer);
     }

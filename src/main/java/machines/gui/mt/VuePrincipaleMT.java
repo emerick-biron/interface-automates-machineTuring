@@ -170,18 +170,20 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         //TODO Faire des tests pour voir si les entrees sont ok
         MachineTuring mt = vueMT.getMachineTuring();
         Task<Integer> taskLancer = mt.getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
-        taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
+
+        taskLancer.setOnRunning(workerStateEvent -> {
             String text = getTextFieldMotAutomate().getText();
-            if (t1 == 0) {
-                hBoxLabelsLettres = new HBox();
-                hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
-                hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
-                for (int i = 0; i < text.length(); i++) {
-                    Label labelLettre = new Label(String.valueOf(text.charAt(i)));
-                    hBoxLabelsLettres.getChildren().add(labelLettre);
-                }
-                hBoxLancerMachine.getChildren().add(0, hBoxLabelsLettres);
+            hBoxLabelsLettres = new HBox();
+            hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
+            hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
+            for (int i = 0; i < text.length(); i++) {
+                Label labelLettre = new Label(String.valueOf(text.charAt(i)));
+                hBoxLabelsLettres.getChildren().add(labelLettre);
             }
+            hBoxLancerMachine.getChildren().add(0, hBoxLabelsLettres);
+        });
+
+        taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
             hBoxLabelsLettres.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
         });
         taskLancer.setOnSucceeded(workerStateEvent -> {
