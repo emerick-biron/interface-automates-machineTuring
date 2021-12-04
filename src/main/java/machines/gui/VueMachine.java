@@ -60,10 +60,6 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
                 }
             }
         }
-        getVuePrincipale().getBoutonAjouterTransition()
-                .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
-        getVuePrincipale().getTextFieldEtiquette()
-                .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
     };
     private ListChangeListener<VueTransition<T>> miseAJourVuesTransitionSelectionnes = change -> {
         while (change.next()) {

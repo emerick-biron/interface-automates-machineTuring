@@ -52,6 +52,10 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         return change;
     };
 
+    public HBox gethBoxAjoutTransition() {
+        return hBoxAjoutTransition;
+    }
+
     public VuePrincipaleMT(App app) {
         super(app);
         getTextFieldEtiquette().setPrefWidth(30);
@@ -135,6 +139,26 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
                 e.printStackTrace();
             }
         }
+    }
+
+    public TextField getFieldNouvelleLette() {
+        return fieldNouvelleLette;
+    }
+
+    public RadioButton getBoutonGauche() {
+        return boutonGauche;
+    }
+
+    public RadioButton getBoutonDroite() {
+        return boutonDroite;
+    }
+
+    public HBox gethBoxChoixMvmt() {
+        return hBoxChoixMvmt;
+    }
+
+    public Button getBoutonArret() {
+        return boutonArret;
     }
 
     @Override

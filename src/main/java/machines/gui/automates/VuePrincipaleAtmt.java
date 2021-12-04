@@ -221,4 +221,8 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         hBoxLancerAutomate.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxLancerAutomate.setPadding(new Insets(0, 10, 10, 0));
     }
+
+    public HBox gethBoxAjoutTransition() {
+        return hBoxAjoutTransition;
+    }
 }
