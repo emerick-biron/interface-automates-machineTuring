@@ -1,17 +1,13 @@
 package machines.gui.mt;
 
 import javafx.collections.ListChangeListener;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.StrokeType;
 import machines.gui.VueEtat;
 import machines.gui.VueMachine;
-import machines.gui.VuePrincipale;
-import machines.logique.automates.TransitionAtmt;
 import machines.logique.mt.MachineTuring;
 import machines.logique.mt.TransitionMT;
 
 public class VueMT extends VueMachine<TransitionMT> {
-    private MachineTuring mt;
+    private MachineTuring machineTuring;
     private VuePrincipaleMT vuePrincipaleMT;
     private ListChangeListener<VueEtat<TransitionMT>> miseAJourVuesEtatSelectionnes =
             change -> vuePrincipaleMT.gethBoxAjoutTransition()
@@ -20,7 +16,7 @@ public class VueMT extends VueMachine<TransitionMT> {
     public VueMT(MachineTuring machine, VuePrincipaleMT vuePrincipale) {
         super(machine, vuePrincipale);
         this.vuePrincipaleMT = vuePrincipale;
-        mt = machine;
+        machineTuring = machine;
 
         getVuesEtatSelectionnes().addListener(miseAJourVuesEtatSelectionnes);
     }
@@ -29,8 +25,8 @@ public class VueMT extends VueMachine<TransitionMT> {
         return vuePrincipaleMT;
     }
 
-    public MachineTuring getMt() {
-        return mt;
+    public MachineTuring getMachineTuring() {
+        return machineTuring;
     }
 
     @Override

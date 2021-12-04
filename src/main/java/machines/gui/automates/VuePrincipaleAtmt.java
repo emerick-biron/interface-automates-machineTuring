@@ -36,6 +36,8 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     private HBox hBoxAjoutTransition;
     private HBox hBoxLabelsLettres;
 
+    private VueAutomate vueAutomate;
+
     private FileChooser fileChooser;
 
     private UnaryOperator<TextFormatter.Change> textFilterAjoutTransition = change -> {
@@ -135,23 +137,26 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     @Override
     public void lancer() {
         //TODO Faire des tests pour voir si les entrees sont ok
-        Machine<TransitionAtmt> automate = getVueMachine().getMachine();
-        Task<Integer> taskLancer =
-                getVueMachine().getMachine().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
-        taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
+        Automate automate = vueAutomate.getAutomate();
+        Task<Integer> taskLancer = automate.getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
+
+        taskLancer.setOnRunning(workerStateEvent -> {
             String text = getTextFieldMotAutomate().getText();
-            if (t1 == 0) {
-                hBoxLabelsLettres = new HBox();
-                hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
-                hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
-                for (int i = 0; i < text.length(); i++) {
-                    Label labelLettre = new Label(String.valueOf(text.charAt(i)));
-                    hBoxLabelsLettres.getChildren().add(labelLettre);
-                }
-                hBoxLancerAutomate.getChildren().add(0, hBoxLabelsLettres);
+            hBoxLabelsLettres = new HBox();
+            hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
+            hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
+            for (int i = 0; i < text.length(); i++) {
+                Label labelLettre = new Label(String.valueOf(text.charAt(i)));
+                hBoxLabelsLettres.getChildren().add(labelLettre);
             }
+            hBoxLancerAutomate.getChildren().add(0, hBoxLabelsLettres);
+        });
+
+
+        taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
             hBoxLabelsLettres.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
         });
+
         taskLancer.setOnSucceeded(workerStateEvent -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Résultat");
@@ -212,7 +217,12 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
 
     @Override
     public VueMachine<TransitionAtmt> creerVueMachine() {
-        return new VueAutomate(new Automate(), this);
+        vueAutomate = new VueAutomate(new Automate(), this);
+        return vueAutomate;
+    }
+
+    public VueAutomate getVueAutomate() {
+        return vueAutomate;
     }
 
     private void initStyle() {

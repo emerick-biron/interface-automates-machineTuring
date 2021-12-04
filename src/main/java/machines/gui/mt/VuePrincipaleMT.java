@@ -1,20 +1,17 @@
 package machines.gui.mt;
 
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import machines.App;
 import machines.gui.VueEtat;
 import machines.gui.VueMachine;
 import machines.gui.VuePrincipale;
-import machines.gui.automates.VueAutomate;
-import machines.logique.automates.Automate;
-import machines.logique.automates.TransitionAtmt;
 import machines.logique.mt.MachineTuring;
 import machines.logique.mt.Mouvement;
 import machines.logique.mt.TransitionMT;
@@ -38,6 +35,8 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     private RadioButton boutonDroite;
     private HBox hBoxChoixMvmt;
     private Button boutonArret;
+
+    private VueMT vueMT;
 
     private FileChooser fileChooser;
 
@@ -92,7 +91,12 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
     @Override
     public VueMachine<TransitionMT> creerVueMachine() {
-        return new VueMT(new MachineTuring(), this);
+        vueMT = new VueMT(new MachineTuring(), this);
+        return vueMT;
+    }
+
+    public VueMT getVueMT() {
+        return vueMT;
     }
 
     @Override
@@ -163,7 +167,33 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
     @Override
     public void lancer() {
-
+        //TODO Faire des tests pour voir si les entrees sont ok
+        MachineTuring mt = vueMT.getMachineTuring();
+        Task<Integer> taskLancer = mt.getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
+        taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
+            String text = getTextFieldMotAutomate().getText();
+            if (t1 == 0) {
+                hBoxLabelsLettres = new HBox();
+                hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
+                hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
+                for (int i = 0; i < text.length(); i++) {
+                    Label labelLettre = new Label(String.valueOf(text.charAt(i)));
+                    hBoxLabelsLettres.getChildren().add(labelLettre);
+                }
+                hBoxLancerMachine.getChildren().add(0, hBoxLabelsLettres);
+            }
+            hBoxLabelsLettres.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
+        });
+        taskLancer.setOnSucceeded(workerStateEvent -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Résultat");
+            alert.setHeaderText(null);
+            if (mt.motReconnu()) alert.setContentText("Mot reconnu");
+            else alert.setContentText("Mot non reconnu");
+            alert.showAndWait();
+            hBoxLancerMachine.getChildren().remove(hBoxLabelsLettres);
+        });
+        getVueMachine().getMachine().lancer(taskLancer);
     }
 
     @Override
@@ -193,8 +223,8 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
                 if (nouvelleTrans) {
                     Mouvement mvmt = (boutonDroite.isSelected()) ? Mouvement.DROITE : Mouvement.GAUCHE;
                     vueEtatDep.getEtat().ajoutTransition(
-                            new TransitionMT(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0), fieldNouvelleLette.getText().charAt(0),
-                                    mvmt));
+                            new TransitionMT(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0),
+                                    fieldNouvelleLette.getText().charAt(0), mvmt));
                 }
             }
         }
@@ -206,7 +236,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
         hBoxChoixMvmt.setAlignment(Pos.CENTER);
         hBoxChoixMvmt.setSpacing(5);
-        hBoxChoixMvmt.setPadding(new Insets(0,0,0,5));
+        hBoxChoixMvmt.setPadding(new Insets(0, 0, 0, 5));
 
         hBoxAjoutTransition.setAlignment(Pos.CENTER);
 

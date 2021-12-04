@@ -145,7 +145,6 @@ public class Automate extends Machine<TransitionAtmt> {
 
     @Override
     public boolean motReconnu() {
-        System.out.println(getEtatsActifs());
         for (Etat<TransitionAtmt> etat : getEtats()) {
             if (etat.estTerminal() && etat.estActif()) return true;
         }
