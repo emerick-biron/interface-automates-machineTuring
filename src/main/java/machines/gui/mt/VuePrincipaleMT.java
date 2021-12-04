@@ -3,8 +3,9 @@ package machines.gui.mt;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import machines.App;
@@ -29,15 +30,36 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     private HBox hBoxLancerMachine;
     private HBox hBoxAjoutTransition;
     private HBox hBoxLabelsLettres;
+    private TextField fieldNouvelleLette;
+    private ToggleGroup groupChoixMvmt;
+    private RadioButton boutonGauche;
+    private RadioButton boutonDroite;
+    private HBox hBoxChoixMvmt;
+    private Button boutonArret;
 
     private FileChooser fileChooser;
 
     public VuePrincipaleMT(App app) {
         super(app);
         getTextFieldEtiquette().setPrefWidth(30);
+        fieldNouvelleLette = new TextField();
+        fieldNouvelleLette.setPrefWidth(30);
 
-        hBoxAjoutTransition = new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette());
-        hBoxLancerMachine = new HBox(getBoutonLancer(), getTextFieldMotAutomate());
+        groupChoixMvmt = new ToggleGroup();
+        boutonDroite = new RadioButton("D");
+        boutonGauche = new RadioButton("G");
+        boutonDroite.setToggleGroup(groupChoixMvmt);
+        boutonDroite.setSelected(true);
+        boutonGauche.setToggleGroup(groupChoixMvmt);
+
+        hBoxChoixMvmt = new HBox(boutonDroite, boutonGauche);
+
+        hBoxAjoutTransition =
+                new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette(), fieldNouvelleLette, hBoxChoixMvmt);
+
+        boutonArret = new Button("STOP");
+
+        hBoxLancerMachine = new HBox(getBoutonLancer(), getTextFieldMotAutomate(), boutonArret);
 
         barreDeMenu = new HBox(getBoutonRetourMenu(), getBoutonCharger(), getBoutonSauvegarder(), getBoutonCreerEtat(),
                 getCheckBoxEstInitial(), getCheckBoxEstTerminal(), getBoutonClear(), getBoutonSupprimer(),
@@ -130,19 +152,51 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
                     }
                 }
                 if (nouvelleTrans) {
+                    Mouvement mvmt = (boutonDroite.isSelected()) ? Mouvement.DROITE : Mouvement.GAUCHE;
                     vueEtatDep.getEtat().ajoutTransition(
-                            new TransitionMT(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0), '#',
-                                    Mouvement.DROITE));
+                            new TransitionMT(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0), fieldNouvelleLette.getText().charAt(0),
+                                    mvmt));
                 }
             }
-            getTextFieldEtiquette().setText("");
         }
     }
 
     private void initStyle() {
-        barreDeMenu.setSpacing(20);
+        barreDeMenu.setSpacing(10);
         barreDeMenu.setAlignment(Pos.CENTER_LEFT);
+
+        hBoxChoixMvmt.setAlignment(Pos.CENTER);
+        hBoxChoixMvmt.setSpacing(5);
+        hBoxChoixMvmt.setPadding(new Insets(0,0,0,5));
+
+        hBoxAjoutTransition.setAlignment(Pos.CENTER);
+
         hBoxLancerMachine.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxLancerMachine.setPadding(new Insets(0, 10, 10, 0));
+
+        boutonArret.setStyle("-fx-font-weight: bold");
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

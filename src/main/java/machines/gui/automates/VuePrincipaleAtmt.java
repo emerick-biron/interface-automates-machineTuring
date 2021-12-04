@@ -129,7 +129,6 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
                             new TransitionAtmt(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0)));
                 }
             }
-            getTextFieldEtiquette().setText("");
         }
     }
 
@@ -139,22 +138,19 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         Machine<TransitionAtmt> automate = getVueMachine().getMachine();
         Task<Integer> taskLancer =
                 getVueMachine().getMachine().getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
-        taskLancer.valueProperty().addListener(new ChangeListener<Integer>() {
-            @Override
-            public void changed(ObservableValue<? extends Integer> observableValue, Integer integer, Integer t1) {
-                String text = getTextFieldMotAutomate().getText();
-                if (t1 == 0) {
-                    hBoxLabelsLettres = new HBox();
-                    hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
-                    hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
-                    for (int i = 0; i < text.length(); i++) {
-                        Label labelLettre = new Label(String.valueOf(text.charAt(i)));
-                        hBoxLabelsLettres.getChildren().add(labelLettre);
-                    }
-                    hBoxLancerAutomate.getChildren().add(0, hBoxLabelsLettres);
+        taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
+            String text = getTextFieldMotAutomate().getText();
+            if (t1 == 0) {
+                hBoxLabelsLettres = new HBox();
+                hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
+                hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
+                for (int i = 0; i < text.length(); i++) {
+                    Label labelLettre = new Label(String.valueOf(text.charAt(i)));
+                    hBoxLabelsLettres.getChildren().add(labelLettre);
                 }
-                hBoxLabelsLettres.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
+                hBoxLancerAutomate.getChildren().add(0, hBoxLabelsLettres);
             }
+            hBoxLabelsLettres.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
         });
         taskLancer.setOnSucceeded(workerStateEvent -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
