@@ -7,9 +7,16 @@ import machines.logique.mt.TransitionMT;
 
 public class VueMT extends VueMachine<TransitionMT> {
     private MachineTuring mt;
-    public VueMT(MachineTuring machine, VuePrincipale<TransitionMT> vuePrincipale) {
+    private VuePrincipaleMT vuePrincipaleMT;
+
+    public VueMT(MachineTuring machine, VuePrincipaleMT vuePrincipale) {
         super(machine, vuePrincipale);
+        this.vuePrincipaleMT = vuePrincipale;
         mt = machine;
+    }
+
+    public VuePrincipaleMT getVuePrincipaleMT() {
+        return vuePrincipaleMT;
     }
 
     public MachineTuring getMt() {

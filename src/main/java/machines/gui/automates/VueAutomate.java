@@ -9,10 +9,16 @@ import machines.logique.automates.TransitionAtmt;
 
 public class VueAutomate extends VueMachine<TransitionAtmt> {
     private Automate automate;
+    private VuePrincipaleAtmt vuePrincipaleAtmt;
 
     public VueAutomate(Automate automate, VuePrincipaleAtmt vuePrincipale) {
         super(automate, vuePrincipale);
         this.automate = automate;
+        this.vuePrincipaleAtmt = vuePrincipale;
+    }
+
+    public VuePrincipaleAtmt getVuePrincipaleAtmt() {
+        return vuePrincipaleAtmt;
     }
 
     public Automate getAutomate() {
