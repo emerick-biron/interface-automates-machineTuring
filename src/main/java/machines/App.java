@@ -1,12 +1,9 @@
 package machines;
 
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import machines.gui.VueDepart;
+import machines.gui.VuePrincipale;
 import machines.gui.automates.VuePrincipaleAtmt;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -14,6 +11,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import machines.gui.mt.VuePrincipaleMT;
+import machines.logique.Transition;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,13 +23,14 @@ import java.util.Optional;
 public class App extends Application {
     private Stage primaryStage;
     private VueDepart vueDepart;
-    private VuePrincipaleAtmt vuePrincipale;
-    private EventHandler<ActionEvent> eventLancerAutomate = new EventHandler<>() {
-        @Override
-        public void handle(ActionEvent actionEvent) {
-            vueDepart.hide();
-            startAutomate();
-        }
+    private VuePrincipale<? extends Transition<?>> vuePrincipale;
+    private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> {
+        vueDepart.hide();
+        startAutomate();
+    };
+    private EventHandler<ActionEvent> eventLancerMT = actionEvent -> {
+        vueDepart.hide();
+        startMT();
     };
 
 
@@ -52,6 +52,7 @@ public class App extends Application {
         vueDepart = new VueDepart();
         vueDepart.setTitle("Interface pour automates et machine de Turing");
         vueDepart.getBoutonAutomate().setOnAction(eventLancerAutomate);
+        vueDepart.getBoutonTuring().setOnAction(eventLancerMT);
     }
 
     public void startAutomate() {
@@ -73,6 +74,36 @@ public class App extends Application {
         String choix = vueDepart.getComboBoxChoixAutomate().getValue();
 
         Path path = Paths.get("./fichiers_machine" + choix + ".atmt");
+        File file = path.toFile();
+        if (!choix.equals("nouveau") && file.isFile()) {
+            try {
+                vuePrincipale.getVueMachine().chargerFichier(file.getAbsolutePath());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public void startMT() {
+        vuePrincipale = new VuePrincipaleMT(App.this);
+
+        primaryStage.setScene(new Scene(vuePrincipale));
+        primaryStage.setWidth(1200);
+        primaryStage.setHeight(750);
+        primaryStage.setTitle("Machine de Turing");
+
+        primaryStage.setOnCloseRequest(windowEvent -> {
+            arretMachine();
+            windowEvent.consume();
+        });
+        vuePrincipale.getBoutonRetourMenu().setOnAction(actionEvent -> retourMenu());
+
+        primaryStage.show();
+
+        String choix = vueDepart.getComboBoxChoixMT().getValue();
+
+        Path path = Paths.get("./fichiers_machine" + choix + ".mt");
         File file = path.toFile();
         if (!choix.equals("nouveau") && file.isFile()) {
             try {

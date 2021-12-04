@@ -34,6 +34,7 @@ public class VueDepart extends Stage {
         labelInformations = new Label(getLabelInformation());
 
         initComboBoxAutomate();
+        initComboBoxMT();
 
         vBoxLancementAutomate = new VBox(boutonAutomate, comboBoxChoixAutomate);
         vBoxLancementMT = new VBox(boutonTuring, comboBoxChoixMT);
@@ -96,7 +97,7 @@ public class VueDepart extends Stage {
     }
 
     private void initComboBoxMT() {
-        comboBoxChoixAutomate = new ComboBox<>();
+        comboBoxChoixMT = new ComboBox<>();
         ObservableList<String> choixPossible = FXCollections.observableArrayList();
         choixPossible.add("nouveau");
         Path path = Paths.get("./fichiers_machine/default");
@@ -106,8 +107,8 @@ public class VueDepart extends Stage {
                 if (file.isFile()) choixPossible.add(file.getName().split("\\.")[0]);
             }
         }
-        comboBoxChoixAutomate.setItems(choixPossible);
-        comboBoxChoixAutomate.getSelectionModel().selectFirst();
+        comboBoxChoixMT.setItems(choixPossible);
+        comboBoxChoixMT.getSelectionModel().selectFirst();
 
 
     }
