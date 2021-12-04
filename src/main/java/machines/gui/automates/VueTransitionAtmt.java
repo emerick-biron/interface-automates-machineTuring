@@ -7,11 +7,21 @@ import machines.logique.automates.TransitionAtmt;
 import machines.gui.VueTransition;
 
 public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
+    TransitionAtmt transitionAtmt;
+    VueAutomate vueAutomate;
 
     public VueTransitionAtmt(TransitionAtmt transition, VueAutomate vueAutomate) {
         super(transition, vueAutomate);
+        this.vueAutomate = vueAutomate;
+        transitionAtmt = transition;
+        getLabelEtiquette().setText(String.valueOf(transitionAtmt.getEtiquette()));
     }
 
+
+
+    public TransitionAtmt getTransitionAtmt() {
+        return transitionAtmt;
+    }
 
     public void positionnerLabelEtiquette(int index) {
         if (getTransition().getEtatDepart() != getTransition().getEtatArrivee()) {
@@ -37,7 +47,7 @@ public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
     }
 
     public VueAutomate getVueAutomate() {
-        return (VueAutomate) super.getVueMachine();
+        return vueAutomate;
     }
 }
 

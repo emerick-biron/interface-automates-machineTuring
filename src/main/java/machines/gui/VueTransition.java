@@ -49,7 +49,7 @@ public abstract class VueTransition<T extends Transition<T>> extends Group {
         ligne = new Line();
         ligneHautFleche = new Line();
         ligneBasFleche = new Line();
-        labelEtiquette = new Label(String.valueOf(transition.getEtiquette()));
+        labelEtiquette = new Label("");
         imgAutoTransition = new ImageView("auto_transition.png");
         vueEtatDep = vueMachine.getVueEtat(transition.getEtatDepart());
         vueEtatFin = vueMachine.getVueEtat(transition.getEtatArrivee());

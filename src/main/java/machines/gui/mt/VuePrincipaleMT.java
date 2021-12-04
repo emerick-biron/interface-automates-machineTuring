@@ -1,16 +1,21 @@
 package machines.gui.mt;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import machines.App;
+import machines.gui.VueEtat;
 import machines.gui.VueMachine;
 import machines.gui.VuePrincipale;
 import machines.gui.automates.VueAutomate;
 import machines.logique.automates.Automate;
+import machines.logique.automates.TransitionAtmt;
 import machines.logique.mt.MachineTuring;
+import machines.logique.mt.Mouvement;
 import machines.logique.mt.TransitionMT;
 
 import java.io.File;
@@ -102,8 +107,38 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
     @Override
     public void ajouterTransition() {
-
+        ObservableList<VueEtat<TransitionMT>> vuesEtatSelectionnes = getVueMachine().getVuesEtatSelectionnes();
+        if (vuesEtatSelectionnes.size() > 2 || vuesEtatSelectionnes.size() < 1) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Problème ajout transition");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous devez sélectionner 1 ou 2 etats");
+            alert.showAndWait();
+        } else {
+            String etiquette = getTextFieldEtiquette().getText();
+            VueEtat<TransitionMT> vueEtatDep = vuesEtatSelectionnes.get(0);
+            VueEtat<TransitionMT> vueEtatArrivee;
+            if (vuesEtatSelectionnes.size() == 1) vueEtatArrivee = vueEtatDep;
+            else vueEtatArrivee = vuesEtatSelectionnes.get(1);
+            if (etiquette.length() >= 1) {
+                boolean nouvelleTrans = true;
+                for (TransitionMT t : getVueMachine().getMachine().getTransitions()) {
+                    if (t.getEtatDepart() == vueEtatDep.getEtat() && t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
+                            t.getEtiquette() == etiquette.charAt(0)) {
+                        nouvelleTrans = false;
+                        break;
+                    }
+                }
+                if (nouvelleTrans) {
+                    vueEtatDep.getEtat().ajoutTransition(
+                            new TransitionMT(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0), '#',
+                                    Mouvement.DROITE));
+                }
+            }
+            getTextFieldEtiquette().setText("");
+        }
     }
+
     private void initStyle() {
         barreDeMenu.setSpacing(20);
         barreDeMenu.setAlignment(Pos.CENTER_LEFT);
