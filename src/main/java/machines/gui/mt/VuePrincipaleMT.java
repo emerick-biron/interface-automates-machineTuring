@@ -1,5 +1,8 @@
 package machines.gui.mt;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import machines.App;
@@ -17,10 +20,28 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
+    private HBox barreDeMenu;
+    private HBox hBoxLancerMachine;
+    private HBox hBoxAjoutTransition;
+    private HBox hBoxLabelsLettres;
+
     private FileChooser fileChooser;
 
     public VuePrincipaleMT(App app) {
         super(app);
+        getTextFieldEtiquette().setPrefWidth(30);
+
+        hBoxAjoutTransition = new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette());
+        hBoxLancerMachine = new HBox(getBoutonLancer(), getTextFieldMotAutomate());
+
+        barreDeMenu = new HBox(getBoutonRetourMenu(), getBoutonCharger(), getBoutonSauvegarder(), getBoutonCreerEtat(),
+                getCheckBoxEstInitial(), getCheckBoxEstTerminal(), getBoutonClear(), getBoutonSupprimer(),
+                hBoxAjoutTransition);
+
+        initStyle();
+
+        setTop(barreDeMenu);
+        setBottom(hBoxLancerMachine);
     }
 
     @Override
@@ -82,5 +103,11 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     @Override
     public void ajouterTransition() {
 
+    }
+    private void initStyle() {
+        barreDeMenu.setSpacing(20);
+        barreDeMenu.setAlignment(Pos.CENTER_LEFT);
+        hBoxLancerMachine.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxLancerMachine.setPadding(new Insets(0, 10, 10, 0));
     }
 }

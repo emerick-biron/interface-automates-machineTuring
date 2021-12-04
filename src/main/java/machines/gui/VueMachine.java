@@ -140,16 +140,6 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
         return null;
     }
 
-    public VueEtat<T> getVueEtat(String labelNumEtat) {
-        for (Node n : getChildren()) {
-            if (n instanceof VueEtat) {
-                VueEtat<T> vueEtat = (VueEtat<T>) n;
-                if (vueEtat.getLabelNumEtat().getText().equals(labelNumEtat)) return vueEtat;
-            }
-        }
-        return null;
-    }
-
     public VueTransition<T> getVueTransition(T transition) {
         for (Node n : getChildren()) {
             if (n instanceof VueTransition) {

@@ -2,10 +2,6 @@ package machines.gui.mt;
 
 import machines.gui.VueMachine;
 import machines.gui.VuePrincipale;
-import machines.gui.automates.VueAutomate;
-import machines.gui.automates.VueTransitionAtmt;
-import machines.logique.Machine;
-import machines.logique.automates.TransitionAtmt;
 import machines.logique.mt.MachineTuring;
 import machines.logique.mt.TransitionMT;
 
