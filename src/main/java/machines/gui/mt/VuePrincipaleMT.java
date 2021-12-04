@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
 
 public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     private HBox barreDeMenu;
@@ -39,11 +41,24 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
     private FileChooser fileChooser;
 
+    private UnaryOperator<TextFormatter.Change> textFilterLettre = change -> {
+        String input = change.getControlNewText();
+        if (!change.isContentChange()) {
+            return change;
+        }
+        if (!Pattern.matches("[a-z]?", input)) {
+            return null;
+        }
+        return change;
+    };
+
     public VuePrincipaleMT(App app) {
         super(app);
         getTextFieldEtiquette().setPrefWidth(30);
+        getTextFieldEtiquette().setTextFormatter(new TextFormatter<>(textFilterLettre));
         fieldNouvelleLette = new TextField();
         fieldNouvelleLette.setPrefWidth(30);
+        fieldNouvelleLette.setTextFormatter(new TextFormatter<>(textFilterLettre));
 
         groupChoixMvmt = new ToggleGroup();
         boutonDroite = new RadioButton("D");
