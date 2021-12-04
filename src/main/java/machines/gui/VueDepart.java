@@ -87,13 +87,11 @@ public class VueDepart extends Stage {
         if (Files.isDirectory(path)) {
             File dossierParDefaut = path.toFile();
             for (File file : dossierParDefaut.listFiles()) {
-                if (file.isFile()) choixPossible.add(file.getName().split("\\.")[0]);
+                if (file.isFile() && file.getName().contains(".atmt")) choixPossible.add(file.getName().split("\\.")[0]);
             }
         }
         comboBoxChoixAutomate.setItems(choixPossible);
         comboBoxChoixAutomate.getSelectionModel().selectFirst();
-
-
     }
 
     private void initComboBoxMT() {
@@ -104,13 +102,11 @@ public class VueDepart extends Stage {
         if (Files.isDirectory(path)) {
             File dossierParDefaut = path.toFile();
             for (File file : dossierParDefaut.listFiles()) {
-                if (file.isFile()) choixPossible.add(file.getName().split("\\.")[0]);
+                if (file.isFile() && file.getName().contains(".mt")) choixPossible.add(file.getName().split("\\.")[0]);
             }
         }
         comboBoxChoixMT.setItems(choixPossible);
         comboBoxChoixMT.getSelectionModel().selectFirst();
-
-
     }
 
     private String getLabelInformation() {
