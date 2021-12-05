@@ -1,9 +1,6 @@
 package machines.gui.mt;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -22,7 +18,7 @@ import machines.gui.VueEtat;
 import machines.gui.VueMachine;
 import machines.gui.VuePrincipale;
 import machines.gui.VueTransition;
-import machines.gui.automates.StageSupTransAtmt;
+import machines.logique.Etat;
 import machines.logique.mt.MachineTuring;
 import machines.logique.mt.Mouvement;
 import machines.logique.mt.TransitionMT;
@@ -48,6 +44,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     private RadioButton boutonDroite;
     private HBox hBoxChoixMvmt;
     private Button boutonStop;
+    private Button boutonSetInitial;
     private Pane paneVide1;
     private Pane paneVide2;
 
@@ -67,6 +64,12 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     };
 
     private EventHandler<ActionEvent> eventArreter = actionEvent -> vueMT.getMachineTuring().arreter();
+    private EventHandler<ActionEvent> eventSetInitial = actionEvent -> {
+      if (vueMT.getVuesEtatSelectionnes().size() > 0){
+          vueMT.getMachineTuring().getEtatInitial().setEstInitial(false);
+          vueMT.getVuesEtatSelectionnes().get(0).getEtat().setEstInitial(true);
+      }
+    };
 
     public VuePrincipaleMT(App app) {
         super(app);
@@ -95,8 +98,10 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
         hBoxLancerMachine = new HBox(paneVide1,textFlowRuban, paneVide2,getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
 
+        boutonSetInitial = new Button("Initial");
+
         barreDeMenu = new ToolBar(getBoutonRetourMenu(), new Separator(), getBoutonCharger(), getBoutonSauvegarder(),
-                new Separator(), getBoutonCreerEtat(), getCheckBoxEstInitial(), getCheckBoxEstTerminal(),
+                new Separator(), getBoutonCreerEtat(), boutonSetInitial, getCheckBoxEstTerminal(),
                 getBoutonClear(), getBoutonSupprimer(), hBoxAjoutTransition);
 
         initStyle();
@@ -211,6 +216,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         });
 
         boutonStop.setOnAction(eventArreter);
+        boutonSetInitial.setOnAction(eventSetInitial);
     }
 
     private void majTextFlowRuban(String ruban) {
