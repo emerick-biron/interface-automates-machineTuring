@@ -132,11 +132,13 @@ public class Automate extends Machine<TransitionAtmt> {
                 for (Etat<TransitionAtmt> e : getEtatsInitiaux()) {
                     e.active();
                 }
+                updateProgress(0, mot.length());
                 for (int i = 0; i < mot.length(); i++) {
                     updateValue(i);
                     Thread.sleep(dellayMillis);
                     char lettre = mot.charAt(i);
                     step(lettre);
+                    updateProgress(i + 1, mot.length());
                 }
                 return mot.length() - 1;
             }

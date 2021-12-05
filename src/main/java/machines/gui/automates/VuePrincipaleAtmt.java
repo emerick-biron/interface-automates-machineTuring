@@ -1,5 +1,7 @@
 package machines.gui.automates;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.scene.paint.Color;
@@ -155,7 +157,6 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             textFlowMot.getChildren().addAll(lettresMot);
             hBoxLancerAutomate.getChildren().add(0, textFlowMot);
         });
-
 
         taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
             lettresMot[t1].setFill(Color.valueOf("#037fdb"));
