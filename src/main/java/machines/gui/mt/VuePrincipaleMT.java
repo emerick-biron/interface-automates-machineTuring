@@ -51,7 +51,6 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     private Pane paneVide1;
     private Pane paneVide2;
 
-
     private VueMT vueMT;
 
     private FileChooser fileChooser;
@@ -66,6 +65,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         }
         return change;
     };
+
     private EventHandler<ActionEvent> eventArreter = actionEvent -> vueMT.getMachineTuring().arreter();
 
     public VuePrincipaleMT(App app) {

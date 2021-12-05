@@ -87,8 +87,8 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
 
     public void unbindCheckBoxes() {
         for (Etat<T> e : vueMachine.getMachine().getEtats()) {
-            getCheckBoxEstInitial().selectedProperty().unbindBidirectional(e.estInitialProperty());
-            getCheckBoxEstTerminal().selectedProperty().unbindBidirectional(e.estTerminalProperty());
+            checkBoxEstInitial.selectedProperty().unbindBidirectional(e.estInitialProperty());
+            checkBoxEstTerminal.selectedProperty().unbindBidirectional(e.estTerminalProperty());
         }
     }
 
