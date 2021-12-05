@@ -1,5 +1,8 @@
 package machines.logique.mt;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -8,15 +11,15 @@ import java.util.Arrays;
 
 public class Ruban {
     private ArrayList<Character> ruban;
-    private int teteLecture;
+    private IntegerProperty teteLecture;
 
     public Ruban() {
-        teteLecture = 1;
+        teteLecture = new SimpleIntegerProperty(1);
         ruban = new ArrayList<>(Arrays.asList('#', '#', '#'));
     }
 
     public Ruban(String mot) {
-        teteLecture = 1;
+        teteLecture = new SimpleIntegerProperty(1);
         ruban = new ArrayList<>();
         ruban.add('#');
         for (int i = 0; i < mot.length(); i++) {
@@ -26,13 +29,13 @@ public class Ruban {
         ruban.add('#');
     }
 
-    public void setRuban(String mot){
+    public void setRuban(String mot) {
         ruban.clear();
-        teteLecture = 1;
+        teteLecture = new SimpleIntegerProperty(1);
         ruban.add('#');
-        if (mot.length() == 0){
+        if (mot.length() == 0) {
             ruban.add('#');
-        }else {
+        } else {
             for (int i = 0; i < mot.length(); i++) {
                 ruban.add(mot.charAt(i));
             }
@@ -41,25 +44,21 @@ public class Ruban {
     }
 
     public char lire() {
-        return ruban.get(teteLecture);
-    }
-
-    public int getTeteLecture() {
-        return teteLecture;
+        return ruban.get(teteLecture.get());
     }
 
     public void ecrire(char nouvelleLettre, Mouvement mouvement) {
-        ruban.set(teteLecture, nouvelleLettre);
+        ruban.set(teteLecture.get(), nouvelleLettre);
         switch (mouvement) {
             case DROITE:
-                teteLecture++;
-                if (teteLecture == ruban.size() - 1) ruban.add('#');
+                teteLecture.set(teteLecture.get() + 1);
+                if (teteLecture.get() == ruban.size() - 1) ruban.add('#');
                 break;
             case GAUCHE:
-                teteLecture--;
-                if (teteLecture == 0) {
+                teteLecture.set(teteLecture.get() - 1);
+                if (teteLecture.get() == 0) {
                     ruban.add(0, '#');
-                    teteLecture++;
+                    teteLecture.set(teteLecture.get() + 1);
                 }
                 break;
         }
@@ -74,5 +73,11 @@ public class Ruban {
         return result.toString();
     }
 
+    public int getTeteLecture() {
+        return teteLecture.get();
+    }
 
+    public ReadOnlyIntegerProperty teteLectureProperty() {
+        return teteLecture;
+    }
 }
