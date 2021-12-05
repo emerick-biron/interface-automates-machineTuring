@@ -1,31 +1,28 @@
 package machines.logique.automates;
 
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
 import machines.logique.Etat;
 import machines.logique.Machine;
-import machines.logique.Transition;
 
 import java.io.*;
 import java.util.*;
 
 public class Automate extends Machine<TransitionAtmt> {
     private DoubleProperty progress;
-    private IntegerProperty indexLettreCourante;
-    private Task<Void> taskLancer;
+    private ChangeListener<Integer> listenerValueTaskLancer;
+    private Task<Integer> taskLancer;
     private String mot;
 
     public Automate(Set<Etat<TransitionAtmt>> etats) {
         super(etats);
         progress = new SimpleDoubleProperty();
-        indexLettreCourante = new SimpleIntegerProperty(-1);
     }
 
     public Automate() {
         super();
         progress = new SimpleDoubleProperty();
-        indexLettreCourante = new SimpleIntegerProperty(-1);
     }
 
     public Set<Etat<TransitionAtmt>> getEtatsActifs() {
@@ -152,13 +149,14 @@ public class Automate extends Machine<TransitionAtmt> {
         taskLancer.setOnCancelled(getOnCancelled());
         taskLancer.setOnRunning(getOnRunning());
         taskLancer.setOnSucceeded(getOnSucceeded());
+        if (listenerValueTaskLancer != null) taskLancer.valueProperty().addListener(listenerValueTaskLancer);
         new Thread(taskLancer).start();
     }
 
     private void initTaskLancer(String mot, long dellayMillis) {
         taskLancer = new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Integer call() throws Exception {
                 getEtats().forEach(Etat::desactive);
                 for (Etat<TransitionAtmt> e : getEtatsInitiaux()) {
                     e.active();
@@ -169,11 +167,11 @@ public class Automate extends Machine<TransitionAtmt> {
                     Thread.sleep(dellayMillis);
                     char lettre = mot.charAt(i);
                     step(lettre);
-                    indexLettreCourante.set(i);
+                    updateValue(i);
                     progress.set((double) (i + 1) / mot.length());
                     i++;
                 }
-                return null;
+                return i;
             }
         };
     }
@@ -221,16 +219,12 @@ public class Automate extends Machine<TransitionAtmt> {
         return progress;
     }
 
-    public int getIndexLettreCourante() {
-        return indexLettreCourante.get();
-    }
-
-    public ReadOnlyIntegerProperty indexLettreCouranteProperty() {
-        return indexLettreCourante;
-    }
-
     public String getMot() {
         return mot;
+    }
+
+    public void setListenerValueTaskLancer(ChangeListener<Integer> listenerValueTaskLancer) {
+        this.listenerValueTaskLancer = listenerValueTaskLancer;
     }
 }
 

@@ -1,8 +1,9 @@
 package machines.logique.mt;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ReadOnlyDoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import machines.logique.Etat;
 import machines.logique.Machine;
@@ -10,19 +11,26 @@ import machines.logique.automates.TransitionAtmt;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Set;
 
 public class MachineTuring extends Machine<TransitionMT> {
-    private Ruban ruban;
+    private ArrayList<Character> ruban;
+    private ChangeListener<Integer> listenerValueTaskLancer;
+    private ChangeListener<String> listenerMessageTaskLancer;
+    private int teteLecture;
+    private Task<Integer> taskLancer;
 
     public MachineTuring(Set<Etat<TransitionMT>> etats) {
         super(etats);
-        ruban = new Ruban();
+        teteLecture = 1;
+        ruban = new ArrayList<>(Arrays.asList('#', '#', '#'));
     }
 
     public MachineTuring() {
         super();
-        ruban = new Ruban();
+        teteLecture = 1;
+        ruban = new ArrayList<>(Arrays.asList('#', '#', '#'));
     }
 
     @Override
@@ -118,28 +126,75 @@ public class MachineTuring extends Machine<TransitionMT> {
     }
 
     public void lancer(String mot, long dellayMillis) {
-        Task<Integer> taskLancer = getTaskLancer(mot, dellayMillis);
+        if (taskLancer == null) {
+            initTaskLancer(mot, dellayMillis);
+        } else if (taskLancer.isRunning()) {
+            taskLancer.cancel();
+            initTaskLancer(mot, dellayMillis);
+        } else {
+            initTaskLancer(mot, dellayMillis);
+        }
+        taskLancer.setOnCancelled(getOnCancelled());
         taskLancer.setOnRunning(getOnRunning());
         taskLancer.setOnSucceeded(getOnSucceeded());
-        taskLancer.setOnCancelled(getOnCancelled());
+        if (listenerValueTaskLancer != null) taskLancer.valueProperty().addListener(listenerValueTaskLancer);
+        if (listenerMessageTaskLancer != null) taskLancer.messageProperty().addListener(listenerMessageTaskLancer);
         new Thread(taskLancer).start();
     }
 
-    private Task<Integer> getTaskLancer(String mot, long dellayMillis) {
-        return new Task<>() {
+    private void initTaskLancer(String mot, long dellayMillis) {
+        taskLancer = new Task<>() {
             @Override
             protected Integer call() throws Exception {
                 getEtats().forEach(Etat::desactive);
                 getEtatInitial().active();
-                ruban.setRuban(mot);
+                setRuban(mot);
+                updateValue(teteLecture);
+                updateMessage(getStringRuban());
                 while (getEtatActif() != null) {
-                    updateValue(ruban.getTeteLecture());
                     Thread.sleep(dellayMillis);
-                    step(ruban.lire());
+                    step(lire());
+                    updateValue(teteLecture);
+                    updateMessage(getStringRuban());
                 }
-                return ruban.getTeteLecture();
+                return teteLecture;
             }
         };
+    }
+
+    public void setRuban(String mot) {
+        ruban.clear();
+        teteLecture = 1;
+        ruban.add('#');
+        if (mot.length() == 0) {
+            ruban.add('#');
+        } else {
+            for (int i = 0; i < mot.length(); i++) {
+                ruban.add(mot.charAt(i));
+            }
+        }
+        ruban.add('#');
+    }
+
+    public char lire() {
+        return ruban.get(teteLecture);
+    }
+
+    public void ecrire(char nouvelleLettre, Mouvement mouvement) {
+        ruban.set(teteLecture, nouvelleLettre);
+        switch (mouvement) {
+            case DROITE:
+                teteLecture++;
+                if (teteLecture == ruban.size() - 1) ruban.add('#');
+                break;
+            case GAUCHE:
+                teteLecture--;
+                if (teteLecture == 0) {
+                    ruban.add(0, '#');
+                    teteLecture++;
+                }
+                break;
+        }
     }
 
     public Etat<TransitionMT> getEtatActif() {
@@ -157,7 +212,7 @@ public class MachineTuring extends Machine<TransitionMT> {
                 if (trans.getEtiquette() == lettre) transEtape = trans;
             }
             if (transEtape != null) {
-                ruban.ecrire(transEtape.getNouvelleLettre(), transEtape.getMouvement());
+                ecrire(transEtape.getNouvelleLettre(), transEtape.getMouvement());
                 transEtape.getEtatDepart().desactive();
                 transEtape.getEtatArrivee().active();
             } else {
@@ -168,7 +223,8 @@ public class MachineTuring extends Machine<TransitionMT> {
 
     @Override
     public boolean motReconnu() {
-        return getEtatActif().estTerminal();
+        if (getEtatActif() == null) return false;
+        else return getEtatActif().estTerminal();
     }
 
     public Etat<TransitionMT> getEtatInitial() {
@@ -178,8 +234,36 @@ public class MachineTuring extends Machine<TransitionMT> {
         return null;
     }
 
-    public Ruban getRuban() {
+    public int getTeteLecture() {
+        return teteLecture;
+    }
+
+    public ArrayList<Character> getRuban() {
         return ruban;
+    }
+
+    public String getStringRuban() {
+        StringBuilder result = new StringBuilder();
+        for (Character c : ruban) {
+            result.append(c);
+        }
+        return result.toString();
+    }
+
+    public ChangeListener<Integer> getListenerValueTaskLancer() {
+        return listenerValueTaskLancer;
+    }
+
+    public ChangeListener<String> getListenerMessageTaskLancer() {
+        return listenerMessageTaskLancer;
+    }
+
+    public void setListenerValueTaskLancer(ChangeListener<Integer> listenerValueTaskLancer) {
+        this.listenerValueTaskLancer = listenerValueTaskLancer;
+    }
+
+    public void setListenerMessageTaskLancer(ChangeListener<String> listenerMessageTaskLancer) {
+        this.listenerMessageTaskLancer = listenerMessageTaskLancer;
     }
 }
 

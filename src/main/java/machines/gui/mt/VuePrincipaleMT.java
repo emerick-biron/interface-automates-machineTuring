@@ -1,5 +1,8 @@
 package machines.gui.mt;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,6 +16,7 @@ import machines.App;
 import machines.gui.VueEtat;
 import machines.gui.VueMachine;
 import machines.gui.VuePrincipale;
+import machines.logique.automates.Automate;
 import machines.logique.mt.MachineTuring;
 import machines.logique.mt.Mouvement;
 import machines.logique.mt.TransitionMT;
@@ -53,10 +57,6 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         return change;
     };
 
-    public HBox gethBoxAjoutTransition() {
-        return hBoxAjoutTransition;
-    }
-
     public VuePrincipaleMT(App app) {
         super(app);
         getTextFieldEtiquette().setPrefWidth(30);
@@ -78,17 +78,23 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
                 new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette(), fieldNouvelleLette, hBoxChoixMvmt);
 
         boutonStop = new Button("STOP");
+        textFlowRuban = new TextFlow();
 
-        hBoxLancerMachine = new HBox(getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
+        hBoxLancerMachine = new HBox(textFlowRuban, getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
 
         barreDeMenu = new ToolBar(getBoutonRetourMenu(), new Separator(), getBoutonCharger(), getBoutonSauvegarder(),
                 new Separator(), getBoutonCreerEtat(), getCheckBoxEstInitial(), getCheckBoxEstTerminal(),
                 getBoutonClear(), getBoutonSupprimer(), hBoxAjoutTransition);
 
         initStyle();
+        initListenersAndActions();
 
         setTop(barreDeMenu);
         setBottom(hBoxLancerMachine);
+    }
+
+    public HBox gethBoxAjoutTransition() {
+        return hBoxAjoutTransition;
     }
 
     @Override
@@ -167,24 +173,19 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         return boutonStop;
     }
 
-    @Override
-    public void lancer() {
-        //TODO Faire des tests pour voir si les entrees sont ok
+    public void initListenersAndActions() {
         MachineTuring mt = vueMT.getMachineTuring();
-        String mot = getTextFieldMotAutomate().getText();
 
-        textFlowRuban = new TextFlow();
-        ArrayList<Text> lettresRuban = new ArrayList<>();
-
-        mt.setOnRunning(workerStateEvent -> {
-            String ruban = mt.getRuban().toString();
-            textFlowRuban.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
-            textFlowRuban.setPadding(new Insets(0, 20, 0, 0));
-            for (int i = 0; i < ruban.length(); i++) {
-                Text lettre = new Text(String.valueOf(ruban.charAt(i)));
-                textFlowRuban.getChildren().add(lettre);
+        mt.setListenerMessageTaskLancer(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
+                textFlowRuban.getChildren().clear();
+                for (int i = 0; i < t1.length(); i++) {
+                    Label lettre = new Label(String.valueOf(t1.charAt(i)));
+                    lettre.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
+                    textFlowRuban.getChildren().add(lettre);
+                }
             }
-            hBoxLancerMachine.getChildren().add(0, textFlowRuban);
         });
 
         mt.setOnSucceeded(workerStateEvent -> {
@@ -194,9 +195,20 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             if (mt.motReconnu()) alert.setContentText("Mot reconnu");
             else alert.setContentText("Mot non reconnu");
             alert.showAndWait();
-            hBoxLancerMachine.getChildren().remove(textFlowRuban);
         });
 
+    }
+
+    private void majTextFlowRuban(String ruban) {
+        textFlowRuban.getChildren().clear();
+        textFlowRuban.getChildren().add(new Label(ruban));
+    }
+
+    @Override
+    public void lancer() {
+        //TODO Faire des tests pour voir si les entrees sont ok
+        MachineTuring mt = vueMT.getMachineTuring();
+        String mot = getTextFieldMotAutomate().getText();
         mt.lancer(mot, 1000);
     }
 

@@ -151,14 +151,14 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
 
         progressBar.progressProperty().bind(automate.progressProperty());
 
-        ChangeListener<Number> listenerIndex = (observableValue, integer, t1) -> {
-            if (textFlowMot.getChildren().size() > t1.intValue()) {
-                textFlowMot.getChildren().get(t1.intValue())
+        ChangeListener<Integer> listenerIndex = (observableValue, integer, t1) -> {
+            if (textFlowMot.getChildren().size() > t1) {
+                textFlowMot.getChildren().get(t1)
                         .setStyle("-fx-font-weight: bold; -fx-text-fill: #037fdb; -fx-font-size: 19");
             }
         };
 
-        automate.indexLettreCouranteProperty().addListener(listenerIndex);
+        automate.setListenerValueTaskLancer(listenerIndex);
 
         automate.setOnRunning(workerStateEvent -> {
             textFlowMot.getChildren().clear();
