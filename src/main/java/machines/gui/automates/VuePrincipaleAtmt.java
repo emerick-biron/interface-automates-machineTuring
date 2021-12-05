@@ -171,7 +171,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             alert.showAndWait();
             hBoxLancerAutomate.getChildren().remove(textFlowMot);
         });
-        getVueMachine().getMachine().lancer(taskLancer);
+        automate.lancer(taskLancer);
     }
 
     @Override

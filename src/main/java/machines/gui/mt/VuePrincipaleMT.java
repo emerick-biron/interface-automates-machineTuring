@@ -6,6 +6,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import machines.App;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
@@ -28,7 +31,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     private ToolBar barreDeMenu;
     private HBox hBoxLancerMachine;
     private HBox hBoxAjoutTransition;
-    private HBox hBoxLabelsLettres;
+    private TextFlow textFlowRuban;
     private TextField fieldNouvelleLette;
     private ToggleGroup groupChoixMvmt;
     private RadioButton boutonGauche;
@@ -169,22 +172,25 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     public void lancer() {
         //TODO Faire des tests pour voir si les entrees sont ok
         MachineTuring mt = vueMT.getMachineTuring();
-        Task<Integer> taskLancer = mt.getTaskLancer(getTextFieldMotAutomate().getText(), 1000);
+        String mot = getTextFieldMotAutomate().getText();
+        Task<Integer> taskLancer = mt.getTaskLancer(mot, 1000);
+
+        textFlowRuban = new TextFlow();
+        ArrayList<Text> lettresRuban = new ArrayList<>();
 
         taskLancer.setOnRunning(workerStateEvent -> {
-            String text = getTextFieldMotAutomate().getText();
-            hBoxLabelsLettres = new HBox();
-            hBoxLabelsLettres.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
-            hBoxLabelsLettres.setPadding(new Insets(0, 20, 0, 0));
-            for (int i = 0; i < text.length(); i++) {
-                Label labelLettre = new Label(String.valueOf(text.charAt(i)));
-                hBoxLabelsLettres.getChildren().add(labelLettre);
+            String ruban = mt.getRuban().toString();
+            textFlowRuban.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
+            textFlowRuban.setPadding(new Insets(0, 20, 0, 0));
+            for (int i = 0; i < ruban.length(); i++) {
+                Text lettre = new Text(String.valueOf(ruban.charAt(i)));
+                textFlowRuban.getChildren().add(lettre);
             }
-            hBoxLancerMachine.getChildren().add(0, hBoxLabelsLettres);
+            hBoxLancerMachine.getChildren().add(0, textFlowRuban);
         });
 
         taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
-            hBoxLabelsLettres.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
+            textFlowRuban.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
         });
         taskLancer.setOnSucceeded(workerStateEvent -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -193,9 +199,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             if (mt.motReconnu()) alert.setContentText("Mot reconnu");
             else alert.setContentText("Mot non reconnu");
             alert.showAndWait();
-            hBoxLancerMachine.getChildren().remove(hBoxLabelsLettres);
+            hBoxLancerMachine.getChildren().remove(textFlowRuban);
         });
-        getVueMachine().getMachine().lancer(taskLancer);
+        mt.lancer(taskLancer);
     }
 
     @Override

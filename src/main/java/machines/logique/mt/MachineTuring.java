@@ -163,6 +163,10 @@ public class MachineTuring extends Machine<TransitionMT> {
         }
         return null;
     }
+
+    public Ruban getRuban() {
+        return ruban;
+    }
 }
 
 
