@@ -152,7 +152,7 @@ public class MachineTuring extends Machine<TransitionMT> {
                 getEtatInitial().active();
                 setRuban(mot);
                 updateValue(getStringRuban());
-                while (getEtatActif() != null) {
+                while (getEtatActif() != null && !getEtatActif().estTerminal()) {
                     Thread.sleep(dellayMillis);
                     step(lire());
                     updateValue(getStringRuban());

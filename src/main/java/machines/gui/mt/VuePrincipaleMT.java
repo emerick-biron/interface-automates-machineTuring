@@ -65,10 +65,13 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
     private EventHandler<ActionEvent> eventArreter = actionEvent -> vueMT.getMachineTuring().arreter();
     private EventHandler<ActionEvent> eventSetInitial = actionEvent -> {
-      if (vueMT.getVuesEtatSelectionnes().size() > 0){
-          vueMT.getMachineTuring().getEtatInitial().setEstInitial(false);
-          vueMT.getVuesEtatSelectionnes().get(0).getEtat().setEstInitial(true);
-      }
+        ObservableList<VueEtat<TransitionMT>> vueEtatsSelect = vueMT.getVuesEtatSelectionnes();
+        Etat<TransitionMT> etatInitial = vueMT.getMachineTuring().getEtatInitial();
+        if (vueEtatsSelect.size() > 0) {
+            if (etatInitial != null)
+                vueMT.getMachineTuring().getEtatInitial().setEstInitial(false);
+            vueEtatsSelect.get(0).getEtat().setEstInitial(true);
+        }
     };
 
     public VuePrincipaleMT(App app) {
@@ -96,13 +99,14 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         paneVide1 = new Pane();
         paneVide2 = new Pane();
 
-        hBoxLancerMachine = new HBox(paneVide1,textFlowRuban, paneVide2,getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
+        hBoxLancerMachine =
+                new HBox(paneVide1, textFlowRuban, paneVide2, getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
 
         boutonSetInitial = new Button("Initial");
 
         barreDeMenu = new ToolBar(getBoutonRetourMenu(), new Separator(), getBoutonCharger(), getBoutonSauvegarder(),
-                new Separator(), getBoutonCreerEtat(), boutonSetInitial, getCheckBoxEstTerminal(),
-                getBoutonClear(), getBoutonSupprimer(), hBoxAjoutTransition);
+                new Separator(), getBoutonCreerEtat(), boutonSetInitial, getCheckBoxEstTerminal(), getBoutonClear(),
+                getBoutonSupprimer(), hBoxAjoutTransition);
 
         initStyle();
         initListenersAndActions();
@@ -242,8 +246,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         if (getVueMachine().getVuesTransitionSelectionnes().size() > 0) {
             ObservableList<VueTransitionMT> vueTransitionMTs = FXCollections.observableArrayList();
             for (VueTransition<TransitionMT> vueTransition : getVueMachine().getVuesTransitionSelectionnes()) {
-                if (vueTransition instanceof VueTransitionMT)
-                    vueTransitionMTs.add((VueTransitionMT) vueTransition);
+                if (vueTransition instanceof VueTransitionMT) vueTransitionMTs.add((VueTransitionMT) vueTransition);
             }
 
             StageSupTransMT stageSupTrans = new StageSupTransMT(vueTransitionMTs, getApp().getPrimaryStage());
