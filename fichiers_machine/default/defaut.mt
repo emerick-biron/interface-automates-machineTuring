@@ -1,5 +1,5 @@
 2
-initial
+initial 0
 0 c 1 # DROITE
 0 a 1 # DROITE
 0 b 1 # DROITE

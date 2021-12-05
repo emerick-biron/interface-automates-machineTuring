@@ -4,10 +4,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
@@ -41,6 +45,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     private RadioButton boutonDroite;
     private HBox hBoxChoixMvmt;
     private Button boutonStop;
+    private Pane paneVide1;
+    private Pane paneVide2;
+
 
     private VueMT vueMT;
 
@@ -56,6 +63,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         }
         return change;
     };
+    private EventHandler<ActionEvent> eventArreter = actionEvent -> vueMT.getMachineTuring().arreter();
 
     public VuePrincipaleMT(App app) {
         super(app);
@@ -79,8 +87,10 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
         boutonStop = new Button("STOP");
         textFlowRuban = new TextFlow();
+        paneVide1 = new Pane();
+        paneVide2 = new Pane();
 
-        hBoxLancerMachine = new HBox(textFlowRuban, getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
+        hBoxLancerMachine = new HBox(paneVide1,textFlowRuban, paneVide2,getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
 
         barreDeMenu = new ToolBar(getBoutonRetourMenu(), new Separator(), getBoutonCharger(), getBoutonSauvegarder(),
                 new Separator(), getBoutonCreerEtat(), getCheckBoxEstInitial(), getCheckBoxEstTerminal(),
@@ -176,17 +186,17 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     public void initListenersAndActions() {
         MachineTuring mt = vueMT.getMachineTuring();
 
-        mt.setListenerMessageTaskLancer(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
-                textFlowRuban.getChildren().clear();
-                for (int i = 0; i < t1.length(); i++) {
-                    Label lettre = new Label(String.valueOf(t1.charAt(i)));
-                    lettre.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
-                    textFlowRuban.getChildren().add(lettre);
-                }
+        mt.setListenerValueTaskLancer((observableValue, s, t1) -> {
+            textFlowRuban.getChildren().clear();
+            for (int i = 0; i < t1.length(); i++) {
+                Label lettre = new Label(String.valueOf(t1.charAt(i)));
+                lettre.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
+                if (i == mt.getTeteLecture())
+                    lettre.setStyle("-fx-font-weight: bold; -fx-text-fill: #037fdb; -fx-font-size: 19");
+                textFlowRuban.getChildren().add(lettre);
             }
         });
+
 
         mt.setOnSucceeded(workerStateEvent -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -197,6 +207,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             alert.showAndWait();
         });
 
+        boutonStop.setOnAction(eventArreter);
     }
 
     private void majTextFlowRuban(String ruban) {
@@ -259,6 +270,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         hBoxLancerMachine.setPadding(new Insets(0, 10, 10, 0));
 
         boutonStop.setStyle("-fx-font-weight: bold");
+
+        HBox.setHgrow(paneVide1, Priority.ALWAYS);
+        HBox.setHgrow(paneVide2, Priority.ALWAYS);
     }
 }
 

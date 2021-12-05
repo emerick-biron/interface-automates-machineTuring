@@ -16,10 +16,9 @@ import java.util.Set;
 
 public class MachineTuring extends Machine<TransitionMT> {
     private ArrayList<Character> ruban;
-    private ChangeListener<Integer> listenerValueTaskLancer;
-    private ChangeListener<String> listenerMessageTaskLancer;
+    private ChangeListener<String> listenerValueTaskLancer;
     private int teteLecture;
-    private Task<Integer> taskLancer;
+    private Task<String> taskLancer;
 
     public MachineTuring(Set<Etat<TransitionMT>> etats) {
         super(etats);
@@ -138,26 +137,27 @@ public class MachineTuring extends Machine<TransitionMT> {
         taskLancer.setOnRunning(getOnRunning());
         taskLancer.setOnSucceeded(getOnSucceeded());
         if (listenerValueTaskLancer != null) taskLancer.valueProperty().addListener(listenerValueTaskLancer);
-        if (listenerMessageTaskLancer != null) taskLancer.messageProperty().addListener(listenerMessageTaskLancer);
         new Thread(taskLancer).start();
+    }
+
+    public void arreter() {
+        if (taskLancer != null && taskLancer.isRunning()) taskLancer.cancel();
     }
 
     private void initTaskLancer(String mot, long dellayMillis) {
         taskLancer = new Task<>() {
             @Override
-            protected Integer call() throws Exception {
+            protected String call() throws Exception {
                 getEtats().forEach(Etat::desactive);
                 getEtatInitial().active();
                 setRuban(mot);
-                updateValue(teteLecture);
-                updateMessage(getStringRuban());
+                updateValue(getStringRuban());
                 while (getEtatActif() != null) {
                     Thread.sleep(dellayMillis);
                     step(lire());
-                    updateValue(teteLecture);
-                    updateMessage(getStringRuban());
+                    updateValue(getStringRuban());
                 }
-                return teteLecture;
+                return getStringRuban();
             }
         };
     }
@@ -250,20 +250,12 @@ public class MachineTuring extends Machine<TransitionMT> {
         return result.toString();
     }
 
-    public ChangeListener<Integer> getListenerValueTaskLancer() {
+    public ChangeListener<String> getListenerValueTaskLancer() {
         return listenerValueTaskLancer;
     }
 
-    public ChangeListener<String> getListenerMessageTaskLancer() {
-        return listenerMessageTaskLancer;
-    }
-
-    public void setListenerValueTaskLancer(ChangeListener<Integer> listenerValueTaskLancer) {
+    public void setListenerValueTaskLancer(ChangeListener<String> listenerValueTaskLancer) {
         this.listenerValueTaskLancer = listenerValueTaskLancer;
-    }
-
-    public void setListenerMessageTaskLancer(ChangeListener<String> listenerMessageTaskLancer) {
-        this.listenerMessageTaskLancer = listenerMessageTaskLancer;
     }
 }
 
