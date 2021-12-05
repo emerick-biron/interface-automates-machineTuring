@@ -2,6 +2,7 @@ package machines.gui.automates;
 
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -32,7 +33,7 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
-    private HBox barreDeMenu;
+    private ToolBar barreDeMenu;
     private HBox hBoxLancerAutomate;
     private HBox hBoxAjoutTransition;
     private TextFlow textFlowMot;
@@ -61,7 +62,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         hBoxAjoutTransition = new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette());
         hBoxLancerAutomate = new HBox(getBoutonLancer(), getTextFieldMotAutomate());
 
-        barreDeMenu = new HBox(getBoutonRetourMenu(), getBoutonCharger(), getBoutonSauvegarder(), getBoutonCreerEtat(),
+        barreDeMenu = new ToolBar(getBoutonRetourMenu(),new Separator(), getBoutonCharger(), getBoutonSauvegarder(),new Separator(), getBoutonCreerEtat(),
                 getCheckBoxEstInitial(), getCheckBoxEstTerminal(), getBoutonClear(), getBoutonSupprimer(),
                 hBoxAjoutTransition);
 
@@ -157,7 +158,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
 
 
         taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
-            textFlowMot.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
+            lettresMot[t1].setFill(Color.valueOf("#037fdb"));
         });
 
         taskLancer.setOnSucceeded(workerStateEvent -> {
@@ -229,8 +230,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     }
 
     private void initStyle() {
-        barreDeMenu.setSpacing(20);
-        barreDeMenu.setAlignment(Pos.CENTER_LEFT);
+        barreDeMenu.setStyle("-fx-spacing: 10");
         hBoxLancerAutomate.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxLancerAutomate.setPadding(new Insets(0, 10, 10, 0));
     }

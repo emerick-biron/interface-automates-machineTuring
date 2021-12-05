@@ -25,7 +25,7 @@ import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
-    private HBox barreDeMenu;
+    private ToolBar barreDeMenu;
     private HBox hBoxLancerMachine;
     private HBox hBoxAjoutTransition;
     private HBox hBoxLabelsLettres;
@@ -79,9 +79,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
         hBoxLancerMachine = new HBox(getBoutonLancer(), getTextFieldMotAutomate(), boutonArret);
 
-        barreDeMenu = new HBox(getBoutonRetourMenu(), getBoutonCharger(), getBoutonSauvegarder(), getBoutonCreerEtat(),
-                getCheckBoxEstInitial(), getCheckBoxEstTerminal(), getBoutonClear(), getBoutonSupprimer(),
-                hBoxAjoutTransition);
+        barreDeMenu = new ToolBar(getBoutonRetourMenu(), new Separator(), getBoutonCharger(), getBoutonSauvegarder(),
+                new Separator(), getBoutonCreerEtat(), getCheckBoxEstInitial(), getCheckBoxEstTerminal(),
+                getBoutonClear(), getBoutonSupprimer(), hBoxAjoutTransition);
 
         initStyle();
 
@@ -233,8 +233,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     }
 
     private void initStyle() {
-        barreDeMenu.setSpacing(10);
-        barreDeMenu.setAlignment(Pos.CENTER_LEFT);
+        barreDeMenu.setStyle("-fx-spacing: 10");
 
         hBoxChoixMvmt.setAlignment(Pos.CENTER);
         hBoxChoixMvmt.setSpacing(5);
