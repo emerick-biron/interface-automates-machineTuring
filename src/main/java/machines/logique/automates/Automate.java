@@ -1,6 +1,8 @@
 package machines.logique.automates;
 
+import javafx.beans.property.*;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
@@ -9,13 +11,21 @@ import java.io.*;
 import java.util.*;
 
 public class Automate extends Machine<TransitionAtmt> {
+    private DoubleProperty progress;
+    private IntegerProperty indexLettreCourante;
+    private Task<Void> taskLancer;
+    private String mot;
 
     public Automate(Set<Etat<TransitionAtmt>> etats) {
         super(etats);
+        progress = new SimpleDoubleProperty();
+        indexLettreCourante = new SimpleIntegerProperty();
     }
 
     public Automate() {
         super();
+        progress = new SimpleDoubleProperty();
+        indexLettreCourante = new SimpleIntegerProperty();
     }
 
     public Set<Etat<TransitionAtmt>> getEtatsActifs() {
@@ -125,22 +135,43 @@ public class Automate extends Machine<TransitionAtmt> {
     }
 
     @Override
-    public Task<Integer> getTaskLancer(String mot, long dellayMillis) {
-        return new Task<>() {
+    public void lancer(String mot) {
+        lancer(mot, 0);
+    }
+
+    public void lancer(String mot, long dellayMillis) {
+        this.mot = mot;
+        if (taskLancer == null) {
+            initTaskLancer(mot, dellayMillis);
+        } else if (taskLancer.isRunning()) {
+            taskLancer.cancel();
+            initTaskLancer(mot, dellayMillis);
+        } else {
+            initTaskLancer(mot, dellayMillis);
+        }
+        taskLancer.setOnCancelled(getOnCancelled());
+        taskLancer.setOnRunning(getOnRunning());
+        taskLancer.setOnSucceeded(getOnSucceeded());
+        new Thread(taskLancer).start();
+    }
+
+    private void initTaskLancer(String mot, long dellayMillis) {
+        taskLancer = new Task<>() {
             @Override
-            protected Integer call() throws Exception {
+            protected Void call() throws Exception {
+                getEtats().forEach(Etat::desactive);
                 for (Etat<TransitionAtmt> e : getEtatsInitiaux()) {
                     e.active();
                 }
-                updateProgress(0, mot.length());
+                progress.set(0);
                 for (int i = 0; i < mot.length(); i++) {
-                    updateValue(i);
+                    indexLettreCourante.set(i);
                     Thread.sleep(dellayMillis);
                     char lettre = mot.charAt(i);
                     step(lettre);
-                    updateProgress(i + 1, mot.length());
+                    progress.set((double) (i + 1) / mot.length());
                 }
-                return mot.length() - 1;
+                return null;
             }
         };
     }
@@ -161,7 +192,6 @@ public class Automate extends Machine<TransitionAtmt> {
         return res;
     }
 
-    @Override
     public void step(char lettre) {
         Set<Etat<TransitionAtmt>> nouveauxActifs = new HashSet<>();
         for (Etat<TransitionAtmt> e : getEtatsActifs()) {
@@ -177,6 +207,25 @@ public class Automate extends Machine<TransitionAtmt> {
         }
     }
 
+    public double getProgress() {
+        return progress.get();
+    }
+
+    public ReadOnlyDoubleProperty progressProperty() {
+        return progress;
+    }
+
+    public int getIndexLettreCourante() {
+        return indexLettreCourante.get();
+    }
+
+    public ReadOnlyIntegerProperty indexLettreCouranteProperty() {
+        return indexLettreCourante;
+    }
+
+    public String getMot() {
+        return mot;
+    }
 }
 
 

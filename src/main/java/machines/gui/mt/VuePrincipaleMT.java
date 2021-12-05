@@ -173,12 +173,11 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         //TODO Faire des tests pour voir si les entrees sont ok
         MachineTuring mt = vueMT.getMachineTuring();
         String mot = getTextFieldMotAutomate().getText();
-        Task<Integer> taskLancer = mt.getTaskLancer(mot, 1000);
 
         textFlowRuban = new TextFlow();
         ArrayList<Text> lettresRuban = new ArrayList<>();
 
-        taskLancer.setOnRunning(workerStateEvent -> {
+        mt.setOnRunning(workerStateEvent -> {
             String ruban = mt.getRuban().toString();
             textFlowRuban.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
             textFlowRuban.setPadding(new Insets(0, 20, 0, 0));
@@ -189,10 +188,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             hBoxLancerMachine.getChildren().add(0, textFlowRuban);
         });
 
-        taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
-            textFlowRuban.getChildren().get(t1).setStyle("-fx-text-fill: #037fdb");
-        });
-        taskLancer.setOnSucceeded(workerStateEvent -> {
+        mt.setOnSucceeded(workerStateEvent -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Résultat");
             alert.setHeaderText(null);
@@ -201,7 +197,8 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             alert.showAndWait();
             hBoxLancerMachine.getChildren().remove(textFlowRuban);
         });
-        mt.lancer(taskLancer);
+
+        mt.lancer(mot, 1000);
     }
 
     @Override

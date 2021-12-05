@@ -1,39 +1,42 @@
 package machines.logique;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 
 import java.io.IOException;
 import java.util.*;
 
 public abstract class Machine<T extends Transition<T>> {
     private ObservableSet<Etat<T>> etats;
+    private ObjectProperty<EventHandler<WorkerStateEvent>> onRunning;
+    private ObjectProperty<EventHandler<WorkerStateEvent>> onSucceeded;
+    private ObjectProperty<EventHandler<WorkerStateEvent>> onCancelled;
 
     public Machine(Set<Etat<T>> etats) {
         this.etats = FXCollections.observableSet(etats);
+        onRunning = new SimpleObjectProperty<>();
+        onSucceeded = new SimpleObjectProperty<>();
+        onCancelled = new SimpleObjectProperty<>();
     }
 
     public Machine() {
         etats = FXCollections.observableSet(new HashSet<>());
+        onRunning = new SimpleObjectProperty<>();
+        onSucceeded = new SimpleObjectProperty<>();
+        onCancelled = new SimpleObjectProperty<>();
     }
 
     public abstract void chargerFichier(String nomFichier) throws IOException;
 
     public abstract void sauvegarder(String nomFichier) throws IOException;
 
-    public void lancer(Task<Integer> taskLancer) {
-        new Thread(taskLancer).start();
-    }
-
-    public abstract Task<Integer> getTaskLancer(String mot, long dellayMillis);
-
-    public Task<?> getTaskLancer(String mot) {
-        return getTaskLancer(mot, 0);
-    }
-
-    public abstract void step(char lettre);
+    public abstract void lancer(String mot);
 
     public abstract boolean motReconnu();
 
@@ -74,6 +77,43 @@ public abstract class Machine<T extends Transition<T>> {
 
     public Set<Etat<T>> getEtats() {
         return etats;
+    }
+
+
+    public EventHandler<WorkerStateEvent> getOnRunning() {
+        return onRunning.get();
+    }
+
+    public ObjectProperty<EventHandler<WorkerStateEvent>> onRunningProperty() {
+        return onRunning;
+    }
+
+    public void setOnRunning(EventHandler<WorkerStateEvent> onRunning) {
+        this.onRunning.set(onRunning);
+    }
+
+    public EventHandler<WorkerStateEvent> getOnSucceeded() {
+        return onSucceeded.get();
+    }
+
+    public ObjectProperty<EventHandler<WorkerStateEvent>> onSucceededProperty() {
+        return onSucceeded;
+    }
+
+    public void setOnSucceeded(EventHandler<WorkerStateEvent> onSucceeded) {
+        this.onSucceeded.set(onSucceeded);
+    }
+
+    public EventHandler<WorkerStateEvent> getOnCancelled() {
+        return onCancelled.get();
+    }
+
+    public ObjectProperty<EventHandler<WorkerStateEvent>> onCancelledProperty() {
+        return onCancelled;
+    }
+
+    public void setOnCancelled(EventHandler<WorkerStateEvent> onCancelled) {
+        this.onCancelled.set(onCancelled);
     }
 }
 

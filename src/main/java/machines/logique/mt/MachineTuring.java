@@ -1,5 +1,8 @@
 package machines.logique.mt;
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.concurrent.Task;
 import machines.logique.Etat;
 import machines.logique.Machine;
@@ -110,7 +113,19 @@ public class MachineTuring extends Machine<TransitionMT> {
     }
 
     @Override
-    public Task<Integer> getTaskLancer(String mot, long dellayMillis) {
+    public void lancer(String mot) {
+        lancer(mot, 0);
+    }
+
+    public void lancer(String mot, long dellayMillis) {
+        Task<Integer> taskLancer = getTaskLancer(mot, dellayMillis);
+        taskLancer.setOnRunning(getOnRunning());
+        taskLancer.setOnSucceeded(getOnSucceeded());
+        taskLancer.setOnCancelled(getOnCancelled());
+        new Thread(taskLancer).start();
+    }
+
+    private Task<Integer> getTaskLancer(String mot, long dellayMillis) {
         return new Task<>() {
             @Override
             protected Integer call() throws Exception {
@@ -134,7 +149,6 @@ public class MachineTuring extends Machine<TransitionMT> {
         return null;
     }
 
-    @Override
     public void step(char lettre) {
         Etat<TransitionMT> etatActif = getEtatActif();
         if (etatActif != null) {

@@ -4,6 +4,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
+import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -61,14 +63,17 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         getTextFieldEtiquette().setTextFormatter(new TextFormatter<>(textFilterAjoutTransition));
         getTextFieldEtiquette().setPrefWidth(30);
 
-        hBoxAjoutTransition = new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette());
-        hBoxLancerAutomate = new HBox(getBoutonLancer(), getTextFieldMotAutomate());
+        textFlowMot = new TextFlow();
 
-        barreDeMenu = new ToolBar(getBoutonRetourMenu(),new Separator(), getBoutonCharger(), getBoutonSauvegarder(),new Separator(), getBoutonCreerEtat(),
-                getCheckBoxEstInitial(), getCheckBoxEstTerminal(), getBoutonClear(), getBoutonSupprimer(),
-                hBoxAjoutTransition);
+        hBoxAjoutTransition = new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette());
+        hBoxLancerAutomate = new HBox(textFlowMot, getBoutonLancer(), getTextFieldMotAutomate());
+
+        barreDeMenu = new ToolBar(getBoutonRetourMenu(), new Separator(), getBoutonCharger(), getBoutonSauvegarder(),
+                new Separator(), getBoutonCreerEtat(), getCheckBoxEstInitial(), getCheckBoxEstTerminal(),
+                getBoutonClear(), getBoutonSupprimer(), hBoxAjoutTransition);
 
         initStyle();
+        initListeners();
 
         setTop(barreDeMenu);
         setBottom(hBoxLancerAutomate);
@@ -138,40 +143,49 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         }
     }
 
-    @Override
-    public void lancer() {
-        //TODO Faire des tests pour voir si les entrees sont ok
+    public void initListeners() {
         Automate automate = vueAutomate.getAutomate();
-        String mot = getTextFieldMotAutomate().getText();
-        Task<Integer> taskLancer = automate.getTaskLancer(mot, 1000);
 
-        textFlowMot = new TextFlow();
-        Text[] lettresMot = new Text[mot.length()];
-
-        taskLancer.setOnRunning(workerStateEvent -> {
-            textFlowMot.setPadding(new Insets(0, 20, 0, 0));
-            for (int i = 0; i < mot.length(); i++) {
-                lettresMot[i] = new Text(String.valueOf(mot.charAt(i)));
-                lettresMot[i].setFont(Font.font("", FontWeight.BOLD, 19));
+        ChangeListener<Number> listenerIndex = (observableValue, integer, t1) -> {
+            if (textFlowMot.getChildren().size() > t1.intValue()) {
+                textFlowMot.getChildren().get(t1.intValue())
+                        .setStyle("-fx-font-weight: bold; -fx-text-fill: #037fdb; -fx-font-size: 19");
             }
-            textFlowMot.getChildren().addAll(lettresMot);
-            hBoxLancerAutomate.getChildren().add(0, textFlowMot);
+        };
+
+        automate.indexLettreCouranteProperty().addListener(listenerIndex);
+
+        automate.setOnRunning(workerStateEvent -> {
+            String mot = automate.getMot();
+            for (int i = 0; i < mot.length(); i++) {
+                Label lettre = new Label(String.valueOf(mot.charAt(i)));
+                lettre.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
+                if (i == 0) lettre.setStyle("-fx-font-weight: bold; -fx-text-fill: #037fdb; -fx-font-size: 19");
+                textFlowMot.getChildren().add(lettre);
+            }
         });
 
-        taskLancer.valueProperty().addListener((observableValue, integer, t1) -> {
-            lettresMot[t1].setFill(Color.valueOf("#037fdb"));
+        automate.setOnCancelled(workerStateEvent -> {
+            textFlowMot.getChildren().clear();
         });
 
-        taskLancer.setOnSucceeded(workerStateEvent -> {
+        automate.setOnSucceeded(workerStateEvent -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Résultat");
             alert.setHeaderText(null);
             if (automate.motReconnu()) alert.setContentText("Mot reconnu");
             else alert.setContentText("Mot non reconnu");
             alert.showAndWait();
-            hBoxLancerAutomate.getChildren().remove(textFlowMot);
+            textFlowMot.getChildren().clear();
         });
-        automate.lancer(taskLancer);
+    }
+
+    @Override
+    public void lancer() {
+        //TODO Faire des tests pour voir si les entrees sont ok
+        Automate automate = vueAutomate.getAutomate();
+        String mot = getTextFieldMotAutomate().getText();
+        automate.lancer(mot, 1000);
     }
 
     @Override
@@ -234,6 +248,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         barreDeMenu.setStyle("-fx-spacing: 10");
         hBoxLancerAutomate.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxLancerAutomate.setPadding(new Insets(0, 10, 10, 0));
+        textFlowMot.setPadding(new Insets(0, 20, 0, 0));
     }
 
     public HBox gethBoxAjoutTransition() {
