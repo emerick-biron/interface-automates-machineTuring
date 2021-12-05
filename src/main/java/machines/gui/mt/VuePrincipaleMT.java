@@ -2,6 +2,7 @@ package machines.gui.mt;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,7 +21,8 @@ import machines.App;
 import machines.gui.VueEtat;
 import machines.gui.VueMachine;
 import machines.gui.VuePrincipale;
-import machines.logique.automates.Automate;
+import machines.gui.VueTransition;
+import machines.gui.automates.StageSupTransAtmt;
 import machines.logique.mt.MachineTuring;
 import machines.logique.mt.Mouvement;
 import machines.logique.mt.TransitionMT;
@@ -31,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
@@ -213,6 +216,38 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     private void majTextFlowRuban(String ruban) {
         textFlowRuban.getChildren().clear();
         textFlowRuban.getChildren().add(new Label(ruban));
+    }
+
+    @Override
+    public void supprimerTransitionsSelectionnees() {
+        HashSet<VueTransition<TransitionMT>> vuesTransitionADeDelectionner = new HashSet<>();
+        for (VueTransition<TransitionMT> vueTransition : getVueMachine().getVuesTransitionSelectionnes()) {
+            if (getVueMachine().getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
+                    .size() == 1) {
+                vueTransition.getVueEtatDep().getEtat().supprimerTransition(vueTransition.getTransition());
+                vuesTransitionADeDelectionner.add(vueTransition);
+            }
+        }
+
+        for (VueTransition<TransitionMT> vueTransition : vuesTransitionADeDelectionner) {
+            vueTransition.deSelectionner();
+        }
+
+        if (getVueMachine().getVuesTransitionSelectionnes().size() > 0) {
+            ObservableList<VueTransitionMT> vueTransitionMTs = FXCollections.observableArrayList();
+            for (VueTransition<TransitionMT> vueTransition : getVueMachine().getVuesTransitionSelectionnes()) {
+                if (vueTransition instanceof VueTransitionMT)
+                    vueTransitionMTs.add((VueTransitionMT) vueTransition);
+            }
+
+            StageSupTransMT stageSupTrans = new StageSupTransMT(vueTransitionMTs, getApp().getPrimaryStage());
+
+            ArrayList<VueTransitionMT> transitionsASupprimer = stageSupTrans.showOpenDialog();
+            for (VueTransitionMT vueTransition : transitionsASupprimer) {
+                vueTransition.getVueEtatDep().getEtat().supprimerTransition(vueTransition.getTransition());
+                vueTransition.deSelectionner();
+            }
+        }
     }
 
     @Override

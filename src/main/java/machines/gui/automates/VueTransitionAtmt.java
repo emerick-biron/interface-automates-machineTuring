@@ -18,7 +18,6 @@ public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
     }
 
 
-
     public TransitionAtmt getTransitionAtmt() {
         return transitionAtmt;
     }
@@ -40,14 +39,21 @@ public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
             getLabelEtiquette().layoutYProperty().bind(yPos);
         } else {
             getLabelEtiquette().layoutXProperty()
-                    .bind(getVueEtatDep().layoutXProperty().add(getVueEtatDep().getCercle().radiusProperty()).add(index * 10));
-            getLabelEtiquette().layoutYProperty()
-                    .bind(getVueEtatDep().layoutYProperty().add(getVueEtatDep().getCercle().radiusProperty().multiply(2)));
+                    .bind(getVueEtatDep().layoutXProperty().add(getVueEtatDep().getCercle().radiusProperty())
+                            .add(index * 10));
+            getLabelEtiquette().layoutYProperty().bind(getVueEtatDep().layoutYProperty()
+                    .add(getVueEtatDep().getCercle().radiusProperty().multiply(2)));
         }
     }
 
     public VueAutomate getVueAutomate() {
         return vueAutomate;
+    }
+
+    @Override
+    public String toString() {
+        return getVueEtatDep().getLabelNumEtat().getText() + " " + transitionAtmt.getEtiquette() + " " +
+                getVueEtatFin().getLabelNumEtat().getText();
     }
 }
 

@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class StageSupTrans extends Stage {
+public class StageSupTransAtmt extends Stage {
     private ScrollPane scrollPane;
     private VBox contenuScrollPane;
     private VBox contenuPrincipal;
@@ -57,7 +57,7 @@ public class StageSupTrans extends Stage {
         }
     };
 
-    public StageSupTrans(ObservableList<VueTransitionAtmt> vuesTransition, Stage primaryStage) {
+    public StageSupTransAtmt(ObservableList<VueTransitionAtmt> vuesTransition, Stage primaryStage) {
         transitionAvecCB = new HashMap<>();
         for (VueTransitionAtmt vueTransition : vuesTransition) {
             CheckBox cb = new CheckBox();
@@ -111,9 +111,7 @@ public class StageSupTrans extends Stage {
         contenuScrollPane = new VBox();
 
         for (VueTransitionAtmt key : transitionAvecCB.keySet()) {
-            Label label = new Label(
-                    key.getVueEtatDep().getLabelNumEtat().getText() + key.getLabelEtiquette().getText() +
-                            key.getVueEtatFin().getLabelNumEtat().getText());
+            Label label = new Label(key.toString());
             HBox hBox = new HBox(transitionAvecCB.get(key), label);
             hBox.setSpacing(15);
             contenuScrollPane.getChildren().add(hBox);

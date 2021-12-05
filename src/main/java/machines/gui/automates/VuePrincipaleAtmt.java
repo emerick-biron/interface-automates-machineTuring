@@ -8,9 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.TextFlow;
 import machines.App;
-import machines.gui.VueEtat;
-import machines.gui.VueMachine;
-import machines.gui.VueTransition;
+import machines.gui.*;
 import machines.logique.automates.Automate;
 import machines.logique.automates.TransitionAtmt;
 import javafx.collections.ObservableList;
@@ -20,7 +18,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import machines.gui.VuePrincipale;
 
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +101,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
                     vueTransitionAtmts.add((VueTransitionAtmt) vueTransition);
             }
 
-            StageSupTrans stageSupTrans = new StageSupTrans(vueTransitionAtmts, getApp().getPrimaryStage());
+            StageSupTransAtmt stageSupTrans = new StageSupTransAtmt(vueTransitionAtmts, getApp().getPrimaryStage());
 
             ArrayList<VueTransitionAtmt> transitionsASupprimer = stageSupTrans.showOpenDialog();
             for (VueTransitionAtmt vueTransition : transitionsASupprimer) {

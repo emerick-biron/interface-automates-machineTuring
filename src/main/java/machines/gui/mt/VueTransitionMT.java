@@ -59,4 +59,10 @@ public class VueTransitionMT extends VueTransition<TransitionMT> {
                     .add(getVueEtatDep().getCercle().radiusProperty().multiply(2)).add(index * 17));
         }
     }
+
+    @Override
+    public String toString() {
+        return getVueEtatDep().getLabelNumEtat().getText() + " " + transitionMT.getEtiquette() + " " +
+                getVueEtatFin().getLabelNumEtat().getText() + " "+transitionMT.getNouvelleLettre()+ " "+transitionMT.getMouvement();
+    }
 }
