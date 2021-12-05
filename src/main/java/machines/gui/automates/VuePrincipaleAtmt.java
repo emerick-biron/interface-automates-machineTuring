@@ -1,15 +1,11 @@
 package machines.gui.automates;
 
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.TextFlow;
 import machines.App;
 import machines.gui.VueEtat;
@@ -41,6 +37,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     private HBox hBoxLancerAutomate;
     private HBox hBoxAjoutTransition;
     private TextFlow textFlowMot;
+    private Button boutonStop;
+    private ProgressBar progressBar;
+    private Pane paneVide;
 
     private VueAutomate vueAutomate;
 
@@ -56,6 +55,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         }
         return change;
     };
+    private EventHandler<ActionEvent> eventArreter = actionEvent -> vueAutomate.getAutomate().arreter();
 
     public VuePrincipaleAtmt(App app) {
         super(app);
@@ -64,16 +64,19 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         getTextFieldEtiquette().setPrefWidth(30);
 
         textFlowMot = new TextFlow();
+        boutonStop = new Button("STOP");
+        progressBar = new ProgressBar();
+        paneVide = new Pane();
 
         hBoxAjoutTransition = new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette());
-        hBoxLancerAutomate = new HBox(textFlowMot, getBoutonLancer(), getTextFieldMotAutomate());
+        hBoxLancerAutomate = new HBox(progressBar,paneVide, textFlowMot, getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
 
         barreDeMenu = new ToolBar(getBoutonRetourMenu(), new Separator(), getBoutonCharger(), getBoutonSauvegarder(),
                 new Separator(), getBoutonCreerEtat(), getCheckBoxEstInitial(), getCheckBoxEstTerminal(),
                 getBoutonClear(), getBoutonSupprimer(), hBoxAjoutTransition);
 
         initStyle();
-        initListeners();
+        initListenersAndActions();
 
         setTop(barreDeMenu);
         setBottom(hBoxLancerAutomate);
@@ -143,8 +146,10 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         }
     }
 
-    public void initListeners() {
+    public void initListenersAndActions() {
         Automate automate = vueAutomate.getAutomate();
+
+        progressBar.progressProperty().bind(automate.progressProperty());
 
         ChangeListener<Number> listenerIndex = (observableValue, integer, t1) -> {
             if (textFlowMot.getChildren().size() > t1.intValue()) {
@@ -156,17 +161,13 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         automate.indexLettreCouranteProperty().addListener(listenerIndex);
 
         automate.setOnRunning(workerStateEvent -> {
+            textFlowMot.getChildren().clear();
             String mot = automate.getMot();
             for (int i = 0; i < mot.length(); i++) {
                 Label lettre = new Label(String.valueOf(mot.charAt(i)));
                 lettre.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
-                if (i == 0) lettre.setStyle("-fx-font-weight: bold; -fx-text-fill: #037fdb; -fx-font-size: 19");
                 textFlowMot.getChildren().add(lettre);
             }
-        });
-
-        automate.setOnCancelled(workerStateEvent -> {
-            textFlowMot.getChildren().clear();
         });
 
         automate.setOnSucceeded(workerStateEvent -> {
@@ -176,8 +177,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             if (automate.motReconnu()) alert.setContentText("Mot reconnu");
             else alert.setContentText("Mot non reconnu");
             alert.showAndWait();
-            textFlowMot.getChildren().clear();
         });
+
+        boutonStop.setOnAction(eventArreter);
     }
 
     @Override
@@ -246,12 +248,24 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
 
     private void initStyle() {
         barreDeMenu.setStyle("-fx-spacing: 10");
+
         hBoxLancerAutomate.setAlignment(Pos.BOTTOM_RIGHT);
-        hBoxLancerAutomate.setPadding(new Insets(0, 10, 10, 0));
+        hBoxLancerAutomate.setPadding(new Insets(0, 10, 10, 10));
+
         textFlowMot.setPadding(new Insets(0, 20, 0, 0));
+
+        boutonStop.setStyle("-fx-font-weight: bold");
+
+        HBox.setHgrow(paneVide, Priority.ALWAYS);
+
+        progressBar.setStyle("-fx-accent: #037fdb");
     }
 
     public HBox gethBoxAjoutTransition() {
         return hBoxAjoutTransition;
+    }
+
+    public Button getBoutonStop() {
+        return boutonStop;
     }
 }

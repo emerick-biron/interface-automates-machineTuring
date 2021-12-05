@@ -1,7 +1,6 @@
 package machines.gui.mt;
 
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -37,7 +36,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     private RadioButton boutonGauche;
     private RadioButton boutonDroite;
     private HBox hBoxChoixMvmt;
-    private Button boutonArret;
+    private Button boutonStop;
 
     private VueMT vueMT;
 
@@ -78,9 +77,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         hBoxAjoutTransition =
                 new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette(), fieldNouvelleLette, hBoxChoixMvmt);
 
-        boutonArret = new Button("STOP");
+        boutonStop = new Button("STOP");
 
-        hBoxLancerMachine = new HBox(getBoutonLancer(), getTextFieldMotAutomate(), boutonArret);
+        hBoxLancerMachine = new HBox(getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
 
         barreDeMenu = new ToolBar(getBoutonRetourMenu(), new Separator(), getBoutonCharger(), getBoutonSauvegarder(),
                 new Separator(), getBoutonCreerEtat(), getCheckBoxEstInitial(), getCheckBoxEstTerminal(),
@@ -164,8 +163,8 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         return hBoxChoixMvmt;
     }
 
-    public Button getBoutonArret() {
-        return boutonArret;
+    public Button getBoutonStop() {
+        return boutonStop;
     }
 
     @Override
@@ -247,7 +246,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         hBoxLancerMachine.setAlignment(Pos.BOTTOM_RIGHT);
         hBoxLancerMachine.setPadding(new Insets(0, 10, 10, 0));
 
-        boutonArret.setStyle("-fx-font-weight: bold");
+        boutonStop.setStyle("-fx-font-weight: bold");
     }
 }
 

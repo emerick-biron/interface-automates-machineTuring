@@ -19,13 +19,13 @@ public class Automate extends Machine<TransitionAtmt> {
     public Automate(Set<Etat<TransitionAtmt>> etats) {
         super(etats);
         progress = new SimpleDoubleProperty();
-        indexLettreCourante = new SimpleIntegerProperty();
+        indexLettreCourante = new SimpleIntegerProperty(-1);
     }
 
     public Automate() {
         super();
         progress = new SimpleDoubleProperty();
-        indexLettreCourante = new SimpleIntegerProperty();
+        indexLettreCourante = new SimpleIntegerProperty(-1);
     }
 
     public Set<Etat<TransitionAtmt>> getEtatsActifs() {
@@ -164,12 +164,14 @@ public class Automate extends Machine<TransitionAtmt> {
                     e.active();
                 }
                 progress.set(0);
-                for (int i = 0; i < mot.length(); i++) {
-                    indexLettreCourante.set(i);
+                int i = 0;
+                while (getEtatsActifs().size() > 0 && i < mot.length()){
                     Thread.sleep(dellayMillis);
                     char lettre = mot.charAt(i);
                     step(lettre);
+                    indexLettreCourante.set(i);
                     progress.set((double) (i + 1) / mot.length());
+                    i++;
                 }
                 return null;
             }
@@ -205,6 +207,10 @@ public class Automate extends Machine<TransitionAtmt> {
         for (Etat<TransitionAtmt> e : nouveauxActifs) {
             e.active();
         }
+    }
+
+    public void arreter(){
+        if (taskLancer != null && taskLancer.isRunning()) taskLancer.cancel();
     }
 
     public double getProgress() {
