@@ -198,15 +198,22 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     public void initListenersAndActions() {
         MachineTuring mt = vueMT.getMachineTuring();
 
-        mt.setListenerValueTaskLancer((observableValue, s, t1) -> {
+        mt.setListenerValueTaskLancer((observableValue, integer, t1) -> {
             textFlowRuban.getChildren().clear();
-            for (int i = 0; i < t1.length(); i++) {
-                Label lettre = new Label(String.valueOf(t1.charAt(i)));
+            String ruban = mt.getStringRuban();
+            System.out.println(ruban);
+            System.out.println(mt.getTeteLecture());
+            System.out.println("---------------");
+            /*
+            for (int i = 0; i < ruban.length(); i++) {
+                Label lettre = new Label(String.valueOf(ruban.charAt(i)));
                 lettre.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
                 if (i == mt.getTeteLecture())
                     lettre.setStyle("-fx-font-weight: bold; -fx-text-fill: #037fdb; -fx-font-size: 19");
                 textFlowRuban.getChildren().add(lettre);
             }
+
+             */
         });
 
 

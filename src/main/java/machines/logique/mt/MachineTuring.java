@@ -16,9 +16,9 @@ import java.util.Set;
 
 public class MachineTuring extends Machine<TransitionMT> {
     private ArrayList<Character> ruban;
-    private ChangeListener<String> listenerValueTaskLancer;
+    private ChangeListener<Integer> listenerValueTaskLancer;
     private int teteLecture;
-    private Task<String> taskLancer;
+    private Task<Integer> taskLancer;
 
     public MachineTuring(Set<Etat<TransitionMT>> etats) {
         super(etats);
@@ -147,17 +147,19 @@ public class MachineTuring extends Machine<TransitionMT> {
     private void initTaskLancer(String mot, long dellayMillis) {
         taskLancer = new Task<>() {
             @Override
-            protected String call() throws Exception {
+            protected Integer call() throws Exception {
                 getEtats().forEach(Etat::desactive);
                 getEtatInitial().active();
                 setRuban(mot);
-                updateValue(getStringRuban());
+                int compteur = 0;
                 while (getEtatActif() != null && !getEtatActif().estTerminal()) {
+                    updateValue(compteur);
                     Thread.sleep(dellayMillis);
                     step(lire());
-                    updateValue(getStringRuban());
+                    compteur++;
                 }
-                return getStringRuban();
+                updateValue(compteur);
+                return compteur;
             }
         };
     }
@@ -250,11 +252,11 @@ public class MachineTuring extends Machine<TransitionMT> {
         return result.toString();
     }
 
-    public ChangeListener<String> getListenerValueTaskLancer() {
+    public ChangeListener<Integer> getListenerValueTaskLancer() {
         return listenerValueTaskLancer;
     }
 
-    public void setListenerValueTaskLancer(ChangeListener<String> listenerValueTaskLancer) {
+    public void setListenerValueTaskLancer(ChangeListener<Integer> listenerValueTaskLancer) {
         this.listenerValueTaskLancer = listenerValueTaskLancer;
     }
 }
