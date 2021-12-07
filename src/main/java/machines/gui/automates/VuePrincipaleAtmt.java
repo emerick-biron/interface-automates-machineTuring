@@ -62,6 +62,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
 
         textFlowMot = new TextFlow();
         boutonStop = new Button("STOP");
+        boutonStop.setDisable(true);
         progressBar = new ProgressBar();
         paneVide = new Pane();
 
@@ -158,6 +159,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         automate.setListenerValueTaskLancer(listenerIndex);
 
         automate.setOnRunning(workerStateEvent -> {
+            boutonStop.setDisable(false);
             textFlowMot.getChildren().clear();
             String mot = automate.getMot();
             for (int i = 0; i < mot.length(); i++) {
@@ -167,7 +169,10 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             }
         });
 
+        automate.setOnCancelled(workerStateEvent -> boutonStop.setDisable(true));
+
         automate.setOnSucceeded(workerStateEvent -> {
+            boutonStop.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Résultat");
             alert.setHeaderText(null);

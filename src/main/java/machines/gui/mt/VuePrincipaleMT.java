@@ -95,6 +95,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
                 new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette(), fieldNouvelleLette, hBoxChoixMvmt);
 
         boutonStop = new Button("STOP");
+        boutonStop.setDisable(true);
         textFlowRuban = new TextFlow();
         paneVide1 = new Pane();
         paneVide2 = new Pane();
@@ -210,8 +211,11 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             }
         });
 
+        mt.setOnRunning(workerStateEvent -> boutonStop.setDisable(false));
+        mt.setOnCancelled(workerStateEvent -> boutonStop.setDisable(true));
 
         mt.setOnSucceeded(workerStateEvent -> {
+            boutonStop.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Résultat");
             alert.setHeaderText(null);
