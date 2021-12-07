@@ -57,7 +57,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         if (!change.isContentChange()) {
             return change;
         }
-        if (!Pattern.matches("[a-z]?", input)) {
+        if (!Pattern.matches(".?", input)) {
             return null;
         }
         return change;
@@ -201,10 +201,6 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         mt.setListenerValueTaskLancer((observableValue, integer, t1) -> {
             textFlowRuban.getChildren().clear();
             String ruban = mt.getStringRuban();
-            System.out.println(ruban);
-            System.out.println(mt.getTeteLecture());
-            System.out.println("---------------");
-            /*
             for (int i = 0; i < ruban.length(); i++) {
                 Label lettre = new Label(String.valueOf(ruban.charAt(i)));
                 lettre.setStyle("-fx-font-weight: bold; -fx-font-size: 19");
@@ -212,8 +208,6 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
                     lettre.setStyle("-fx-font-weight: bold; -fx-text-fill: #037fdb; -fx-font-size: 19");
                 textFlowRuban.getChildren().add(lettre);
             }
-
-             */
         });
 
 
@@ -299,6 +293,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
                     }
                 }
                 if (nouvelleTrans) {
+                    //TODO vérifier entrées
                     Mouvement mvmt = (boutonDroite.isSelected()) ? Mouvement.DROITE : Mouvement.GAUCHE;
                     vueEtatDep.getEtat().ajoutTransition(
                             new TransitionMT(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0),

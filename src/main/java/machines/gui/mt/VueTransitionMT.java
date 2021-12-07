@@ -62,7 +62,8 @@ public class VueTransitionMT extends VueTransition<TransitionMT> {
 
     @Override
     public String toString() {
-        return getVueEtatDep().getLabelNumEtat().getText() + " " + transitionMT.getEtiquette() + " " +
-                getVueEtatFin().getLabelNumEtat().getText() + " "+transitionMT.getNouvelleLettre()+ " "+transitionMT.getMouvement();
+        return getVueEtatDep().getLabelNumEtat().getText() + " -> " + getVueEtatFin().getLabelNumEtat().getText() +
+                " : " + transitionMT.getEtiquette() + ";" + transitionMT.getNouvelleLettre() + ";" +
+                transitionMT.getMouvement().toString().charAt(0);
     }
 }
