@@ -28,8 +28,8 @@ public class VueEtat<T extends Transition<T>> extends StackPane {
     private ImageView imageViewTerminal;
     private BooleanProperty estSelectionne;
     private ChangeListener<Boolean> changementActivationEtat = (observableValue, ancienneValeur, nouvelleValeur) -> {
-        if (observableValue.getValue()) getCercle().setFill(Color.GREEN);
-        else getCercle().setFill(Color.RED);
+        if (observableValue.getValue()) getCercle().setFill(Color.valueOf("#079423"));
+        else getCercle().setFill(Color.valueOf("#037fdb"));
     };
     private ChangeListener<Boolean> changementEstInitial = (observableValue, aBoolean, t1) -> {
         if (observableValue.getValue()) getChildren().add(getImageViewInitial());
@@ -65,7 +65,7 @@ public class VueEtat<T extends Transition<T>> extends StackPane {
         labelNumEtat = new Label();
         imageViewInitial = new ImageView("etat_initial.png");
         imageViewTerminal = new ImageView("etat_terminal.png");
-        cercle = new Circle(50, 50, 46, Color.RED);
+        cercle = new Circle(50, 50, 46, Color.valueOf("#037fdb"));
 
         getChildren().add(cercle);
         init();
