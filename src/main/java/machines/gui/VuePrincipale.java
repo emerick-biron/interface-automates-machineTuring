@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -28,6 +29,7 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
     private Button boutonClear;
     private Button boutonLancer;
     private Button boutonRetourMenu;
+    private Spinner<Double> spinnerVitesse;
 
     private CheckBox checkBoxEstInitial;
     private CheckBox checkBoxEstTerminal;
@@ -156,6 +158,8 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
         checkBoxEstTerminal = new CheckBox("Terminal");
         textFieldEtiquette = new TextField();
         textFieldMotAutomate = new TextField();
+        spinnerVitesse = new Spinner<>(0, 2, 1, 0.01);
+        spinnerVitesse.setEditable(true);
     }
 
     public Button getBoutonRetourMenu() {
@@ -196,6 +200,10 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
 
     public TextField getTextFieldEtiquette() {
         return textFieldEtiquette;
+    }
+
+    public Spinner<Double> getSpinnerVitesse() {
+        return spinnerVitesse;
     }
 }
 

@@ -101,7 +101,8 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         paneVide2 = new Pane();
 
         hBoxLancerMachine =
-                new HBox(paneVide1, textFlowRuban, paneVide2, getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
+                new HBox(paneVide1, textFlowRuban, paneVide2, getBoutonLancer(), getTextFieldMotAutomate(),
+                        getSpinnerVitesse(), boutonStop);
 
         boutonSetInitial = new Button("Initial");
 
@@ -211,17 +212,24 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             }
         });
 
-        mt.setOnRunning(workerStateEvent -> boutonStop.setDisable(false));
-        mt.setOnCancelled(workerStateEvent -> boutonStop.setDisable(true));
+        mt.setOnRunning(workerStateEvent -> {
+            boutonStop.setDisable(false);
+            getSpinnerVitesse().setDisable(true);
+        });
+        mt.setOnCancelled(workerStateEvent -> {
+            boutonStop.setDisable(true);
+            getSpinnerVitesse().setDisable(false);
+        });
 
         mt.setOnSucceeded(workerStateEvent -> {
+            getSpinnerVitesse().setDisable(false);
             boutonStop.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Résultat");
             alert.setHeaderText(null);
             if (mt.motReconnu()) alert.setContentText("Le calcul est terminé et est valide");
             else alert.setContentText("Le calcul est terminé mais il n'est pas valide");
-            alert.setHeaderText("Résultat obtenu : "+mt.getStringRuban());
+            alert.setHeaderText("Résultat obtenu : " + mt.getStringRuban());
             alert.showAndWait();
         });
 
@@ -317,8 +325,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
         hBoxAjoutTransition.setAlignment(Pos.CENTER);
 
-        hBoxLancerMachine.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxLancerMachine.setAlignment(Pos.CENTER_RIGHT);
         hBoxLancerMachine.setPadding(new Insets(0, 10, 10, 0));
+        getSpinnerVitesse().setPrefWidth(75);
 
         boutonStop.setStyle("-fx-font-weight: bold");
 

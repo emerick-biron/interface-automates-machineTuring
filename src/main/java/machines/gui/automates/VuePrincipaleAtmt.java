@@ -37,6 +37,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     private Button boutonStop;
     private ProgressBar progressBar;
     private Pane paneVide;
+    private Label labelSpinner;
 
     private VueAutomate vueAutomate;
 
@@ -67,7 +68,8 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         paneVide = new Pane();
 
         hBoxAjoutTransition = new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette());
-        hBoxLancerAutomate = new HBox(progressBar,paneVide, textFlowMot, getBoutonLancer(), getTextFieldMotAutomate(), boutonStop);
+        hBoxLancerAutomate = new HBox(progressBar, paneVide, textFlowMot, getBoutonLancer(), getTextFieldMotAutomate(),
+                getSpinnerVitesse(), boutonStop);
 
         barreDeMenu = new ToolBar(getBoutonRetourMenu(), new Separator(), getBoutonCharger(), getBoutonSauvegarder(),
                 new Separator(), getBoutonCreerEtat(), getCheckBoxEstInitial(), getCheckBoxEstTerminal(),
@@ -130,8 +132,8 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             if (etiquette.length() >= 1) {
                 boolean nouvelleTrans = true;
                 for (TransitionAtmt t : getVueMachine().getMachine().getTransitions()) {
-                    if (t.getEtatDepart() == vueEtatDep.getEtat() && t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
-                            t.getEtiquette() == etiquette.charAt(0)) {
+                    if (t.getEtatDepart() == vueEtatDep.getEtat() && t.getEtatArrivee() == vueEtatArrivee.getEtat() && t.getEtiquette() == etiquette.charAt(
+                            0)) {
                         nouvelleTrans = false;
                         break;
                     }
@@ -159,6 +161,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         automate.setListenerValueTaskLancer(listenerIndex);
 
         automate.setOnRunning(workerStateEvent -> {
+            getSpinnerVitesse().setDisable(true);
             boutonStop.setDisable(false);
             textFlowMot.getChildren().clear();
             String mot = automate.getMot();
@@ -169,9 +172,13 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             }
         });
 
-        automate.setOnCancelled(workerStateEvent -> boutonStop.setDisable(true));
+        automate.setOnCancelled(workerStateEvent -> {
+            boutonStop.setDisable(true);
+            getSpinnerVitesse().setDisable(false);
+        });
 
         automate.setOnSucceeded(workerStateEvent -> {
+            getSpinnerVitesse().setDisable(false);
             boutonStop.setDisable(true);
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Résultat");
@@ -251,8 +258,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     private void initStyle() {
         barreDeMenu.setStyle("-fx-spacing: 10");
 
-        hBoxLancerAutomate.setAlignment(Pos.BOTTOM_RIGHT);
+        hBoxLancerAutomate.setAlignment(Pos.CENTER_RIGHT);
         hBoxLancerAutomate.setPadding(new Insets(0, 10, 10, 10));
+        getSpinnerVitesse().setPrefWidth(75);
 
         textFlowMot.setPadding(new Insets(0, 20, 0, 0));
 
