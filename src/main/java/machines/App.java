@@ -2,6 +2,7 @@ package machines;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import machines.gui.VueDepart;
 import machines.gui.VuePrincipale;
 import machines.gui.automates.VuePrincipaleAtmt;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class App extends Application {
     private Stage primaryStage;
     private VueDepart vueDepart;
+    private static final Image ICON_IMAGE = new Image("icon.png");
     private VuePrincipale<? extends Transition<?>> vuePrincipale;
     private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> {
         vueDepart.hide();
@@ -49,7 +51,9 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         this.primaryStage = primaryStage;
+        primaryStage.getIcons().add(ICON_IMAGE);
         vueDepart = new VueDepart();
+        vueDepart.getIcons().add(ICON_IMAGE);
         vueDepart.setTitle("Interface pour automates et machine de Turing");
         vueDepart.getBoutonAutomate().setOnAction(eventLancerAutomate);
         vueDepart.getBoutonTuring().setOnAction(eventLancerMT);
