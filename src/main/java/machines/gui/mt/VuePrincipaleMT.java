@@ -278,7 +278,8 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         //TODO Faire des tests pour voir si les entrees sont ok
         MachineTuring mt = vueMT.getMachineTuring();
         String mot = getTextFieldMotAutomate().getText();
-        mt.lancer(mot, 1000);
+        long dellayMillis = Double.valueOf(getSpinnerVitesse().getValue() * 1000).longValue();
+        mt.lancer(mot, dellayMillis);
     }
 
     @Override

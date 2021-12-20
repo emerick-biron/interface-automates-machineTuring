@@ -196,7 +196,8 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         //TODO Faire des tests pour voir si les entrees sont ok
         Automate automate = vueAutomate.getAutomate();
         String mot = getTextFieldMotAutomate().getText();
-        automate.lancer(mot, 1000);
+        long dellayMillis = Double.valueOf(getSpinnerVitesse().getValue() * 1000).longValue();
+        automate.lancer(mot, dellayMillis);
     }
 
     @Override
