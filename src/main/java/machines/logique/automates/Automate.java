@@ -33,11 +33,6 @@ public class Automate extends Machine<TransitionAtmt> {
         return etatsActifs;
     }
 
-    @Override
-    public void clear() {
-        super.clear();
-    }
-
     /**
      * Permet de creer un automate a partir d'un fichier
      *

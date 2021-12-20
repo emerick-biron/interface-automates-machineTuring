@@ -219,8 +219,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Résultat");
             alert.setHeaderText(null);
-            if (mt.motReconnu()) alert.setContentText("Mot reconnu");
-            else alert.setContentText("Mot non reconnu");
+            if (mt.motReconnu()) alert.setContentText("Le calcul est terminé et est valide");
+            else alert.setContentText("Le calcul est terminé mais il n'est pas valide");
+            alert.setHeaderText("Résultat obtenu : "+mt.getStringRuban());
             alert.showAndWait();
         });
 
