@@ -193,7 +193,6 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
 
     @Override
     public void lancer() {
-        //TODO Faire des tests pour voir si les entrees sont ok
         Automate automate = vueAutomate.getAutomate();
         String mot = getTextFieldMotAutomate().getText();
         long dellayMillis = Double.valueOf(getSpinnerVitesse().getValue() * 1000).longValue();

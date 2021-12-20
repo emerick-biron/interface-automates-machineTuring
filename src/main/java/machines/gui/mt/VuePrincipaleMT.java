@@ -275,7 +275,6 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
     @Override
     public void lancer() {
-        //TODO Faire des tests pour voir si les entrees sont ok
         MachineTuring mt = vueMT.getMachineTuring();
         String mot = getTextFieldMotAutomate().getText();
         long dellayMillis = Double.valueOf(getSpinnerVitesse().getValue() * 1000).longValue();
@@ -307,7 +306,6 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
                     }
                 }
                 if (nouvelleTrans) {
-                    //TODO vérifier entrées
                     Mouvement mvmt = (boutonDroite.isSelected()) ? Mouvement.DROITE : Mouvement.GAUCHE;
                     vueEtatDep.getEtat().ajoutTransition(
                             new TransitionMT(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0),
