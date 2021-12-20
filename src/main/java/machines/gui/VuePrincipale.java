@@ -2,10 +2,7 @@ package machines.gui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import machines.App;
@@ -30,6 +27,7 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
     private Button boutonLancer;
     private Button boutonRetourMenu;
     private Spinner<Double> spinnerVitesse;
+    private ScrollPane scrollPaneCenter;
 
     private CheckBox checkBoxEstInitial;
     private CheckBox checkBoxEstTerminal;
@@ -60,7 +58,8 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
         initSetOnAction();
 
         vueMachine = creerVueMachine();
-        setCenter(vueMachine);
+        scrollPaneCenter = new ScrollPane(vueMachine);
+        setCenter(scrollPaneCenter);
 
         ctrlPresse = false;
         setOnKeyPressed(eventToucheCtrlPresse);
@@ -204,6 +203,10 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
 
     public Spinner<Double> getSpinnerVitesse() {
         return spinnerVitesse;
+    }
+
+    public ScrollPane getScrollPaneCenter() {
+        return scrollPaneCenter;
     }
 }
 

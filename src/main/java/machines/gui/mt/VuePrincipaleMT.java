@@ -325,7 +325,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         hBoxAjoutTransition.setAlignment(Pos.CENTER);
 
         hBoxLancerMachine.setAlignment(Pos.CENTER_RIGHT);
-        hBoxLancerMachine.setPadding(new Insets(0, 10, 10, 0));
+        hBoxLancerMachine.setPadding(new Insets(5));
         getSpinnerVitesse().setPrefWidth(75);
 
         boutonStop.setStyle("-fx-font-weight: bold");

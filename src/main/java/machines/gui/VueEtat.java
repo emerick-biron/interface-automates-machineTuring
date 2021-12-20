@@ -99,7 +99,7 @@ public class VueEtat<T extends Transition<T>> extends StackPane {
         return labelNumEtat;
     }
 
-    public int getNumEtat(){
+    public int getNumEtat() {
         return Integer.parseInt(labelNumEtat.getText());
     }
 
@@ -118,6 +118,8 @@ public class VueEtat<T extends Transition<T>> extends StackPane {
                 selectionner();
             }
 
+            vueMachine.setMinSize(vueMachine.getWidth(), vueMachine.getHeight());
+
             vueMachine.getVuePrincipale().unbindCheckBoxes();
 
             CheckBox cbEstInitial = vueMachine.getVuePrincipale().getCheckBoxEstInitial();
@@ -131,7 +133,10 @@ public class VueEtat<T extends Transition<T>> extends StackPane {
             mouseY = mouseEvent.getSceneY();
         });
 
-        setOnMouseReleased(mouseEvent -> setCursor(Cursor.HAND));
+        setOnMouseReleased(mouseEvent -> {
+            setCursor(Cursor.HAND);
+            vueMachine.setMinSize(-1, -1);
+        });
 
         setOnMouseDragged(mouseEvent -> {
             //Permet de deplacer la vueEtat a la souris
@@ -140,13 +145,13 @@ public class VueEtat<T extends Transition<T>> extends StackPane {
             double newXpos = getLayoutX() + deltaX;
             double newYPos = getLayoutY() + deltaY;
 
-            //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-            if (newXpos >= 0 && newXpos + getWidth() <= vueMachine.getBoundsInLocal().getMaxX()) {
+            //Permet de faire en sorte que la vue etat ait un X négatif
+            if (newXpos >= 0) {
                 setLayoutX(newXpos);
                 mouseX = mouseEvent.getSceneX();
             }
-            //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
-            if (newYPos >= 0 && newYPos + getHeight() <= vueMachine.getBoundsInLocal().getMaxY() - 25) {
+            //Permet de faire en sorte que la vue etat ait un Y négatif
+            if (newYPos >= 0) {
                 setLayoutY(newYPos);
                 mouseY = mouseEvent.getSceneY();
             }

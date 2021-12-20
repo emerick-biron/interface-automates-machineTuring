@@ -259,7 +259,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         barreDeMenu.setStyle("-fx-spacing: 10");
 
         hBoxLancerAutomate.setAlignment(Pos.CENTER_RIGHT);
-        hBoxLancerAutomate.setPadding(new Insets(0, 10, 10, 10));
+        hBoxLancerAutomate.setPadding(new Insets(5));
         getSpinnerVitesse().setPrefWidth(75);
 
         textFlowMot.setPadding(new Insets(0, 20, 0, 0));

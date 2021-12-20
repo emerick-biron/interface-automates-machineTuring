@@ -180,40 +180,7 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
             ligne = bf.readLine();
         }
 
-        double largeurVA;
-        double hauteurVA;
-
         ligne = bf.readLine();
-        if (ligne.contains("DIM")) {
-            Screen sreen = Screen.getPrimary();
-            String[] dimensions = ligne.split(" ");
-            double largeurVP = Double.parseDouble(dimensions[1]);
-            double hauteurVP = Double.parseDouble(dimensions[2]);
-            double largeurEcran = sreen.getBounds().getWidth();
-            double hauteurEcran = sreen.getBounds().getHeight();
-            double deltaHauteur = 1;
-            double deltaLargeur = 1;
-
-            if (largeurEcran < largeurVP) {
-                deltaLargeur = largeurEcran / largeurVP;
-            }
-            if (hauteurEcran < hauteurVP) {
-                deltaHauteur = hauteurEcran / hauteurVP;
-            }
-
-            largeurVA = Double.parseDouble(dimensions[3]) * deltaLargeur;
-            hauteurVA = Double.parseDouble(dimensions[4]) * deltaHauteur;
-
-            Stage primaryStage = getVuePrincipale().getApp().getPrimaryStage();
-
-            primaryStage.setWidth(largeurVP * deltaLargeur);
-            primaryStage.setHeight(hauteurVP * deltaHauteur);
-
-            ligne = bf.readLine();
-        } else {
-            largeurVA = getWidth();
-            hauteurVA = getHeight();
-        }
 
         ArrayList<Etat<T>> etats = new ArrayList<>(machine.getEtats());
 
@@ -231,12 +198,12 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
                 VueEtat<T> vueEtat = getVueEtat(etat);
 
                 if (vueEtat != null) {
-                    //Permet de faire en sorte que la vue etat ne sorte pas de la vue automate
+                    //Permet de faire que les coordonnées de la vue etat soient positives
                     double taille = vueEtat.getCercle().getRadius() * 2 + 20;
-                    if (xPos >= 0 && xPos + taille <= largeurVA) {
+                    if (xPos >= 0) {
                         vueEtat.setLayoutX(xPos);
                     }
-                    if (yPos >= 0 && yPos + taille <= hauteurVA - 50) {
+                    if (yPos >= 0) {
                         vueEtat.setLayoutY(yPos);
                     }
 
@@ -258,13 +225,6 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
         BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
         bufferedWriter.write("###");
-        bufferedWriter.newLine();
-
-        Stage primaryStage = getVuePrincipale().getApp().getPrimaryStage();
-
-        bufferedWriter
-                .write("DIM: " + primaryStage.getWidth() + " " + primaryStage.getHeight() + " " + getWidth() + " " +
-                        getHeight());
         bufferedWriter.newLine();
 
         ArrayList<Etat<T>> etats = new ArrayList<>(machine.getEtats());
