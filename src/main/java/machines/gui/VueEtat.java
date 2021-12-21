@@ -11,11 +11,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import machines.gui.automates.VueAutomate;
-import machines.gui.automates.VueTransitionAtmt;
 import machines.logique.Etat;
 import machines.logique.Transition;
-import machines.logique.automates.TransitionAtmt;
 
 public class VueEtat<T extends Transition<T>> extends StackPane {
     private Etat<T> etat;
@@ -32,12 +29,12 @@ public class VueEtat<T extends Transition<T>> extends StackPane {
         else getCercle().setFill(Color.valueOf("#037fdb"));
     };
     private ChangeListener<Boolean> changementEstInitial = (observableValue, aBoolean, t1) -> {
-        if (observableValue.getValue()) getChildren().add(getImageViewInitial());
-        else getChildren().remove(getImageViewInitial());
+        if (observableValue.getValue()) getChildren().add(imageViewInitial);
+        else getChildren().remove(imageViewInitial);
     };
     private ChangeListener<Boolean> changementEstTerminal = (observableValue, aBoolean, t1) -> {
-        if (observableValue.getValue()) getChildren().add(getImageViewTerminal());
-        else getChildren().remove(getImageViewTerminal());
+        if (observableValue.getValue()) getChildren().add(imageViewTerminal);
+        else getChildren().remove(imageViewTerminal);
     };
     private ChangeListener<Boolean> changementSelection = (observableValue, aBoolean, t1) -> {
         if (aBoolean != t1) {
@@ -99,12 +96,12 @@ public class VueEtat<T extends Transition<T>> extends StackPane {
         return labelNumEtat;
     }
 
-    public int getNumEtat() {
-        return Integer.parseInt(labelNumEtat.getText());
-    }
-
     public void setLabelNumEtat(int numEtat) {
         labelNumEtat.setText(String.valueOf(numEtat));
+    }
+
+    public int getNumEtat() {
+        return Integer.parseInt(labelNumEtat.getText());
     }
 
     private void initMouseEvents() {
