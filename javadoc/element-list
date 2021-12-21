@@ -1,0 +1,8 @@
+module:projet_s3_desbos_moret_roussel_biron
+machines
+machines.gui
+machines.gui.automates
+machines.gui.mt
+machines.logique
+machines.logique.automates
+machines.logique.mt
