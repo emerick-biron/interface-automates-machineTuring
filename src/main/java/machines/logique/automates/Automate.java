@@ -1,13 +1,17 @@
 package machines.logique.automates;
 
-import javafx.beans.property.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ReadOnlyDoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Task;
 import machines.logique.Etat;
 import machines.logique.Machine;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Automate extends Machine<TransitionAtmt> {
     private DoubleProperty progress;
@@ -153,12 +157,10 @@ public class Automate extends Machine<TransitionAtmt> {
             @Override
             protected Integer call() throws Exception {
                 getEtats().forEach(Etat::desactive);
-                for (Etat<TransitionAtmt> e : getEtatsInitiaux()) {
-                    e.active();
-                }
+                getEtatsInitiaux().forEach(Etat::active);
                 progress.set(0);
                 int i = 0;
-                while (getEtatsActifs().size() > 0 && i < mot.length()){
+                while (getEtatsActifs().size() > 0 && i < mot.length()) {
                     Thread.sleep(dellayMillis);
                     char lettre = mot.charAt(i);
                     step(lettre);
@@ -202,7 +204,7 @@ public class Automate extends Machine<TransitionAtmt> {
         }
     }
 
-    public void arreter(){
+    public void arreter() {
         if (taskLancer != null && taskLancer.isRunning()) taskLancer.cancel();
     }
 
