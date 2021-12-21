@@ -2,22 +2,25 @@ package machines.gui.automates;
 
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.text.TextFlow;
-import machines.App;
-import machines.gui.*;
-import machines.logique.automates.Automate;
-import machines.logique.automates.TransitionAtmt;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.text.TextFlow;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import machines.App;
+import machines.gui.VueEtat;
+import machines.gui.VueMachine;
+import machines.gui.VuePrincipale;
+import machines.gui.VueTransition;
+import machines.logique.automates.Automate;
+import machines.logique.automates.TransitionAtmt;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,6 +82,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         setBottom(hBoxLancerAutomate);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void supprimerTransitionsSelectionnees() {
         HashSet<VueTransition<TransitionAtmt>> vuesTransitionADeDelectionner = new HashSet<>();
@@ -90,9 +96,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             }
         }
 
-        for (VueTransition<TransitionAtmt> vueTransition : vuesTransitionADeDelectionner) {
-            vueTransition.deSelectionner();
-        }
+        vuesTransitionADeDelectionner.forEach(VueTransition::deSelectionner);
 
         if (getVueMachine().getVuesTransitionSelectionnes().size() > 0) {
             ObservableList<VueTransitionAtmt> vueTransitionAtmts = FXCollections.observableArrayList();
@@ -111,6 +115,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void ajouterTransition() {
         ObservableList<VueEtat<TransitionAtmt>> vuesEtatSelectionnes = getVueMachine().getVuesEtatSelectionnes();
@@ -129,8 +136,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             if (etiquette.length() >= 1) {
                 boolean nouvelleTrans = true;
                 for (TransitionAtmt t : getVueMachine().getMachine().getTransitions()) {
-                    if (t.getEtatDepart() == vueEtatDep.getEtat() && t.getEtatArrivee() == vueEtatArrivee.getEtat() && t.getEtiquette() == etiquette.charAt(
-                            0)) {
+                    if (t.getEtatDepart() == vueEtatDep.getEtat() && t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
+                            t.getEtiquette() == etiquette.charAt(
+                                    0)) {
                         nouvelleTrans = false;
                         break;
                     }
@@ -143,7 +151,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         }
     }
 
-    public void initListenersAndActions() {
+    private void initListenersAndActions() {
         Automate automate = vueAutomate.getAutomate();
 
         progressBar.progressProperty().bind(automate.progressProperty());
@@ -188,6 +196,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         boutonStop.setOnAction(eventArreter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void lancer() {
         Automate automate = vueAutomate.getAutomate();
@@ -196,6 +207,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         automate.lancer(mot, dellayMillis);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sauvegarder() {
         fileChooser = new FileChooser();
@@ -211,9 +225,8 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             try {
                 String fileName = selectedFile.getAbsolutePath();
                 int index = selectedFile.getName().lastIndexOf('.');
-                if (index < 0 || !selectedFile.getName().substring(index).equals(".atmt")) {
+                if (index < 0 || !selectedFile.getName().substring(index).equals(".atmt"))
                     fileName = fileName.concat(".atmt");
-                }
 
                 getVueMachine().sauvegarder(fileName);
             } catch (IOException e) {
@@ -222,6 +235,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void charger() {
         fileChooser = new FileChooser();
@@ -242,6 +258,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public VueMachine<TransitionAtmt> creerVueMachine() {
         vueAutomate = new VueAutomate(new Automate(), this);
