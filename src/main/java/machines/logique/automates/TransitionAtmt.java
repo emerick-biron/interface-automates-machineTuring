@@ -7,6 +7,4 @@ public class TransitionAtmt extends Transition<TransitionAtmt> {
     public TransitionAtmt(Etat<TransitionAtmt> etatDepart, Etat<TransitionAtmt> etatArrivee, char etiquette) {
         super(etatDepart, etatArrivee, etiquette);
     }
-
-
 }
