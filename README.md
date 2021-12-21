@@ -42,7 +42,8 @@ pour la partie interface.
 Lors du lancement de l'application une fenêtre s'ouvrira et vous permettra de choisir de lancer l'application de gestion
 d'automates [[1]](#fentre-de-dpart) ou l'application de gestion de machines de Turing [[2]](#fentre-de-dpart)
 
-### Fenêtre de départ :
+### Fenêtre de départ 
+
 
 ![fenetre_depart](ressources/fenetre_depart.png)
 
