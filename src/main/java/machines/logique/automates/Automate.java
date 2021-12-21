@@ -135,6 +135,12 @@ public class Automate extends Machine<TransitionAtmt> {
         lancer(mot, 0);
     }
 
+    /**
+     * Lance l'automate
+     *
+     * @param mot          mot a donner a l'automate
+     * @param dellayMillis temps d'attente entre chauqe etape
+     */
     public void lancer(String mot, long dellayMillis) {
         this.mot = mot;
         if (taskLancer == null) {
@@ -189,21 +195,16 @@ public class Automate extends Machine<TransitionAtmt> {
         return res;
     }
 
-    public void step(char lettre) {
+    private void step(char lettre) {
         Set<Etat<TransitionAtmt>> nouveauxActifs = new HashSet<>();
-        for (Etat<TransitionAtmt> e : getEtatsActifs()) {
-            nouveauxActifs.addAll(e.cible(lettre));
-        }
-
-        for (Etat<TransitionAtmt> e : getEtatsActifs()) {
-            e.desactive();
-        }
-
-        for (Etat<TransitionAtmt> e : nouveauxActifs) {
-            e.active();
-        }
+        getEtatsActifs().forEach(e -> nouveauxActifs.addAll(e.cible(lettre)));
+        getEtatsActifs().forEach(Etat::desactive);
+        nouveauxActifs.forEach(Etat::active);
     }
 
+    /**
+     * Arrete l'execution de l'automate
+     */
     public void arreter() {
         if (taskLancer != null && taskLancer.isRunning()) taskLancer.cancel();
     }
