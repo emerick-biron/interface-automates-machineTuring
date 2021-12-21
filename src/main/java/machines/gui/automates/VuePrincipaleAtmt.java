@@ -38,11 +38,9 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     private ProgressBar progressBar;
     private Pane paneVide;
     private Label labelSpinner;
-
     private VueAutomate vueAutomate;
-
     private FileChooser fileChooser;
-
+    private EventHandler<ActionEvent> eventArreter = actionEvent -> vueAutomate.getAutomate().arreter();
     private UnaryOperator<TextFormatter.Change> textFilterAjoutTransition = change -> {
         String input = change.getControlNewText();
         if (!change.isContentChange()) {
@@ -53,7 +51,6 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         }
         return change;
     };
-    private EventHandler<ActionEvent> eventArreter = actionEvent -> vueAutomate.getAutomate().arreter();
 
     public VuePrincipaleAtmt(App app) {
         super(app);
@@ -271,7 +268,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         progressBar.setStyle("-fx-accent: #037fdb");
     }
 
-    public HBox gethBoxAjoutTransition() {
+    public HBox getHBoxAjoutTransition() {
         return hBoxAjoutTransition;
     }
 
