@@ -251,8 +251,8 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     @Override
     public void supprimerTransitionsSelectionnees() {
         HashSet<VueTransition<TransitionMT>> vuesTransitionADeDelectionner = new HashSet<>();
-        for (VueTransition<TransitionMT> vueTransition : getVueMachine().getVuesTransitionSelectionnes()) {
-            if (getVueMachine().getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
+        for (VueTransition<TransitionMT> vueTransition : vueMT.getVuesTransitionSelectionnes()) {
+            if (vueMT.getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
                     .size() == 1) {
                 vueTransition.getVueEtatDep().getEtat().supprimerTransition(vueTransition.getTransition());
                 vuesTransitionADeDelectionner.add(vueTransition);
@@ -261,7 +261,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
         vuesTransitionADeDelectionner.forEach(VueTransition::deSelectionner);
 
-        if (getVueMachine().getVuesTransitionSelectionnes().size() > 0) {
+        if (vueMT.getVuesTransitionSelectionnes().size() > 0) {
             ObservableList<VueTransitionMT> vueTransitionMTs = FXCollections.observableArrayList();
             for (VueTransition<TransitionMT> vueTransition : vueMT.getVuesTransitionSelectionnes()) {
                 if (vueTransition instanceof VueTransitionMT) vueTransitionMTs.add((VueTransitionMT) vueTransition);

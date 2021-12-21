@@ -89,8 +89,8 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     @Override
     public void supprimerTransitionsSelectionnees() {
         HashSet<VueTransition<TransitionAtmt>> vuesTransitionADeDelectionner = new HashSet<>();
-        for (VueTransition<TransitionAtmt> vueTransition : getVueMachine().getVuesTransitionSelectionnes()) {
-            if (getVueMachine().getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
+        for (VueTransition<TransitionAtmt> vueTransition : vueAutomate.getVuesTransitionSelectionnes()) {
+            if (vueAutomate.getVuesTransition(vueTransition.getVueEtatDep(), vueTransition.getVueEtatFin())
                     .size() == 1) {
                 vueTransition.getVueEtatDep().getEtat().supprimerTransition(vueTransition.getTransition());
                 vuesTransitionADeDelectionner.add(vueTransition);
@@ -99,7 +99,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
 
         vuesTransitionADeDelectionner.forEach(VueTransition::deSelectionner);
 
-        if (getVueMachine().getVuesTransitionSelectionnes().size() > 0) {
+        if (vueAutomate.getVuesTransitionSelectionnes().size() > 0) {
             ObservableList<VueTransitionAtmt> vueTransitionAtmts = FXCollections.observableArrayList();
             for (VueTransition<TransitionAtmt> vueTransition : vueAutomate.getVuesTransitionSelectionnes()) {
                 if (vueTransition instanceof VueTransitionAtmt)
@@ -121,7 +121,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
      */
     @Override
     public void ajouterTransition() {
-        ObservableList<VueEtat<TransitionAtmt>> vuesEtatSelectionnes = getVueMachine().getVuesEtatSelectionnes();
+        ObservableList<VueEtat<TransitionAtmt>> vuesEtatSelectionnes = vueAutomate.getVuesEtatSelectionnes();
         if (vuesEtatSelectionnes.size() > 2 || vuesEtatSelectionnes.size() < 1) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Problème ajout transition");
@@ -136,7 +136,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
             else vueEtatArrivee = vuesEtatSelectionnes.get(1);
             if (etiquette.length() >= 1) {
                 boolean nouvelleTrans = true;
-                for (TransitionAtmt t : getVueMachine().getMachine().getTransitions()) {
+                for (TransitionAtmt t : vueAutomate.getAutomate().getTransitions()) {
                     if (t.getEtatDepart() == vueEtatDep.getEtat() && t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
                             t.getEtiquette() == etiquette.charAt(
                                     0)) {
