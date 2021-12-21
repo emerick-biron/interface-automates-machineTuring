@@ -48,15 +48,15 @@ pour la partie interface.
 Lors du lancement de l'application une fenêtre s'ouvrira et vous permettra de choisir de lancer l'application de gestion
 d'automates ou l'application de gestion de machines de Turing [cf Figure1](#figure1).
 
-Il est aussi possible de charger directement des fichier .atmt ou .mt à l'aide des menus déroulants sous chaque boutons.
+Il est aussi possible de charger directement des fichier .atmt ou .mt à l'aide des menus déroulants sous chaque bouton.
 
-![fenetre_depart](ressources/fenetre_depart.png)
+<a name="figure1"></a>![fenetre_depart](ressources/fenetre_depart.png)
 
-<a name="figure1"></a>*Figure1 : Fenetre de depart*
+*Figure1 - Fenetre de depart*
 
-### Automates
+### 2 - Automates
 
-#### Les états
+#### 2.1 - Les états
 
 Pour ajouter un état à l'automate, il suffit de cliquer sur le bouton "ajouter état" [[3]](#interface-dun-automate-).
 Pour qu'un état soit initial ou final (représenté par les - et les + à côté des états) [[4]](#interface-dun-automate-),
@@ -94,19 +94,18 @@ Il est possible de charger [[12]](#interface-dun-automate-) ou de sauvegarder [[
 automate sous la forme de fichiers _.atmt_. Il est aussi possible de supprimer l'ensemble d'un automate en appuyant sur
 le bouton "Clear" [[14]](#interface-dun-automate-).
 
-#### Interface d'un automate
+<a name="figure2"></a>![fenetre_automate](ressources/fenetre_automate.PNG)
 
-![fenetre_automate](ressources/fenetre_automate.PNG)
+*Figure 2 - Interface d'un automate*
 
-#### Ajout d'une transition
+<a name="figure3"></a>![ajout_trans](ressources/ajout_trans.PNG)
 
-![ajout_trans](ressources/ajout_trans.PNG)
+*Figure 3 - Ajout d'une transition*
 
-#### Suppression de multiples transition
+<a name="figure4"></a>![dialog_sup_trans](ressources/dialog_sup_trans.PNG)
 
-![plusieurs_trans_select](ressources/plusieurs_trans_select.PNG)
-![dialog_sup_trans](ressources/dialog_sup_trans.PNG)
+*Figure 4 - Fenêtre de dialogue pour la suppression de transitions*
 
-#### Lancement d'un automate
+<a name="figure5"></a>![lancement_automate](ressources/lancement_automate.gif)
 
-![lancement_automate](ressources/lancement_automate.gif)
+*Figure 5 - Lancement d'un automate*
