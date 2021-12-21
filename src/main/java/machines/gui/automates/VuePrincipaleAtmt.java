@@ -101,7 +101,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
 
         if (getVueMachine().getVuesTransitionSelectionnes().size() > 0) {
             ObservableList<VueTransitionAtmt> vueTransitionAtmts = FXCollections.observableArrayList();
-            for (VueTransition<TransitionAtmt> vueTransition : getVueMachine().getVuesTransitionSelectionnes()) {
+            for (VueTransition<TransitionAtmt> vueTransition : vueAutomate.getVuesTransitionSelectionnes()) {
                 if (vueTransition instanceof VueTransitionAtmt)
                     vueTransitionAtmts.add((VueTransitionAtmt) vueTransition);
             }
@@ -229,7 +229,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
                 if (index < 0 || !selectedFile.getName().substring(index).equals(".atmt"))
                     fileName = fileName.concat(".atmt");
 
-                getVueMachine().sauvegarder(fileName);
+                vueAutomate.sauvegarder(fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -252,7 +252,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         File selectedFile = fileChooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
             try {
-                getVueMachine().chargerFichier(selectedFile.getAbsolutePath());
+                vueAutomate.chargerFichier(selectedFile.getAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
             }

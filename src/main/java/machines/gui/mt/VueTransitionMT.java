@@ -1,7 +1,6 @@
 package machines.gui.mt;
 
 import javafx.beans.binding.DoubleBinding;
-import machines.gui.VueMachine;
 import machines.gui.VueTransition;
 import machines.logique.mt.TransitionMT;
 
@@ -37,6 +36,10 @@ public class VueTransitionMT extends VueTransition<TransitionMT> {
         return transitionMT;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void positionnerLabelEtiquette(int index) {
         if (getTransition().getEtatDepart() != getTransition().getEtatArrivee()) {
             //coordonnees du centre du cercle de la vue etat de depart

@@ -52,6 +52,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
 
     private FileChooser fileChooser;
 
+    private EventHandler<ActionEvent> eventArreter = actionEvent -> vueMT.getMachineTuring().arreter();
     private UnaryOperator<TextFormatter.Change> textFilterLettre = change -> {
         String input = change.getControlNewText();
         if (!change.isContentChange()) {
@@ -62,8 +63,6 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         }
         return change;
     };
-
-    private EventHandler<ActionEvent> eventArreter = actionEvent -> vueMT.getMachineTuring().arreter();
     private EventHandler<ActionEvent> eventSetInitial = actionEvent -> {
         ObservableList<VueEtat<TransitionMT>> vueEtatsSelect = vueMT.getVuesEtatSelectionnes();
         Etat<TransitionMT> etatInitial = vueMT.getMachineTuring().getEtatInitial();
@@ -121,6 +120,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         return hBoxAjoutTransition;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public VueMachine<TransitionMT> creerVueMachine() {
         vueMT = new VueMT(new MachineTuring(), this);
@@ -131,6 +133,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         return vueMT;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sauvegarder() {
         fileChooser = new FileChooser();
@@ -150,13 +155,16 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
                     fileName = fileName.concat(".mt");
                 }
 
-                getVueMachine().sauvegarder(fileName);
+                vueMT.sauvegarder(fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void charger() {
         fileChooser = new FileChooser();
@@ -170,7 +178,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         File selectedFile = fileChooser.showOpenDialog(new Stage());
         if (selectedFile != null) {
             try {
-                getVueMachine().chargerFichier(selectedFile.getAbsolutePath());
+                vueMT.chargerFichier(selectedFile.getAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -197,7 +205,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         return boutonStop;
     }
 
-    public void initListenersAndActions() {
+    private void initListenersAndActions() {
         MachineTuring mt = vueMT.getMachineTuring();
 
         mt.setListenerValueTaskLancer((observableValue, integer, t1) -> {
@@ -237,11 +245,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         boutonSetInitial.setOnAction(eventSetInitial);
     }
 
-    private void majTextFlowRuban(String ruban) {
-        textFlowRuban.getChildren().clear();
-        textFlowRuban.getChildren().add(new Label(ruban));
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void supprimerTransitionsSelectionnees() {
         HashSet<VueTransition<TransitionMT>> vuesTransitionADeDelectionner = new HashSet<>();
@@ -253,13 +259,11 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             }
         }
 
-        for (VueTransition<TransitionMT> vueTransition : vuesTransitionADeDelectionner) {
-            vueTransition.deSelectionner();
-        }
+        vuesTransitionADeDelectionner.forEach(VueTransition::deSelectionner);
 
         if (getVueMachine().getVuesTransitionSelectionnes().size() > 0) {
             ObservableList<VueTransitionMT> vueTransitionMTs = FXCollections.observableArrayList();
-            for (VueTransition<TransitionMT> vueTransition : getVueMachine().getVuesTransitionSelectionnes()) {
+            for (VueTransition<TransitionMT> vueTransition : vueMT.getVuesTransitionSelectionnes()) {
                 if (vueTransition instanceof VueTransitionMT) vueTransitionMTs.add((VueTransitionMT) vueTransition);
             }
 
@@ -273,6 +277,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void lancer() {
         MachineTuring mt = vueMT.getMachineTuring();
@@ -281,9 +288,12 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         mt.lancer(mot, dellayMillis);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void ajouterTransition() {
-        ObservableList<VueEtat<TransitionMT>> vuesEtatSelectionnes = getVueMachine().getVuesEtatSelectionnes();
+        ObservableList<VueEtat<TransitionMT>> vuesEtatSelectionnes = vueMT.getVuesEtatSelectionnes();
         if (vuesEtatSelectionnes.size() > 2 || vuesEtatSelectionnes.size() < 1) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Problème ajout transition");
@@ -298,7 +308,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             else vueEtatArrivee = vuesEtatSelectionnes.get(1);
             if (etiquette.length() >= 1) {
                 boolean nouvelleTrans = true;
-                for (TransitionMT t : getVueMachine().getMachine().getTransitions()) {
+                for (TransitionMT t : vueMT.getMachineTuring().getTransitions()) {
                     if (t.getEtatDepart() == vueEtatDep.getEtat() && t.getEtatArrivee() == vueEtatArrivee.getEtat() &&
                             t.getEtiquette() == etiquette.charAt(0)) {
                         nouvelleTrans = false;
