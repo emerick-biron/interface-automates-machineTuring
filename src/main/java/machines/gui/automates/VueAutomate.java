@@ -1,11 +1,8 @@
 package machines.gui.automates;
 
 import javafx.collections.ListChangeListener;
-import javafx.collections.SetChangeListener;
 import machines.gui.VueEtat;
 import machines.gui.VueMachine;
-import machines.logique.Etat;
-import machines.logique.Transition;
 import machines.logique.automates.Automate;
 import machines.logique.automates.TransitionAtmt;
 
@@ -13,7 +10,7 @@ public class VueAutomate extends VueMachine<TransitionAtmt> {
     private Automate automate;
     private VuePrincipaleAtmt vuePrincipaleAtmt;
     private ListChangeListener<VueEtat<TransitionAtmt>> miseAJourVuesEtatSelectionnes =
-            change -> vuePrincipaleAtmt.gethBoxAjoutTransition()
+            change -> vuePrincipaleAtmt.getHBoxAjoutTransition()
                     .setVisible(getVuesEtatSelectionnes().size() <= 2 && getVuesEtatSelectionnes().size() >= 1);
 
     public VueAutomate(Automate automate, VuePrincipaleAtmt vuePrincipale) {
@@ -32,6 +29,9 @@ public class VueAutomate extends VueMachine<TransitionAtmt> {
         return automate;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void ajoutVueTransition(TransitionAtmt transition) {
         VueTransitionAtmt vueTransition = new VueTransitionAtmt(transition, VueAutomate.this);
@@ -44,39 +44,3 @@ public class VueAutomate extends VueMachine<TransitionAtmt> {
         vueTransition.positionnerLabelEtiquette(nbrTrans - 1);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
