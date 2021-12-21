@@ -24,7 +24,6 @@ import java.util.Optional;
 public class App extends Application {
     private Stage primaryStage;
     private VueDepart vueDepart;
-    private static final Image ICON_IMAGE = new Image("icon.png");
     private VuePrincipale<? extends Transition<?>> vuePrincipale;
     private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> {
         vueDepart.hide();
@@ -51,9 +50,10 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         this.primaryStage = primaryStage;
-        primaryStage.getIcons().add(ICON_IMAGE);
+        Image icon = new Image("icon.png");
+        primaryStage.getIcons().add(icon);
         vueDepart = new VueDepart();
-        vueDepart.getIcons().add(ICON_IMAGE);
+        vueDepart.getIcons().add(icon);
         vueDepart.setTitle("Interface pour automates et machine de Turing");
         vueDepart.getBoutonAutomate().setOnAction(eventLancerAutomate);
         vueDepart.getBoutonTuring().setOnAction(eventLancerMT);
