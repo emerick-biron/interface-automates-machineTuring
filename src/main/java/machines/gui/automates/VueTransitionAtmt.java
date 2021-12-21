@@ -1,14 +1,12 @@
 package machines.gui.automates;
 
 import javafx.beans.binding.DoubleBinding;
-import javafx.beans.value.ChangeListener;
-import machines.logique.automates.Automate;
-import machines.logique.automates.TransitionAtmt;
 import machines.gui.VueTransition;
+import machines.logique.automates.TransitionAtmt;
 
 public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
-    TransitionAtmt transitionAtmt;
-    VueAutomate vueAutomate;
+    private TransitionAtmt transitionAtmt;
+    private VueAutomate vueAutomate;
 
     public VueTransitionAtmt(TransitionAtmt transition, VueAutomate vueAutomate) {
         super(transition, vueAutomate);
@@ -22,6 +20,10 @@ public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
         return transitionAtmt;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void positionnerLabelEtiquette(int index) {
         if (getTransition().getEtatDepart() != getTransition().getEtatArrivee()) {
             //coordonnees du centre du cercle de la vue etat de depart
@@ -56,33 +58,3 @@ public class VueTransitionAtmt extends VueTransition<TransitionAtmt> {
                 getVueEtatFin().getLabelNumEtat().getText();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
