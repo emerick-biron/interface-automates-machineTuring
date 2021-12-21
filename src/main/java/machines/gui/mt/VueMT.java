@@ -16,7 +16,7 @@ public class VueMT extends VueMachine<TransitionMT> {
     public VueMT(MachineTuring machine, VuePrincipaleMT vuePrincipale) {
         super(machine, vuePrincipale);
         this.vuePrincipaleMT = vuePrincipale;
-        machineTuring = machine;
+        this.machineTuring = machine;
 
         getVuesEtatSelectionnes().addListener(miseAJourVuesEtatSelectionnes);
     }
@@ -29,6 +29,9 @@ public class VueMT extends VueMachine<TransitionMT> {
         return machineTuring;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void ajoutVueTransition(TransitionMT transition) {
         VueTransitionMT vueTransition = new VueTransitionMT(transition, VueMT.this);
