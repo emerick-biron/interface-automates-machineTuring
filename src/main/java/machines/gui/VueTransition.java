@@ -11,9 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import machines.gui.automates.VueTransitionAtmt;
-import machines.logique.Etat;
-import machines.logique.Machine;
 import machines.logique.Transition;
 
 public abstract class VueTransition<T extends Transition<T>> extends Group {

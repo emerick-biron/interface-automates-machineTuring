@@ -33,24 +33,16 @@ public class StageSupTransAtmt extends Stage {
     private HBox hBoxInfo;
     private Label labelToutSelect;
     private ArrayList<VueTransitionAtmt> transitionsASupprimmer;
-    private ChangeListener<Boolean> changementCbToutSelect = new ChangeListener<Boolean>() {
+    private ChangeListener<Boolean> changementCbToutSelect = new ChangeListener<>() {
         @Override
         public void changed(ObservableValue<? extends Boolean> observableValue, Boolean aBoolean, Boolean t1) {
-            if (observableValue.getValue()) {
-                for (CheckBox cb : transitionAvecCB.values()) {
-                    cb.selectedProperty().set(true);
-                }
-            } else {
-                for (CheckBox cb : transitionAvecCB.values()) {
-                    cb.selectedProperty().set(false);
-                }
-            }
+            transitionAvecCB.values().forEach(cb -> cb.selectedProperty().set(observableValue.getValue()));
         }
     };
-    private EventHandler<ActionEvent> eventSupprimer = new EventHandler<ActionEvent>() {
+    private EventHandler<ActionEvent> eventSupprimer = new EventHandler<>() {
         @Override
         public void handle(ActionEvent actionEvent) {
-            for (VueTransitionAtmt key : transitionAvecCB.keySet() ) {
+            for (VueTransitionAtmt key : transitionAvecCB.keySet()) {
                 if (transitionAvecCB.get(key).selectedProperty().get()) transitionsASupprimmer.add(key);
             }
             close();
@@ -59,10 +51,8 @@ public class StageSupTransAtmt extends Stage {
 
     public StageSupTransAtmt(ObservableList<VueTransitionAtmt> vuesTransition, Stage primaryStage) {
         transitionAvecCB = new HashMap<>();
-        for (VueTransitionAtmt vueTransition : vuesTransition) {
-            CheckBox cb = new CheckBox();
-            transitionAvecCB.put(vueTransition, cb);
-        }
+
+        vuesTransition.forEach(vueTransition -> transitionAvecCB.put(vueTransition, new CheckBox()));
 
         transitionsASupprimmer = new ArrayList<>();
         scrollPane = createScrollPane();
@@ -122,31 +112,11 @@ public class StageSupTransAtmt extends Stage {
         return scrollPane;
     }
 
-    public ArrayList<VueTransitionAtmt> showOpenDialog(){
+    /**
+     * @return la liste des vues transitions que l'utilisateur veut supprimer
+     */
+    public ArrayList<VueTransitionAtmt> showOpenDialog() {
         showAndWait();
         return transitionsASupprimmer;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
