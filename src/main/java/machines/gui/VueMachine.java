@@ -8,18 +8,12 @@ import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeType;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import machines.gui.automates.VueAutomate;
-import machines.gui.automates.VueTransitionAtmt;
 import machines.logique.Etat;
 import machines.logique.Machine;
 import machines.logique.Transition;
-import machines.logique.automates.TransitionAtmt;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public abstract class VueMachine<T extends Transition<T>> extends Pane {
     private Machine<T> machine;
@@ -96,8 +90,18 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
         vuesTransitionSelectionnes.addListener(miseAJourVuesTransitionSelectionnes);
     }
 
+    /**
+     * Ajoute une vueTransition a la vue machine
+     *
+     * @param transition transition de la vueTransition a ajouter
+     */
     public abstract void ajoutVueTransition(T transition);
 
+    /**
+     * Supprime une vue transition a la vue machine
+     *
+     * @param transition transition de la vueTransition a supprimer
+     */
     public void supprimerVueTransition(T transition) {
         VueTransition<T> vueTransition = getVueTransition(transition);
         if (vueTransition != null) {
@@ -126,6 +130,12 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
         return vuePrincipale;
     }
 
+    /**
+     * Permet d'obtenir la vueEtat correspondante a l'etat
+     *
+     * @param etat etat de la vueEtat
+     * @return vueEtat correspondante
+     */
     public VueEtat<T> getVueEtat(Etat<T> etat) {
         for (Node n : getChildren()) {
             if (n instanceof VueEtat) {
@@ -136,6 +146,12 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
         return null;
     }
 
+    /**
+     * Permet d'obtenir la vueTransition correspondante a la transition
+     *
+     * @param transition transition de la vueTransition
+     * @return vueTransition correspondante
+     */
     public VueTransition<T> getVueTransition(T transition) {
         for (Node n : getChildren()) {
             if (n instanceof VueTransition) {
@@ -146,6 +162,13 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
         return null;
     }
 
+    /**
+     * Peremet d'obtenir la liste de vueTransitions ayant les etats en parametre comme borne
+     *
+     * @param vueEtat1 etat de de depart
+     * @param vueEtat2 etat d'arrivee
+     * @return liste des vueTransition ou null si il n'y en a pas
+     */
     public ArrayList<VueTransition<T>> getVuesTransition(VueEtat<T> vueEtat1, VueEtat<T> vueEtat2) {
         ArrayList<VueTransition<T>> res = new ArrayList<>();
         for (T t : vueEtat1.getEtat().getListeTransitions()) {
@@ -161,12 +184,21 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
         return res;
     }
 
+    /**
+     * Supprime tous les element de la vueMachine
+     */
     public void clear() {
         vuesEtatSelectionnes.clear();
         vuesTransitionSelectionnes.clear();
         machine.clear();
     }
 
+    /**
+     * Permet de creer une machine a partir d'un fichier
+     *
+     * @param nomFichier nom du fichier contenant la machine
+     * @throws IOException
+     */
     public void chargerFichier(String nomFichier) throws IOException {
         clear();
         machine.chargerFichier(nomFichier);
@@ -218,6 +250,12 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
         fr.close();
     }
 
+    /**
+     * Perme de sauvegarder la machine dans un fichier
+     *
+     * @param nomFichier nom du fichier dans lequel sauvegarder la machine
+     * @throws IOException
+     */
     public void sauvegarder(String nomFichier) throws IOException {
         machine.sauvegarder(nomFichier);
 
@@ -242,23 +280,31 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
         fileWriter.close();
     }
 
-
+    /**
+     * Deselectionne toutes les vues etat et les vue transitions
+     */
     public void deSelectionnerVues() {
         deSelectionnerVuesEtat();
         deSelectionnerVuesTransition();
     }
 
+    /**
+     * Deselectionne toutes les vues etats
+     */
     public void deSelectionnerVuesEtat() {
         for (Etat<T> e : machine.getEtats()) {
             VueEtat<T> vueEtat = getVueEtat(e);
-            vueEtat.deSelectionner();
+            if (vueEtat != null) vueEtat.deSelectionner();
         }
     }
 
+    /**
+     * Deselectionne toutes les vue transitions
+     */
     public void deSelectionnerVuesTransition() {
         for (T t : machine.getTransitions()) {
             VueTransition<T> vueTransition = getVueTransition(t);
-            vueTransition.deSelectionner();
+            if (vueTransition != null) vueTransition.deSelectionner();
         }
     }
 }
