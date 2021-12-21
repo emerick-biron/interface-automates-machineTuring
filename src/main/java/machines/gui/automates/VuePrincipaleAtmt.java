@@ -44,19 +44,20 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
     private VueAutomate vueAutomate;
     private FileChooser fileChooser;
     private EventHandler<ActionEvent> eventArreter = actionEvent -> vueAutomate.getAutomate().arreter();
-    private UnaryOperator<TextFormatter.Change> textFilterAjoutTransition = change -> {
-        String input = change.getControlNewText();
-        if (!change.isContentChange()) {
-            return change;
-        }
-        if (!Pattern.matches("[a-z]?", input)) {
-            return null;
-        }
-        return change;
-    };
 
     public VuePrincipaleAtmt(App app) {
         super(app);
+
+        UnaryOperator<TextFormatter.Change> textFilterAjoutTransition = change -> {
+            String input = change.getControlNewText();
+            if (!change.isContentChange()) {
+                return change;
+            }
+            if (!Pattern.matches("[a-z]?", input)) {
+                return null;
+            }
+            return change;
+        };
 
         getTextFieldEtiquette().setTextFormatter(new TextFormatter<>(textFilterAjoutTransition));
         getTextFieldEtiquette().setPrefWidth(30);
