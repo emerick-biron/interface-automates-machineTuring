@@ -4,9 +4,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
-import machines.logique.automates.TransitionAtmt;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Etat<T extends Transition<T>> {
     private BooleanProperty estInitial;
@@ -58,23 +59,26 @@ public class Etat<T extends Transition<T>> {
         return resultat;
     }
 
-    public void clearTransitions(){
+    /**
+     * Supprime toutes les transitions sortantes de l'etat
+     */
+    public void clearTransitions() {
         listeTransitions.clear();
     }
 
-    public void ajoutTransition(T transition){
+    public void ajoutTransition(T transition) {
         listeTransitions.add(transition);
     }
 
-    public void ajoutTransition(Collection<T> transitions){
+    public void ajoutTransition(Collection<T> transitions) {
         listeTransitions.addAll(transitions);
     }
 
-    public void supprimerTransition(T transition){
+    public void supprimerTransition(T transition) {
         listeTransitions.remove(transition);
     }
 
-    public void supprimerTransition(Collection<T> transitions){
+    public void supprimerTransition(Collection<T> transitions) {
         listeTransitions.removeAll(transitions);
     }
 
@@ -125,6 +129,7 @@ public class Etat<T extends Transition<T>> {
     public Set<T> getListeTransitions() {
         return listeTransitions;
     }
+
     public ObservableSet<T> transitionsProperty() {
         return listeTransitions;
     }
