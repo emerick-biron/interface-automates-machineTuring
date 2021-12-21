@@ -90,7 +90,6 @@ public abstract class VueTransition<T extends Transition<T>> extends Group {
         DoubleBinding xB = vueEtatFin.layoutXProperty().add(vueEtatFin.getCercle().getRadius());
         DoubleBinding yB = vueEtatFin.layoutYProperty().add(vueEtatFin.getCercle().getRadius());
 
-
         ligne.startXProperty().bind(xA);
         ligne.startYProperty().bind(yA);
         ligne.endXProperty().bind(xB);
@@ -159,12 +158,22 @@ public abstract class VueTransition<T extends Transition<T>> extends Group {
         return labelEtiquette;
     }
 
+    /**
+     * Permet de rendre les fleches de la vue transition visible ou non
+     *
+     * @param b true si on veut qu'elles soient visibles sinon false
+     */
     public void setFlechesVisible(boolean b) {
         ligne.setVisible(b);
         ligneBasFleche.setVisible(b);
         ligneHautFleche.setVisible(b);
     }
 
+    /**
+     * Permet changer la couleur des fleches en fonction de si la vue transition est selectionne
+     *
+     * @param estSelectionne true si la vue est selectionne sinon false
+     */
     public void setCouleurSelection(boolean estSelectionne) {
         if (estSelectionne) {
             ligne.setStroke(Color.valueOf("#003576"));
@@ -180,18 +189,19 @@ public abstract class VueTransition<T extends Transition<T>> extends Group {
         }
     }
 
+    /**
+     * Permet de positionner le label de l'etiquette de la transition en fonction du nombre de transition entre deux memes etats
+     *
+     * @param index index de la vue transition par rapport aux autres vues transitions ayant les meme etats aux bornes
+     */
     public abstract void positionnerLabelEtiquette(int index);
 
     private void initMouseEvents() {
         setOnMousePressed(mouseEvent -> {
-            if (!vueMachine.getVuePrincipale().ctrlPresse()) {
-                vueMachine.deSelectionnerVues();
-            }
-            if (estSelectionne()) {
-                deSelectionner();
-            } else {
-                selectionner();
-            }
+            if (!vueMachine.getVuePrincipale().ctrlPresse()) vueMachine.deSelectionnerVues();
+            if (estSelectionne()) deSelectionner();
+            else selectionner();
+
         });
     }
 
@@ -219,35 +229,3 @@ public abstract class VueTransition<T extends Transition<T>> extends Group {
         return vueEtatFin;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
