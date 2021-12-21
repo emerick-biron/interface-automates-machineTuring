@@ -1,13 +1,9 @@
 package machines.logique.mt;
 
-import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import machines.logique.Etat;
 import machines.logique.Machine;
-import machines.logique.automates.TransitionAtmt;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -32,6 +28,9 @@ public class MachineTuring extends Machine<TransitionMT> {
         ruban = new ArrayList<>(Arrays.asList('#', '#', '#'));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void chargerFichier(String nomFichier) throws IOException {
         getEtats().clear();
@@ -81,6 +80,9 @@ public class MachineTuring extends Machine<TransitionMT> {
         fr.close();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void sauvegarder(String nomFichier) throws IOException {
         Writer fileWriter = new FileWriter(nomFichier, false); //overwrites file
@@ -119,11 +121,20 @@ public class MachineTuring extends Machine<TransitionMT> {
         fileWriter.close();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void lancer(String mot) {
         lancer(mot, 0);
     }
 
+    /**
+     * Lance la machine de Turing
+     *
+     * @param mot          mot a donner a la machine de Turing
+     * @param dellayMillis temps d'attente entre chauqe etape
+     */
     public void lancer(String mot, long dellayMillis) {
         if (taskLancer == null) {
             initTaskLancer(mot, dellayMillis);
@@ -140,6 +151,9 @@ public class MachineTuring extends Machine<TransitionMT> {
         new Thread(taskLancer).start();
     }
 
+    /**
+     * Arrete l'execution de la machine de Turing
+     */
     public void arreter() {
         if (taskLancer != null && taskLancer.isRunning()) taskLancer.cancel();
     }
@@ -164,25 +178,11 @@ public class MachineTuring extends Machine<TransitionMT> {
         };
     }
 
-    public void setRuban(String mot) {
-        ruban.clear();
-        teteLecture = 1;
-        ruban.add('#');
-        if (mot.length() == 0) {
-            ruban.add('#');
-        } else {
-            for (int i = 0; i < mot.length(); i++) {
-                ruban.add(mot.charAt(i));
-            }
-        }
-        ruban.add('#');
-    }
-
-    public char lire() {
+    private char lire() {
         return ruban.get(teteLecture);
     }
 
-    public void ecrire(char nouvelleLettre, Mouvement mouvement) {
+    private void ecrire(char nouvelleLettre, Mouvement mouvement) {
         ruban.set(teteLecture, nouvelleLettre);
         switch (mouvement) {
             case DROITE:
@@ -206,7 +206,7 @@ public class MachineTuring extends Machine<TransitionMT> {
         return null;
     }
 
-    public void step(char lettre) {
+    private void step(char lettre) {
         Etat<TransitionMT> etatActif = getEtatActif();
         if (etatActif != null) {
             TransitionMT transEtape = null;
@@ -223,6 +223,9 @@ public class MachineTuring extends Machine<TransitionMT> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean motReconnu() {
         if (getEtatActif() == null) return false;
@@ -242,6 +245,20 @@ public class MachineTuring extends Machine<TransitionMT> {
 
     public ArrayList<Character> getRuban() {
         return ruban;
+    }
+
+    public void setRuban(String mot) {
+        ruban.clear();
+        teteLecture = 1;
+        ruban.add('#');
+        if (mot.length() == 0) {
+            ruban.add('#');
+        } else {
+            for (int i = 0; i < mot.length(); i++) {
+                ruban.add(mot.charAt(i));
+            }
+        }
+        ruban.add('#');
     }
 
     public String getStringRuban() {
