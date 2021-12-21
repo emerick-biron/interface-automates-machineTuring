@@ -130,6 +130,9 @@ public class Automate extends Machine<TransitionAtmt> {
         fileWriter.close();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void lancer(String mot) {
         lancer(mot, 0);
@@ -179,6 +182,9 @@ public class Automate extends Machine<TransitionAtmt> {
         };
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean motReconnu() {
         for (Etat<TransitionAtmt> etat : getEtats()) {
