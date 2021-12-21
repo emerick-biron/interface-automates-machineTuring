@@ -55,7 +55,7 @@ public class VueDepart extends Stage {
         return boutonAutomate;
     }
 
-    public Button getBoutonTuring(){
+    public Button getBoutonTuring() {
         return boutonTuring;
     }
 
@@ -87,7 +87,8 @@ public class VueDepart extends Stage {
         if (Files.isDirectory(path)) {
             File dossierParDefaut = path.toFile();
             for (File file : dossierParDefaut.listFiles()) {
-                if (file.isFile() && file.getName().contains(".atmt")) choixPossible.add(file.getName().split("\\.")[0]);
+                if (file.isFile() && file.getName().contains(".atmt"))
+                    choixPossible.add(file.getName().split("\\.")[0]);
             }
         }
         comboBoxChoixAutomate.setItems(choixPossible);
