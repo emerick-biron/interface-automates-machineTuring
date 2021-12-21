@@ -37,15 +37,22 @@ La mise en œuvre graphique de ce projet a nécessité d'utiliser le langage jav
 pour la partie interface.
 
 
-## Manuels 
+## Manuels
+
+### I - Sommaire
+
+### II - Table des Figures
+
+### 1 - Fenêtre de départ 
 
 Lors du lancement de l'application une fenêtre s'ouvrira et vous permettra de choisir de lancer l'application de gestion
-d'automates [[1]](#fentre-de-dpart) ou l'application de gestion de machines de Turing [[2]](#fentre-de-dpart)
+d'automates ou l'application de gestion de machines de Turing [cf Figure1](#figure1).
 
-### Fenêtre de départ 
-
+Il est aussi possible de charger directement des fichier .atmt ou .mt à l'aide des menus déroulants sous chaque boutons.
 
 ![fenetre_depart](ressources/fenetre_depart.png)
+
+<a name="figure1"></a>*Figure1 : Fenetre de depart*
 
 ### Automates
 
