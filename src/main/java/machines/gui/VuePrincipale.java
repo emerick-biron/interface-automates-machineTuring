@@ -7,7 +7,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import machines.App;
 import machines.logique.Etat;
-import machines.logique.Machine;
 import machines.logique.Transition;
 
 import java.util.ArrayList;
@@ -34,23 +33,23 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
 
     private TextField textFieldMotAutomate;
     private TextField textFieldEtiquette;
+    private EventHandler<ActionEvent> eventClear = actionEvent -> vueMachine.clear();
+    private EventHandler<ActionEvent> eventSauvegarder = actionEvent -> sauvegarder();
+    private EventHandler<ActionEvent> eventCharger = actionEvent -> charger();
+    private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> lancer();
+    private EventHandler<ActionEvent> eventAjouterTransition = actionEvent -> ajouterTransition();
+    private EventHandler<ActionEvent> eventAjouterEtat = actionEvent -> vueMachine.getMachine()
+            .ajouterEtat(new Etat<T>(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
     private EventHandler<KeyEvent> eventToucheCtrlPresse = new EventHandler<>() {
         @Override
         public void handle(KeyEvent keyEvent) {
             ctrlPresse = keyEvent.isControlDown();
         }
     };
-    private EventHandler<ActionEvent> eventClear = actionEvent -> vueMachine.clear();
-    private EventHandler<ActionEvent> eventAjouterEtat = actionEvent -> vueMachine.getMachine()
-            .ajouterEtat(new Etat<T>(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
-    private EventHandler<ActionEvent> eventSauvegarder = actionEvent -> sauvegarder();
-    private EventHandler<ActionEvent> eventCharger = actionEvent -> charger();
-    private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> lancer();
     private EventHandler<ActionEvent> eventSupprimer = actionEvent -> {
         supprimerEtatsSelectionnes();
         supprimerTransitionsSelectionnees();
     };
-    private EventHandler<ActionEvent> eventAjouterTransition = actionEvent -> ajouterTransition();
 
     public VuePrincipale(App app) {
         this.app = app;
@@ -76,6 +75,11 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
         getBoutonAjouterTransition().setOnAction(eventAjouterTransition);
     }
 
+    /**
+     * Permet de creer la vueMachine
+     *
+     * @return vueMachine creee
+     */
     public abstract VueMachine<T> creerVueMachine();
 
     public VueMachine<T> getVueMachine() {
@@ -86,6 +90,9 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
         return app;
     }
 
+    /**
+     * Permet d'enlever le lien entre les checkboxes er la propriete selectionne des etats
+     */
     public void unbindCheckBoxes() {
         for (Etat<T> e : vueMachine.getMachine().getEtats()) {
             checkBoxEstInitial.selectedProperty().unbindBidirectional(e.estInitialProperty());
@@ -93,43 +100,55 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
         }
     }
 
+    /**
+     * Supprime tous les etat selectionnes
+     */
     public void supprimerEtatsSelectionnes() {
         ArrayList<VueEtat<T>> vuesEtatADeSelectionner = new ArrayList<>();
         for (VueEtat<T> vueEtat : vueMachine.getVuesEtatSelectionnes()) {
             for (T t : vueMachine.getMachine().getTransitions()) {
                 if (t.getEtatDepart() == vueEtat.getEtat() || t.getEtatArrivee() == vueEtat.getEtat()) {
                     VueTransition<T> vueTransition = vueMachine.getVueTransition(t);
-                    vueTransition.deSelectionner();
+                    if (vueTransition != null) vueTransition.deSelectionner();
                     t.getEtatDepart().supprimerTransition(t);
                 }
             }
             vuesEtatADeSelectionner.add(vueEtat);
             vueMachine.getMachine().supprimerEtat(vueEtat.getEtat());
         }
-        for (VueEtat<T> vueEtat : vuesEtatADeSelectionner) {
-            vueEtat.deSelectionner();
-        }
+        vuesEtatADeSelectionner.forEach(VueEtat::deSelectionner);
     }
 
+    /**
+     * Supprime toutes les transition selectionnes
+     */
     public void supprimerTransitionsSelectionnees() {
         HashSet<VueTransition<T>> vuesTransitionADeDelectionner = new HashSet<>();
         for (VueTransition<T> vueTransition : vueMachine.getVuesTransitionSelectionnes()) {
             vueTransition.getVueEtatDep().getEtat().supprimerTransition(vueTransition.getTransition());
             vuesTransitionADeDelectionner.add(vueTransition);
-
         }
-
-        for (VueTransition<T> vueTransition : vuesTransitionADeDelectionner) {
-            vueTransition.deSelectionner();
-        }
+        vuesTransitionADeDelectionner.forEach(VueTransition::deSelectionner);
     }
 
+    /**
+     * Sauvegarde la machine
+     */
     public abstract void sauvegarder();
 
+    /**
+     * Charge la machine
+     */
     public abstract void charger();
 
+    /**
+     * Lance la machine
+     */
     public abstract void lancer();
 
+    /**
+     * Ajoute une transition a la machine en fonction des entrees de l'utilisateur
+     */
     public abstract void ajouterTransition();
 
     public Button getBoutonSupprimer() {
@@ -144,7 +163,7 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
         return ctrlPresse;
     }
 
-    public void initComposants() {
+    private void initComposants() {
         boutonSupprimer = new Button("Supprimer");
         boutonCreerEtat = new Button("Ajouter etat");
         boutonLancer = new Button("Lancer");
