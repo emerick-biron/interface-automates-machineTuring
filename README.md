@@ -13,7 +13,7 @@
   * [Remerciements](#remerciements)
   * [Notre projet](#notre-projet)
 * [Manuel de notre application](#manuel-de-notre-application)
-  * [1 - Fenêtre de départ](#1---fentre-de-dpart)
+  * [1 - Fenêtre de départ](#1-fentre-de-dpart)
   * [2 - Automates](#2---automates)
     * [2.1 - Les états](#21---les-tats)
     * [2.2 - Les transitions](#22---les-transitions)
@@ -82,7 +82,7 @@ pour la partie interface.
 
 # Manuel de notre application
 
-### 1 - Fenêtre de départ 
+### 1. Fenêtre de départ 
 
 Lors du lancement de l'application une fenêtre s'ouvrira et vous permettra de choisir de lancer l'application de gestion
 d'automates en appuyant sur le bouton *Automate* [(cf. Figure1)](#figure1).
