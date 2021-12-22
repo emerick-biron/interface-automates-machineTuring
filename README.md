@@ -14,7 +14,7 @@
   * [Notre projet](#notre-projet)
 * [Manuel de notre application](#manuel-de-notre-application)
   * [1 - Fenêtre de départ](#1-fentre-de-dpart)
-  * [2 - Automates](#2---automates)
+  * [2. Automates](#2-automates)
     * [2.1 - Les états](#21---les-tats)
     * [2.2 - Les transitions](#22---les-transitions)
     * [2.3 - La sélection](#23---la-slection)
@@ -100,7 +100,7 @@ déroulante**
 
 *Figure 1 - Fenêtre de depart*
 
-### 2 - Automates
+### 2 Automates
 
 <a name="figure2"></a>![interface_automate](ressources/automate/interface_automate.png)
 
