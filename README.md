@@ -104,7 +104,7 @@ déroulante**
 ### 2. Automates
 
 <a name="figure2"></a>
-[interface_automate](ressources/automate/interface_automate.png)
+![interface_automate](ressources/automate/interface_automate.png)
 
 *Figure 2 - Interface d'un automate*
 
