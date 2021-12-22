@@ -13,23 +13,23 @@
   * [Remerciements](#remerciements)
   * [Notre projet](#notre-projet)
 * [Manuel de notre application](#manuel-de-notre-application)
-  * [1 - Fenêtre de départ](#1-fentre-de-dpart)
-  * [2. Automates](#2-automates)
-    * [2.1 - Les états](#21---les-tats)
-    * [2.2 - Les transitions](#22---les-transitions)
-    * [2.3 - La sélection](#23---la-slection)
-    * [2.4 - La suppression](#24---la-suppression)
-    * [2.5 - Le lancement d'un automate](#25---le-lancement-dun-automate)
-    * [2.6 - Fichiers *.atmt*](#26---fichiers-atmt)
-    * [2.7 La sauvegarde / le chargement de fichiers *.atmt*](#27-la-sauvegarde--le-chargement-de-fichiers-atmt)
-  * [3 - Machine de Turing](#3---machine-de-turing)
-      * [3.1 - Les états](#31---les-tats)
-      * [3.2 - Les transitions](#32---les-transitions)
-      * [3.3 - La sélection](#33---la-slection)
-      * [3.4 - La suppression](#34---la-suppression)
-      * [3.5 - Le lancement d'une machine de Turing](#35---le-lancement-dune-machine-de-turing)
-      * [3.6 - Fichiers *.mt*](#36---fichiers-mt)
-      * [3.7 La sauvegarde / le chargement de fichiers *.mt*](#37-la-sauvegarde--le-chargement-de-fichiers-mt)
+  * [1. Fenêtre de départ](#1---fentre-de-dpart)
+  * [2. Automates](#2---automates)
+    * [2.1. Les états](#21---les-tats)
+    * [2.2. Les transitions](#22---les-transitions)
+    * [2.3. La sélection](#23---la-slection)
+    * [2.4. La suppression](#24---la-suppression)
+    * [2.5. Le lancement d'un automate](#25---le-lancement-dun-automate)
+    * [2.6. Fichiers *.atmt*](#26---fichiers-atmt)
+    * [2.7. La sauvegarde / le chargement de fichiers *.atmt*](#27-la-sauvegarde--le-chargement-de-fichiers-atmt)
+  * [3. Machine de Turing](#3---machine-de-turing)
+      * [3.1. Les états](#31---les-tats)
+      * [3.2. Les transitions](#32---les-transitions)
+      * [3.3. La sélection](#33---la-slection)
+      * [3.4. La suppression](#34---la-suppression)
+      * [3.5. Le lancement d'une machine de Turing](#35---le-lancement-dune-machine-de-turing)
+      * [3.6. Fichiers *.mt*](#36---fichiers-mt)
+      * [3.7. La sauvegarde / le chargement de fichiers *.mt*](#37-la-sauvegarde--le-chargement-de-fichiers-mt)
 
 ## Table des figures
 
@@ -82,7 +82,7 @@ pour la partie interface.
 
 # Manuel de notre application
 
-### 1 Fenêtre de départ 
+### 1. Fenêtre de départ 
 
 Lors du lancement de l'application une fenêtre s'ouvrira et vous permettra de choisir de lancer l'application de gestion
 d'automates en appuyant sur le bouton *Automate* [(cf. Figure1)](#figure1).
@@ -100,13 +100,13 @@ déroulante**
 
 *Figure 1 - Fenêtre de depart*
 
-### 2 Automates
+### 2. Automates
 
 <a name="figure2"></a>![interface_automate](ressources/automate/interface_automate.png)
 
 *Figure 2 - Interface d'un automate*
 
-#### 2.1 - Les états
+#### 2.1. Les états
 
 Pour ajouter un état à l'automate, il suffit de cliquer sur le bouton *ajouter état*.
 
@@ -118,7 +118,7 @@ Pour déplacer un état, il suffit de le faire glisser avec la souris.
 
 [(cf. Figure2)](#figure2)
 
-#### 2.2 - Les transitions
+#### 2.2. Les transitions
 
 Pour ajouter une transition, il faut **d'abord** sélectionner l'état d'arrivée **puis** l'état de départ
 (ou seulement un état pour une auto-transition). Il faut ensuite ajouter la lettre de la transition dans le cadre qui 
@@ -130,12 +130,12 @@ apparait en haut à droite puis cliquer sur le bouton *ajouter transition*.
 
 *Figure 3 - Ajout d'une transition (automate)*
 
-#### 2.3 - La sélection
+#### 2.3. La sélection
 
 Pour sélectionner un état ou une transition, il suffit de cliquer dessus. Cet élément aura donc un contour bleu. Pour
 sélectionner plusieurs éléments, il faut maintenir la touche *Ctrl* enfoncée et cliquer sur un autre élément.
 
-#### 2.4 - La suppression
+#### 2.4. La suppression
 
 Un appui sur le bouton *Supprimer* supprimera tous les éléments sélectionnés [(cf. 2.3)](#23---la-slection). Dans le cas 
 où plusieurs transitions entre deux mêmes états seraient sélectionnées une fenêtre de dialogue s'ouvrira afin de vous 
@@ -147,7 +147,7 @@ Il est aussi possible de supprimer tous les états et toutes les transitions en 
 
 *Figure 4 - Fenêtre de dialogue pour la suppression de transitions (automate)*
 
-#### 2.5 - Le lancement d'un automate
+#### 2.5. Le lancement d'un automate
 
 Pour lancer un automate, il faut écrire le mot à tester dans la zone prévue à cet effet puis appuyer sur le bouton 
 *Lancer* [(cf. Figure2)](#figure2). Vous pouvez voir la progression de la lecture du mot en bas de l'application. À la 
@@ -163,7 +163,7 @@ Il est aussi possible d'arrêter l'exécution de l'automate en appuyant sur le b
 
 *Figure 5 - Lancement d'un automate*
 
-#### 2.6 - Fichiers *.atmt*
+#### 2.6. Fichiers *.atmt*
 
 Nous avons créé un type de fichier : les fichiers *.atmt*. Ces fichiers permettent de stocker les automates dans un 
 fichier. La partie du fichier situé après les *###* permet de stocker la position graphique des états.
@@ -190,24 +190,24 @@ terminal 3          (état terminal)
 **Attention, les numéros des états dans les fichiers *.atmt* ne correspondent pas forcément au numéro affiché. Le numéro
 affiché et celui spécifié après la position de l'état.**
 
-#### 2.7 La sauvegarde / le chargement de fichiers *.atmt*
+#### 2.7. La sauvegarde / le chargement de fichiers *.atmt*
 
 Il est possible de charger ou de sauvegarder un automate sous la forme de fichiers *.atmt* 
 [(cf. 2.6)](#26---fichiers-atmt) via les boutons *Sauvegarder* et *Charger* [(cf. Figure2)](#figure2)
 
-### 3 - Machine de Turing
+### 3. Machine de Turing
 
 <a name="figure6"></a>![interface_mt](ressources/mt/interface_mt.png)
 
 *Figure 6 - Interface d'une machine de Turing*
 
-#### 3.1 - Les états
+#### 3.1. Les états
 
 Le fonctionnement des états pour une machine de Turing est identique à celui des états pour un automate 
 [(cf. 2.1)](#21---les-tats). Cependant, dans notre projet, il ne peut y avoir plusieurs états initiaux pour une machine
 de Turing. La case *initial* a donc été remplacée par un bouton *initial* [(cf. Figure6)](#figure6).
 
-#### 3.2 - Les transitions
+#### 3.2. Les transitions
 
 Pour ajouter une transition, il faut **d'abord** sélectionner l'état d'arrivée **puis** l'état de départ
 (ou seulement un état pour une auto-transition). Il faut ensuite ajouter une lettre de lecture, une lettre d'écriture 
@@ -218,12 +218,12 @@ bouton *ajouter transition* [(cf. Figure7)](#figure7).
 
 *Figure 7 - Ajout d'une transition (machine de Turing)*
 
-#### 3.3 - La sélection
+#### 3.3. La sélection
 
 Pour sélectionner un état ou une transition, il suffit de cliquer dessus. Cet élément aura donc un contour bleu. Pour
 sélectionner plusieurs éléments, il faut maintenir la touche *Ctrl* enfoncée et cliquer sur un autre élément.
 
-#### 3.4 - La suppression
+#### 3.4. La suppression
 
 Un appui sur le bouton *Supprimer* supprimera tous les éléments sélectionnés [(cf. 3.3)](#33---la-slection). Dans le cas
 où plusieurs transitions entre deux mêmes états seraient sélectionnées une fenêtre de dialogue s'ouvrira afin de vous
@@ -235,7 +235,7 @@ Il est aussi possible de supprimer tous les états et toutes les transitions en 
 
 *Figure 8 - Fenêtre de dialogue pour la suppression de transitions (machine de Turing)*
 
-#### 3.5 - Le lancement d'une machine de Turing
+#### 3.5. Le lancement d'une machine de Turing
 
 Pour lancer une machine de Turing, il faut écrire le ruban initial à tester dans la zone prévue à cet effet puis appuyer 
 sur le bouton *Lancer* [(cf. Figure6)](#figure6). Vous pouvez suivre l'évolution du ruban de la machine en bas de 
@@ -251,7 +251,7 @@ Il est aussi possible d'arrêter l'exécution de l'automate en appuyant sur le b
 
 *Figure 9 - Lancement d'une machine de Turing*
 
-#### 3.6 - Fichiers *.mt*
+#### 3.6. Fichiers *.mt*
 
 Nous avons créé un deuxième type de fichier : les fichiers *.mt*. Ces fichiers permettent de stocker les machines de
 Turing dans un fichier. La partie du fichier situé après les *###* permet de stocker la position graphique des états.
@@ -277,7 +277,7 @@ terminal 1          (état terminal)
 **Attention, les numéros des états dans les fichiers *.mt* ne correspondent pas forcément au numéro affiché. Le numéro
 affiché et celui spécifié après la position de l'état.**
 
-#### 3.7 La sauvegarde / le chargement de fichiers *.mt*
+#### 3.7. La sauvegarde / le chargement de fichiers *.mt*
 
 Il est possible de charger ou de sauvegarder un automate sous la forme de fichiers *.mt*
 [(cf. 3.6)](#36---fichiers-mt) via les boutons *Sauvegarder* et *Charger* [(cf. Figure6)](#figure6)
