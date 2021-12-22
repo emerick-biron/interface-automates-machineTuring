@@ -14,21 +14,21 @@
   * [Notre projet](#notre-projet)
 * [Manuel de notre application](#manuel-de-notre-application)
   * [1. Fenêtre de départ](#1-fentre-de-dpart)
-  * [2. Automates](#2---automates)
-    * [2.1. Les états](#21---les-tats)
-    * [2.2. Les transitions](#22---les-transitions)
-    * [2.3. La sélection](#23---la-slection)
-    * [2.4. La suppression](#24---la-suppression)
-    * [2.5. Le lancement d'un automate](#25---le-lancement-dun-automate)
-    * [2.6. Fichiers *.atmt*](#26---fichiers-atmt)
+  * [2. Automates](#2-automates)
+    * [2.1. Les états](#21-les-tats)
+    * [2.2. Les transitions](#22-les-transitions)
+    * [2.3. La sélection](#23-la-slection)
+    * [2.4. La suppression](#24-la-suppressions)
+    * [2.5. Le lancement d'un automate](#25-le-lancement-dun-automate)
+    * [2.6. Fichiers *.atmt*](#26-fichiers-atmt)
     * [2.7. La sauvegarde / le chargement de fichiers *.atmt*](#27-la-sauvegarde--le-chargement-de-fichiers-atmt)
-  * [3. Machine de Turing](#3---machine-de-turing)
-      * [3.1. Les états](#31---les-tats)
-      * [3.2. Les transitions](#32---les-transitions)
-      * [3.3. La sélection](#33---la-slection)
-      * [3.4. La suppression](#34---la-suppression)
-      * [3.5. Le lancement d'une machine de Turing](#35---le-lancement-dune-machine-de-turing)
-      * [3.6. Fichiers *.mt*](#36---fichiers-mt)
+  * [3. Machine de Turing](#3-machine-de-turing)
+      * [3.1. Les états](#31-les-tats)
+      * [3.2. Les transitions](#32-les-transitions)
+      * [3.3. La sélection](#33-la-slection)
+      * [3.4. La suppression](#34-la-suppression)
+      * [3.5. Le lancement d'une machine de Turing](#35-le-lancement-dune-machine-de-turing)
+      * [3.6. Fichiers *.mt*](#36-fichiers-mt)
       * [3.7. La sauvegarde / le chargement de fichiers *.mt*](#37-la-sauvegarde--le-chargement-de-fichiers-mt)
 
 ## Table des figures
@@ -82,6 +82,7 @@ pour la partie interface.
 
 # Manuel de notre application
 
+<a name="1-fentre-de-dpart"></a>
 ### 1. Fenêtre de départ 
 
 Lors du lancement de l'application une fenêtre s'ouvrira et vous permettra de choisir de lancer l'application de gestion
@@ -96,13 +97,15 @@ Les fichiers pouvant être chargés sont les fichiers présents dans le réperto
 *fichiers_machines* qui doit être au même endroit que le jar de l'application pour être proposé par la liste 
 déroulante**
 
-<a name="figure1"></a>![fenetre_depart](ressources/fenetre_depart.png)
+<a name="figure1"></a>
+![fenetre_depart](ressources/fenetre_depart.png)
 
 *Figure 1 - Fenêtre de depart*
 
 ### 2. Automates
 
-<a name="figure2"></a>![interface_automate](ressources/automate/interface_automate.png)
+<a name="figure2"></a>
+[interface_automate](ressources/automate/interface_automate.png)
 
 *Figure 2 - Interface d'un automate*
 
@@ -126,7 +129,8 @@ apparait en haut à droite puis cliquer sur le bouton *ajouter transition*.
 
 [(cf. Figure3)](#figure3)
 
-<a name="figure3"></a>![ajout_trans](ressources/automate/ajout_trans.png)
+<a name="figure3"></a>
+![ajout_trans](ressources/automate/ajout_trans.png)
 
 *Figure 3 - Ajout d'une transition (automate)*
 
@@ -143,7 +147,8 @@ permettre de choisir spécifiquement les transitions à supprimer [(cf. Figure4)
 
 Il est aussi possible de supprimer tous les états et toutes les transitions en appuyant sur le bouton *Clear*.
 
-<a name="figure4"></a>![dialog_sup_trans](ressources/automate/dialog_sup_trans.png)
+<a name="figure4"></a>
+![dialog_sup_trans](ressources/automate/dialog_sup_trans.png)
 
 *Figure 4 - Fenêtre de dialogue pour la suppression de transitions (automate)*
 
@@ -159,7 +164,8 @@ Cette valeur représente le temps, en seconde, qui s'écoulera entre deux étape
 
 Il est aussi possible d'arrêter l'exécution de l'automate en appuyant sur le bouton *STOP*.
 
-<a name="figure5"></a>![lancement_automate](ressources/automate/lancement_automate.gif)
+<a name="figure5"></a>
+![lancement_automate](ressources/automate/lancement_automate.gif)
 
 *Figure 5 - Lancement d'un automate*
 
@@ -197,7 +203,8 @@ Il est possible de charger ou de sauvegarder un automate sous la forme de fichie
 
 ### 3. Machine de Turing
 
-<a name="figure6"></a>![interface_mt](ressources/mt/interface_mt.png)
+<a name="figure6"></a>
+![interface_mt](ressources/mt/interface_mt.png)
 
 *Figure 6 - Interface d'une machine de Turing*
 
@@ -214,7 +221,8 @@ Pour ajouter une transition, il faut **d'abord** sélectionner l'état d'arrivé
 et un mouvement (gauche ou droite), via les cadres et les boutons radios situés en haut à gauche, puis cliquer sur le
 bouton *ajouter transition* [(cf. Figure7)](#figure7).
 
-<a name="figure7"></a>![ajout_trans](ressources/mt/ajout_trans.png)
+<a name="figure7"></a>
+![ajout_trans](ressources/mt/ajout_trans.png)
 
 *Figure 7 - Ajout d'une transition (machine de Turing)*
 
@@ -231,7 +239,8 @@ permettre de choisir spécifiquement les transitions à supprimer [(cf. Figure8)
 
 Il est aussi possible de supprimer tous les états et toutes les transitions en appuyant sur le bouton *Clear*.
 
-<a name="figure8"></a>![dialog_sup_trans](ressources/mt/dialog_sup_trans.png)
+<a name="figure8"></a>
+![dialog_sup_trans](ressources/mt/dialog_sup_trans.png)
 
 *Figure 8 - Fenêtre de dialogue pour la suppression de transitions (machine de Turing)*
 
@@ -247,7 +256,8 @@ Cette valeur représente le temps, en seconde, qui s'écoulera entre deux étape
 
 Il est aussi possible d'arrêter l'exécution de l'automate en appuyant sur le bouton *STOP*.
 
-<a name="figure9"></a>![lancement_mt](ressources/mt/lancement_mt.gif)
+<a name="figure9"></a>
+![lancement_mt](ressources/mt/lancement_mt.gif)
 
 *Figure 9 - Lancement d'une machine de Turing*
 
