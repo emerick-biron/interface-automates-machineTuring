@@ -49,17 +49,17 @@ le bouton "Clear" [[14]](#interface-dun-automate-).
 
 ##### Interface d'un automate :
 
-![fenetre_automate](../ressources/fenetre_automate.PNG)
+![fenetre_automate](../ressources/automate/fenetre_automate.PNG)
 
 ##### Ajout d'une transition :
 
-![ajout_trans](../ressources/ajout_trans.PNG)
+![ajout_trans](../ressources/automate/ajout_trans.PNG)
 
 ##### Suppression de multiples transition :
 
 ![plusieurs_trans_select](../ressources/plusieurs_trans_select.PNG)
-![dialog_sup_trans](../ressources/dialog_sup_trans.PNG)
+![dialog_sup_trans](../ressources/automate/dialog_sup_trans.PNG)
 
 ##### Lancement d'un automate :
 
-![lancement_automate](../ressources/lancement_automate.gif)
+![lancement_automate](../ressources/automate/lancement_automate.gif)
