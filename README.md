@@ -46,17 +46,22 @@ pour la partie interface.
 ### 1 - Fenêtre de départ 
 
 Lors du lancement de l'application une fenêtre s'ouvrira et vous permettra de choisir de lancer l'application de gestion
-d'automates ou l'application de gestion de machines de Turing [cf Figure1](#figure1).
+d'automates en appuyant sur le bouton *Automate* [(cf Figure1)](#figure1).
 
-Les listes déroulantes permettent de choisir de partir d'un nouvel automate ou d'une nouvelle machine de Turing ou de 
-charger directement des fichiers .mt ou .atmt. Les fichiers pouvant être chargés sont les fichiers présents dans le 
-répertoire "default" du repertoire "fichiers_machines". 
+La liste déroulante, en dessous du bouton *Automate* permet de choisir de partir d'un nouvel automate si l'option 
+*nouveau* est choisis ou de charger directement des fichiers *.atmt* en choisissant les noms de ces derniers. 
+Les fichiers pouvant être chargés sont les fichiers présents dans le répertoire *default* du repertoire 
+*fichiers_machines*. 
 
 <a name="figure1"></a>![fenetre_depart](ressources/fenetre_depart.png)
 
 *Figure1 - Fenetre de depart*
 
 ### 2 - Automates
+
+<a name="figure2"></a>![fenetre_automate](ressources/fenetre_automate.PNG)
+
+*Figure 2 - Interface d'un automate*
 
 #### 2.1 - Les états
 
@@ -72,6 +77,10 @@ Pour ajouter une transition, il faut d'abord sélection l'état d'arrivée puis 
 une auto-transition). Il faut ensuite ajouter la lettre de la transition dans le cadre qui apparait en haut à
 droite [[6]](#ajout-dune-transition-) puis cliquer sur le bouton "ajouter transition" [[7]](#ajout-dune-transition-).
 
+<a name="figure3"></a>![ajout_trans](ressources/ajout_trans.PNG)
+
+*Figure 3 - Ajout d'une transition*
+
 #### 2.3 - La sélection
 
 Pour sélectionner un état ou une transition il suffit de cliquer dessus. Cet élément aura donc un contour bleu. Il faut
@@ -84,30 +93,22 @@ cas où plusieurs transitions entre deux mêmes états seraient sélectionnées 
 une [fenêtre de dialogue](#suppression-de-multiples-transition-) s'ouvrira afin de vous permettre de choisir
 spécifiquement les transitions à supprimer.
 
+<a name="figure4"></a>![dialog_sup_trans](ressources/dialog_sup_trans.PNG)
+
+*Figure 4 - Fenêtre de dialogue pour la suppression de transitions*
+
 #### 2.5 - Le lancement d'un automate
 
 Pour lancer un automate il faut écrire le mot a tester dans la zone prévue à cet effet [[10]](#interface-dun-automate-)
 puis appuyer sur le bouton "Lancer" [[11]](#interface-dun-automate-). Vous pouvez
 retrouver [ici](#lancement-dun-automate) un exemple.
 
-#### 2.6 - Informations complémentaires
+<a name="figure5"></a>![lancement_automate](ressources/lancement_automate.gif)
+
+*Figure 5 - Lancement d'un automate*
+
+#### 2.6 - Fichiers *.atmt*
 
 Il est possible de charger [[12]](#interface-dun-automate-) ou de sauvegarder [[13]](#interface-dun-automate-) un
 automate sous la forme de fichiers _.atmt_. Il est aussi possible de supprimer l'ensemble d'un automate en appuyant sur
 le bouton "Clear" [[14]](#interface-dun-automate-).
-
-<a name="figure2"></a>![fenetre_automate](ressources/fenetre_automate.PNG)
-
-*Figure 2 - Interface d'un automate*
-
-<a name="figure3"></a>![ajout_trans](ressources/ajout_trans.PNG)
-
-*Figure 3 - Ajout d'une transition*
-
-<a name="figure4"></a>![dialog_sup_trans](ressources/dialog_sup_trans.PNG)
-
-*Figure 4 - Fenêtre de dialogue pour la suppression de transitions*
-
-<a name="figure5"></a>![lancement_automate](ressources/lancement_automate.gif)
-
-*Figure 5 - Lancement d'un automate*

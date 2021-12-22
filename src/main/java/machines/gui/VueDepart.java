@@ -83,7 +83,7 @@ public class VueDepart extends Stage {
         comboBoxChoixAutomate = new ComboBox<>();
         ObservableList<String> choixPossible = FXCollections.observableArrayList();
         choixPossible.add("nouveau");
-        Path path = Paths.get("./fichiers_machine/default");
+        Path path = Paths.get("./fichiers_machines/default");
         if (Files.isDirectory(path)) {
             File dossierParDefaut = path.toFile();
             for (File file : dossierParDefaut.listFiles()) {
@@ -99,7 +99,7 @@ public class VueDepart extends Stage {
         comboBoxChoixMT = new ComboBox<>();
         ObservableList<String> choixPossible = FXCollections.observableArrayList();
         choixPossible.add("nouveau");
-        Path path = Paths.get("./fichiers_machine/default");
+        Path path = Paths.get("./fichiers_machines/default");
         if (Files.isDirectory(path)) {
             File dossierParDefaut = path.toFile();
             for (File file : dossierParDefaut.listFiles()) {

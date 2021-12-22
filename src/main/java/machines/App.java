@@ -77,7 +77,7 @@ public class App extends Application {
 
         String choix = vueDepart.getComboBoxChoixAutomate().getValue();
 
-        Path path = Paths.get("./fichiers_machine/default/" + choix + ".atmt");
+        Path path = Paths.get("./fichiers_machines/default/" + choix + ".atmt");
         File file = path.toFile();
         if (!choix.equals("nouveau") && file.isFile()) {
             try {
@@ -107,7 +107,7 @@ public class App extends Application {
 
         String choix = vueDepart.getComboBoxChoixMT().getValue();
 
-        Path path = Paths.get("./fichiers_machine/default/" + choix + ".mt");
+        Path path = Paths.get("./fichiers_machines/default/" + choix + ".mt");
         File file = path.toFile();
         if (!choix.equals("nouveau") && file.isFile()) {
             try {

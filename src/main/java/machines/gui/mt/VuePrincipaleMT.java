@@ -141,7 +141,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Sauvegarder machine Turing");
 
-        Path path = Paths.get("./fichiers_machine");
+        Path path = Paths.get("./fichiers_machines");
         if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
         else fileChooser.setInitialDirectory(new File("./"));
 
@@ -170,7 +170,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Charger machine Turing");
 
-        Path path = Paths.get("./fichiers_machine");
+        Path path = Paths.get("./fichiers_machines");
         if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
         else fileChooser.setInitialDirectory(new File("./"));
 

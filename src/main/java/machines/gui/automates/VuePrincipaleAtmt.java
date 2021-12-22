@@ -216,7 +216,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Sauvegarder automate");
 
-        Path path = Paths.get("./fichiers_machine");
+        Path path = Paths.get("./fichiers_machines");
         if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
         else fileChooser.setInitialDirectory(new File("./"));
 
@@ -244,7 +244,7 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
         fileChooser = new FileChooser();
         fileChooser.setTitle("Charger automate");
 
-        Path path = Paths.get("./fichiers_machine");
+        Path path = Paths.get("./fichiers_machines");
         if (Files.isDirectory(path)) fileChooser.setInitialDirectory(path.toFile());
         else fileChooser.setInitialDirectory(new File("./"));
 
