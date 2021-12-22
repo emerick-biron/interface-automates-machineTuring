@@ -48,7 +48,9 @@ pour la partie interface.
 Lors du lancement de l'application une fenêtre s'ouvrira et vous permettra de choisir de lancer l'application de gestion
 d'automates ou l'application de gestion de machines de Turing [cf Figure1](#figure1).
 
-Il est aussi possible de charger directement des fichier .atmt ou .mt à l'aide des menus déroulants sous chaque bouton.
+Les listes déroulantes permettent de choisir de partir d'un nouvel automate ou d'une nouvelle machine de Turing ou de 
+charger directement des fichiers .mt ou .atmt. Les fichiers pouvant être chargés sont les fichiers présents dans le 
+répertoire "default" du repertoire "fichiers_machines". 
 
 <a name="figure1"></a>![fenetre_depart](ressources/fenetre_depart.png)
 
