@@ -82,7 +82,7 @@ pour la partie interface.
 
 # Manuel de notre application
 
-### 1. Fenêtre de départ 
+### 1 Fenêtre de départ 
 
 Lors du lancement de l'application une fenêtre s'ouvrira et vous permettra de choisir de lancer l'application de gestion
 d'automates en appuyant sur le bouton *Automate* [(cf. Figure1)](#figure1).
