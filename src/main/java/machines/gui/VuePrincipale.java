@@ -56,8 +56,9 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
         initComposants();
         initSetOnAction();
 
+        scrollPaneCenter = new ScrollPane();
         vueMachine = creerVueMachine();
-        scrollPaneCenter = new ScrollPane(vueMachine);
+        scrollPaneCenter.setContent(vueMachine);
         setCenter(scrollPaneCenter);
 
         ctrlPresse = false;

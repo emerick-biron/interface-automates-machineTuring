@@ -74,6 +74,9 @@ public abstract class VueMachine<T extends Transition<T>> extends Pane {
         this.vuePrincipale = vuePrincipale;
         this.machine = machine;
 
+        minWidthProperty().bind(vuePrincipale.getScrollPaneCenter().widthProperty());
+        minHeightProperty().bind(vuePrincipale.getScrollPaneCenter().heightProperty());
+
         initListeners();
 
         setOnMousePressed(mouseEvent -> {

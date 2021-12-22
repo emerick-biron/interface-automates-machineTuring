@@ -115,7 +115,7 @@ public class VueEtat<T extends Transition<T>> extends StackPane {
                 selectionner();
             }
 
-            vueMachine.setMinSize(vueMachine.getWidth(), vueMachine.getHeight());
+            vueMachine.setPrefSize(vueMachine.getWidth(), vueMachine.getHeight());
 
             vueMachine.getVuePrincipale().unbindCheckBoxes();
 
@@ -132,7 +132,7 @@ public class VueEtat<T extends Transition<T>> extends StackPane {
 
         setOnMouseReleased(mouseEvent -> {
             setCursor(Cursor.HAND);
-            vueMachine.setMinSize(-1, -1);
+            vueMachine.setPrefSize(-1, -1);
         });
 
         setOnMouseDragged(mouseEvent -> {
