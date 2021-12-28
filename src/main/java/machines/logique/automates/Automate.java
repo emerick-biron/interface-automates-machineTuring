@@ -142,7 +142,7 @@ public class Automate extends Machine<TransitionAtmt> {
      * Lance l'automate
      *
      * @param mot          mot a donner a l'automate
-     * @param dellayMillis temps d'attente entre chauqe etape
+     * @param dellayMillis temps d'attente entre chaque etape
      */
     public void lancer(String mot, long dellayMillis) {
         this.mot = mot;

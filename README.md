@@ -107,7 +107,7 @@ Pour déplacer un état, il suffit de le faire glisser avec la souris.
 
 #### 2.2. Les transitions
 
-Pour ajouter une transition, il faut **d'abord** sélectionner l'état d'arrivée **puis** l'état de départ (ou seulement un état pour une auto-transition). Il faut ensuite ajouter la lettre de la transition dans le cadre qui  apparait en haut à droite puis cliquer sur le bouton *ajouter transition*.
+Pour ajouter une transition, il faut **d'abord** sélectionner l'état d'arrivée **puis** l'état de départ en gardant la touche *Ctrl* enfoncée (ou seulement un état pour une auto-transition). Il faut ensuite ajouter la lettre de la transition dans le cadre qui  apparait en haut à droite puis cliquer sur le bouton *ajouter transition*.
 
 [(cf. Figure3)](#figure3)
 
@@ -187,7 +187,7 @@ Le fonctionnement des états pour une machine de Turing est identique à celui d
 
 #### 3.2. Les transitions
 
-Pour ajouter une transition, il faut **d'abord** sélectionner l'état d'arrivée **puis** l'état de départ (ou seulement un état pour une auto-transition). Il faut ensuite ajouter une lettre de lecture, une lettre d'écriture  et un mouvement (gauche ou droite), via les cadres et les boutons radios situés en haut à gauche, puis cliquer sur le bouton *ajouter transition* [(cf. Figure7)](#figure7).
+Pour ajouter une transition, il faut **d'abord** sélectionner l'état d'arrivée **puis** l'état de départ en gardant la touche *Ctrl* enfoncée (ou seulement un état pour une auto-transition). Il faut ensuite ajouter une lettre de lecture, une lettre d'écriture  et un mouvement (gauche ou droite), via les cadres et les boutons radios situés en haut à gauche, puis cliquer sur le bouton *ajouter transition* [(cf. Figure7)](#figure7).
 
 <a name="figure7"></a>
 ![ajout_trans](ressources/mt/ajout_trans.png)
