@@ -38,8 +38,7 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
     private EventHandler<ActionEvent> eventCharger = actionEvent -> charger();
     private EventHandler<ActionEvent> eventLancerAutomate = actionEvent -> lancer();
     private EventHandler<ActionEvent> eventAjouterTransition = actionEvent -> ajouterTransition();
-    private EventHandler<ActionEvent> eventAjouterEtat = actionEvent -> vueMachine.getMachine()
-            .ajouterEtat(new Etat<T>(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
+    private EventHandler<ActionEvent> eventAjouterEtat = actionEvent -> ajouterEtat();
     private EventHandler<KeyEvent> eventToucheCtrlPresse = new EventHandler<>() {
         @Override
         public void handle(KeyEvent keyEvent) {
@@ -151,6 +150,11 @@ public abstract class VuePrincipale<T extends Transition<T>> extends BorderPane 
      * Ajoute une transition a la machine en fonction des entrees de l'utilisateur
      */
     public abstract void ajouterTransition();
+
+    /**
+     * Ajoute un etat a la machine en fonction des entrees de l'utilisateur
+     */
+    public abstract void ajouterEtat();
 
     public Button getBoutonSupprimer() {
         return boutonSupprimer;

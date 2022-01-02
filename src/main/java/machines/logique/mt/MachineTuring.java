@@ -197,6 +197,18 @@ public class MachineTuring extends Machine<TransitionMT> {
                 }
                 break;
         }
+        for (int i = 1; i < teteLecture; i++) {
+            if (ruban.get(i) == '#') {
+                ruban.remove(i);
+                teteLecture--;
+            } else {
+                break;
+            }
+        }
+        for (int i = ruban.size() - 2; i > teteLecture; i--) {
+            if (ruban.get(i) == '#') ruban.remove(i);
+            else break;
+        }
     }
 
     public Etat<TransitionMT> getEtatActif() {

@@ -19,6 +19,7 @@ import machines.gui.VueEtat;
 import machines.gui.VueMachine;
 import machines.gui.VuePrincipale;
 import machines.gui.VueTransition;
+import machines.logique.Etat;
 import machines.logique.automates.Automate;
 import machines.logique.automates.TransitionAtmt;
 
@@ -150,6 +151,15 @@ public class VuePrincipaleAtmt extends VuePrincipale<TransitionAtmt> {
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void ajouterEtat() {
+        vueAutomate.getAutomate()
+                .ajouterEtat(new Etat<>(getCheckBoxEstInitial().isSelected(), getCheckBoxEstTerminal().isSelected()));
     }
 
     private void initListenersAndActions() {

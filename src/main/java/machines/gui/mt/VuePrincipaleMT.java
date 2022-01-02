@@ -38,7 +38,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
     private HBox hBoxLancerMachine;
     private HBox hBoxAjoutTransition;
     private TextFlow textFlowRuban;
-    private TextField fieldNouvelleLette;
+    private TextField fieldNouvelleLettre;
     private ToggleGroup groupChoixMvmt;
     private RadioButton boutonGauche;
     private RadioButton boutonDroite;
@@ -77,9 +77,9 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         super(app);
         getTextFieldEtiquette().setPrefWidth(30);
         getTextFieldEtiquette().setTextFormatter(new TextFormatter<>(textFilterLettre));
-        fieldNouvelleLette = new TextField();
-        fieldNouvelleLette.setPrefWidth(30);
-        fieldNouvelleLette.setTextFormatter(new TextFormatter<>(textFilterLettre));
+        fieldNouvelleLettre = new TextField();
+        fieldNouvelleLettre.setPrefWidth(30);
+        fieldNouvelleLettre.setTextFormatter(new TextFormatter<>(textFilterLettre));
 
         groupChoixMvmt = new ToggleGroup();
         boutonDroite = new RadioButton("D");
@@ -91,7 +91,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         hBoxChoixMvmt = new HBox(boutonDroite, boutonGauche);
 
         hBoxAjoutTransition =
-                new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette(), fieldNouvelleLette, hBoxChoixMvmt);
+                new HBox(getBoutonAjouterTransition(), getTextFieldEtiquette(), fieldNouvelleLettre, hBoxChoixMvmt);
 
         boutonStop = new Button("STOP");
         boutonStop.setDisable(true);
@@ -185,8 +185,8 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
         }
     }
 
-    public TextField getFieldNouvelleLette() {
-        return fieldNouvelleLette;
+    public TextField getFieldNouvelleLettre() {
+        return fieldNouvelleLettre;
     }
 
     public RadioButton getBoutonGauche() {
@@ -302,6 +302,7 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
             alert.showAndWait();
         } else {
             String etiquette = getTextFieldEtiquette().getText();
+            String nouvelleLettre = fieldNouvelleLettre.getText();
             VueEtat<TransitionMT> vueEtatDep = vuesEtatSelectionnes.get(0);
             VueEtat<TransitionMT> vueEtatArrivee;
             if (vuesEtatSelectionnes.size() == 1) vueEtatArrivee = vueEtatDep;
@@ -316,13 +317,22 @@ public class VuePrincipaleMT extends VuePrincipale<TransitionMT> {
                     }
                 }
                 if (nouvelleTrans) {
+                    if (nouvelleLettre.length() < 1) nouvelleLettre = etiquette;
                     Mouvement mvmt = (boutonDroite.isSelected()) ? Mouvement.DROITE : Mouvement.GAUCHE;
                     vueEtatDep.getEtat().ajoutTransition(
                             new TransitionMT(vueEtatDep.getEtat(), vueEtatArrivee.getEtat(), etiquette.charAt(0),
-                                    fieldNouvelleLette.getText().charAt(0), mvmt));
+                                    nouvelleLettre.charAt(0), mvmt));
                 }
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void ajouterEtat() {
+        vueMT.getMachineTuring().ajouterEtat(new Etat<>(false, getCheckBoxEstTerminal().isSelected()));
     }
 
     private void initStyle() {
