@@ -73,6 +73,9 @@ Ces formats de fichiers permettent d’importer et de sauvegarder les créations
 
 La mise en œuvre graphique de ce projet a nécessité d'utiliser le langage java avec l'utilisation du framework javafx  pour la partie interface.
 
+Vous pourrez retrouver notre application à télécharger sur ce [lien](https://drive.google.com/file/d/1J4F-Wo9cbP5c5u9myqma1jWul9M9TNJ4/view). Ensuite, si Java est installé sur votre ordinateur vous pourrez lancer le jar pour accéder au logiciel (java -jar projetS3.jar).
+
+
 # Manuel de notre application
 
 ### 1. Fenêtre de départ 
